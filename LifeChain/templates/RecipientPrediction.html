@@ -7,23 +7,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" />
 
 <div class="bd-example m-0 border-0 d-flex justify-content-center">
-    <h4 class="text-center mb-4">Donor Registration Form</h4>
+    <h4 class="text-center mb-4">Recipient Compatibility Form</h4>
     <form id="donor-form" class="border border-2 p-5 rounded-3" style="width: 30rem;" action="{% url 'recipientprictiction' %}" method="post">
-       
+        {% csrf_token %}
         
-        
-        <!-- Stage 1 -->
+        <!-- Stage 1: Basic Demographics and Physical Attributes -->
         <div id="stage-1">
+            <h3 class="text-center mb-4">Basic Demographics and Physical Attributes</h3>
             <div class="mb-3">
-                <label for="age" class="form-label">
-                    Age <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your age in years"></i>
-                </label>
+                <label for="age" class="form-label">Age (in years)</label>
                 <input type="number" class="form-control" id="age" name="age" placeholder="e.g., 30">
             </div>
             <div class="mb-3">
-                <label for="gender" class="form-label">
-                    Gender <i class="ri-information-line" data-bs-toggle="tooltip" title="Select your Gender"></i>
-                </label>
+                <label for="gender" class="form-label">Gender</label>
                 <select class="form-control" id="gender" name="gender">
                     <option value="">Select...</option>
                     <option value="male">Male</option>
@@ -32,23 +28,7 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="blood_type" class="form-label">
-                    Blood Type <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Blood Type"></i>
-                </label>
-                <select class="form-control" id="blood_type" name="blood_type">
-                    <option value="">Select...</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="AB">AB</option>
-                    <option value="O">O</option>
-                </select>
-            </div>
-
-
-            <div class="mb-3">
-                <label for="blood_type" class="form-label">
-                    Blood Type <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Blood Type"></i>
-                </label>
+                <label for="blood_type" class="form-label">Blood Type</label>
                 <select class="form-control" id="blood_type" name="blood_type">
                     <option value="">Select...</option>
                     <option value="A">A</option>
@@ -58,123 +38,127 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="blood_type" class="form-label">
-                    Blood Type <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Blood Type"></i>
-                </label>
-                <select class="form-control" id="blood_type" name="blood_type">
+                <label for="rh_factor" class="form-label">Rh Factor</label>
+                <select class="form-control" id="rh_factor" name="rh_factor">
                     <option value="">Select...</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="AB">AB</option>
-                    <option value="O">O</option>
+                    <option value="positive">Positive</option>
+                    <option value="negative">Negative</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="blood_type" class="form-label">
-                    Blood Type <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Blood Type"></i>
-                </label>
-                <select class="form-control" id="blood_type" name="blood_type">
-                    <option value="">Select...</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="AB">AB</option>
-                    <option value="O">O</option>
-                </select>
+                <label for="height_cm" class="form-label">Height (in centimeters)</label>
+                <input type="number" class="form-control" id="height_cm" name="height_cm" placeholder="e.g., 175">
             </div>
             <div class="mb-3">
-                <label for="blood_type" class="form-label">
-                    Blood Type <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Blood Type"></i>
-                </label>
-                <select class="form-control" id="blood_type" name="blood_type">
-                    <option value="">Select...</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="AB">AB</option>
-                    <option value="O">O</option>
-                </select>
+                <label for="weight_kg" class="form-label">Weight (in kilograms)</label>
+                <input type="number" class="form-control" id="weight_kg" name="weight_kg" placeholder="e.g., 70">
             </div>
             <div class="mb-3">
-                <label for="blood_type" class="form-label">
-                    Blood Type <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Blood Type"></i>
-                </label>
-                <select class="form-control" id="blood_type" name="blood_type">
-                    <option value="">Select...</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="AB">AB</option>
-                    <option value="O">O</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="blood_type" class="form-label">
-                    Blood Type <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Blood Type"></i>
-                </label>
-                <select class="form-control" id="blood_type" name="blood_type">
-                    <option value="">Select...</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="AB">AB</option>
-                    <option value="O">O</option>
-                </select>
+                <label for="bmi" class="form-label">Body Mass Index (BMI)</label>
+                <input type="number" step="0.1" class="form-control" id="bmi" name="bmi" placeholder="e.g., 24.2">
             </div>
             <div class="d-flex justify-content-end">
                 <button type="button" class="btn btn-primary" onclick="showNextStage()">Next</button>
             </div>
         </div>
 
-        <!-- Stage 2 -->
+        <!-- Stage 2: Medical History and Current Condition -->
         <div id="stage-2" style="display: none;">
+            <h3 class="text-center mb-4">Medical History and Current Condition</h3>
+
             <div class="mb-3">
-                <label for="hemoglobin" class="form-label">
-                    Hemoglobin <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your Hemoglobin level"></i>
-                </label>
-                <input type="number" class="form-control" id="hemoglobin" name="hemoglobin" placeholder="e.g., 13.5">
+                <label for="wait_list_days" class="form-label">Waitlist Days</label>
+                <input type="number" class="form-control" id="wait_list_days" name="wait_list_days" placeholder="e.g., 180">
             </div>
             <div class="mb-3">
-                <label for="wbc_count" class="form-label">
-                    WBC Count <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your WBC Count"></i>
-                </label>
+                <label for="medical_urgency_score" class="form-label">Medical Urgency Score</label>
+                <input type="number" step="0.1" class="form-control" id="medical_urgency_score" name="medical_urgency_score" placeholder="e.g., 8.5">
+            </div>
+            <div class="mb-3">
+                <label for="hemoglobin" class="form-label">Hemoglobin (g/dL)</label>
+                <input type="number" step="0.1" class="form-control" id="hemoglobin" name="hemoglobin" placeholder="e.g., 13.5">
+            </div>
+            <div class="mb-3">
+                <label for="wbc_count" class="form-label">White Blood Cell (WBC) Count (cells/µL)</label>
                 <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
             </div>
             <div class="mb-3">
-                <label for="wbc_count" class="form-label">
-                    WBC Count <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your WBC Count"></i>
-                </label>
-                <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
+                <label for="platelet_count" class="form-label">Platelet Count (cells/µL)</label>
+                <input type="number" class="form-control" id="platelet_count" name="platelet_count" placeholder="e.g., 250000">
             </div>
             <div class="mb-3">
-                <label for="wbc_count" class="form-label">
-                    WBC Count <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your WBC Count"></i>
-                </label>
-                <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
+                <label for="creatinine" class="form-label">Creatinine (mg/dL)</label>
+                <input type="number" step="0.1" class="form-control" id="creatinine" name="creatinine" placeholder="e.g., 1.2">
             </div>
             <div class="mb-3">
-                <label for="wbc_count" class="form-label">
-                    WBC Count <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your WBC Count"></i>
-                </label>
-                <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
+                <label for="alt" class="form-label">Alanine Aminotransferase (ALT) (U/L)</label>
+                <input type="number" step="0.1" class="form-control" id="alt" name="alt" placeholder="e.g., 25">
             </div>
             <div class="mb-3">
-                <label for="wbc_count" class="form-label">
-                    WBC Count <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your WBC Count"></i>
-                </label>
-                <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
-            </div>
-            <div class="mb-3">
-                <label for="wbc_count" class="form-label">
-                    WBC Count <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your WBC Count"></i>
-                </label>
-                <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
-            </div>
-            <div class="mb-3">
-                <label for="wbc_count" class="form-label">
-                    WBC Count <i class="ri-information-line" data-bs-toggle="tooltip" title="Enter your WBC Count"></i>
-                </label>
-                <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
+                <label for="ast" class="form-label">Aspartate Aminotransferase (AST) (U/L)</label>
+                <input type="number" step="0.1" class="form-control" id="ast" name="ast" placeholder="e.g., 30">
             </div>
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary" onclick="showPreviousStage()">Back</button>
-                
+                <button type="button" class="btn btn-primary" onclick="showNextStage2()">Next</button>
+            </div>
+        </div>
+
+        <!-- Stage 3: Transplant-Specific Information -->
+        <div id="stage-3" style="display: none;">
+            <h3 class="text-center mb-4">Transplant-Specific Information</h3>
+
+            <div class="mb-3">
+                <label for="diabetes" class="form-label">Diabetes</label>
+                <select class="form-control" id="diabetes" name="diabetes">
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="hypertension" class="form-label">Hypertension</label>
+                <select class="form-control" id="hypertension" name="hypertension">
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="previous_transplant" class="form-label">Previous Transplant</label>
+                <select class="form-control" id="previous_transplant" name="previous_transplant">
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="dialysis_status" class="form-label">Dialysis Status</label>
+                <select class="form-control" id="dialysis_status" name="dialysis_status">
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="required_organ" class="form-label">Required Organ</label>
+                <select class="form-control" id="required_organ" name="required_organ">
+                    <option value="">Select...</option>
+                    <option value="kidney">Kidney</option>
+                    <option value="liver">Liver</option>
+                    <option value="heart">Heart</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="antibody_screen" class="form-label">Antibody Screen (AU/mL)</label>
+                <input type="number" step="0.1" class="form-control" id="antibody_screen" name="antibody_screen" placeholder="e.g., 1.5">
+            </div>
+            <div class="mb-3">
+                <label for="pra_score" class="form-label">Panel Reactive Antibody (PRA) Score (%)</label>
+                <input type="number" step="0.1" class="form-control" id="pra_score" name="pra_score" placeholder="e.g., 85.5">
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" onclick="showPreviousStage2()">Back</button>
                 <button type="submit" class="btn btn-success">Submit</button>
             </div>
         </div>
@@ -182,7 +166,6 @@
 </div>
 
 <script>
-    // Functions for dynamic stage handling
     function showNextStage() {
         document.getElementById('stage-1').style.display = 'none';
         document.getElementById('stage-2').style.display = 'block';
@@ -192,6 +175,15 @@
         document.getElementById('stage-2').style.display = 'none';
         document.getElementById('stage-1').style.display = 'block';
     }
-</script>
 
+    function showNextStage2() {
+        document.getElementById('stage-2').style.display = 'none';
+        document.getElementById('stage-3').style.display = 'block';
+    }
+
+    function showPreviousStage2() {
+        document.getElementById('stage-3').style.display = 'none';
+        document.getElementById('stage-2').style.display = 'block';
+    }
+</script>
 {% endblock %}
