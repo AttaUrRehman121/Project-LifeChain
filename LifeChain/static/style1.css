@@ -1,0 +1,99 @@
+:root{
+    --blue:#0188df;
+    --black:#444d53;
+    --wigth:#fff;
+}
+
+#buttonH
+{
+    width: 7rem;
+    height: 3.5rem;
+    background: var(--blue);
+    color: var(--wigth);
+    font-size: 1.7rem;
+    text-transform: capitalize;
+    border-radius: .5rem;
+    cursor: pointer;
+    margin: 1rem 0;
+    border: .1rem solid var(--blue);
+}
+
+#buttonH:hover{
+    border: .1rem solid var(--blue);
+    background: var(--wigth);
+    color: var(--blue);
+    letter-spacing: .2rem;
+}
+
+#buttonH:active
+{
+    background-color: var(--blue);
+    color: var(--wigth);
+    transform: scale(0.98);
+}
+
+header{
+    width: 96%;
+    background: var(--wigth);
+   position: relative;
+    top: 2rem;
+    left: 50%;
+    transform: translate(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    border-radius: .5rem;
+    
+}
+header a{
+    color: var(--black);
+}
+header a:hover{
+    color: var(--blue);
+}
+header .logo{
+    font-size: 3rem;
+}
+header .logo span{
+    color: var(--blue);
+}
+header .navbar ul{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+}
+header .navbar ul li{
+    margin: 0 1rem;
+}
+header .navbar ul li a{
+    font-size: 2rem;
+    color: var(--black);
+}
+header .navbar ul li a:hover{
+    color: var(--blue);
+}
+header .fa-bars{
+    font-size: 3rem;
+    color: var(--blue);
+    cursor: pointer;
+    display: none;
+}
+header .fa-times{
+    transform: rotate(180deg);
+}
+.header-active{
+    top: 0;
+    width: 100%;
+    box-shadow: .1rem .3rem rgba(0,0,0,.3);
+}
+
+
+
+
+
+/* CSs for Profile view  */
+
+/* General container styling */

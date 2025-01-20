@@ -1,0 +1,42 @@
+
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+</head>
+<header>
+    <a href="{% url 'index' %}"
+        class="logo"><span>L</span>ife<span>C</span>hain.</a>
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'index' %}" active>Home</a></li>
+            <li><a href="{% url 'donorpage'%}"> Donor </a></li>
+            <li><a href="{% url 'recipientpage'%}">Recipient</a></li>
+            <li><a href="{%url 'contact'%}">Contact</a></li>
+            <!-- <li><a href="#blog">Blog</a></li> -->
+            <li><a href="{% url 'about'%}">About</a></li>
+            <li><i class="ri-account-pin-circle-line" style="font-size: 26px; color:#0188df" onclick="window.location.href='{% url 'profile_view' %}'"></i></li>
+            <!-- {% if user.is_authenticated %}
+            <li><button onclick="window.location.href='{% url 'logout' %}'"
+                    id="buttonH">Logout</button></li>
+            {% else %}
+            <li><button onclick="window.location.href='{% url 'login' %}'"
+                    id="buttonH">Login</button></li>
+            <li><button onclick="window.location.href='{% url 'signup' %}'"
+                    id="buttonH">Signup</button></li>
+            {% endif %} -->
+            <li><button onclick="window.location.href='{% url 'login' %}'"
+                id="buttonH">Login</button></li>
+            <li><button onclick="window.location.href='{% url 'signup' %}'"
+                id="buttonH">Signup</button></li>
+
+
+
+
+        </ul>
+    </nav>
+    <div class="fas fa-bars"></div>
+</header>
+
+
+<script src="js\logoutReset.js"></script>

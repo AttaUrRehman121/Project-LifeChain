@@ -1,0 +1,209 @@
+
+{% extends 'base.html' %}
+{% load static  %}
+{% load bootstrap5 %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'DonorStyle.css' %}" />
+
+<!-- icons for this  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" integrity="sha512-XcIsjKMcuVe0Ucj/xgIXQnytNwBttJbNjltBV18IOnru2lDPe9KRRyvCXw6Y5H415vbBLRm8+q6fmLUU7DfO6Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="bd-example m-0 border-0 d-flex justify-content-center">
+    <form class="border border-2 p-5 rounded-3" style="width: 30rem;" placeholder="Donor Registration Form">
+        <h4 class="text-center">Donor Registration Form</h4>
+        <div class="mb-3">
+            <label for="age" class="form-label">
+                Age
+                <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your age in years"></i>
+            </label>
+            <input type="number" class="form-control" id="age" name="age" placeholder="e.g., 30">
+        </div>
+        <div class="mb-3">
+            <label for="gender" class="form-label">
+                Gender (Gender)<i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Select your Gender"></i>
+            </label>
+            <select class="form-control" id="gender" name="gender">
+                <option value="">Select...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="blood_type" class="form-label">Blood Type (Blood Type)<i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Blood Type | اپنا بلڈ ٹائپ درج کریں۔"></i></label>
+            <select class="form-control" id="blood_type" name="blood_type">
+                <option value="">Select...</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="AB">AB</option>
+                <option value="O">O</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="rh_factor" class="form-label">Rh Factor (Rh Factor) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Select Blood Type positive or Negative | اپنا بلڈ ٹائپ درج کریں۔"></i></label>
+            <select class="form-control" id="rh_factor" name="rh_factor">
+                <option value="">Select...</option>
+                <option value="+">Positive</option>
+                <option value="-">Negative</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="height_cm" class="form-label">Height (cm) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Height in cm | اپنی اونچائی سینٹی میٹر میں درج کریں۔"></i></label>
+            <input type="number" class="form-control" id="height_cm" name="height_cm" placeholder="e.g., 170">
+        </div>
+        <div class="mb-3">
+            <label for="weight_kg" class="form-label">Weight (kg) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Weight in Kg | اپنا وزن کلوگرام میں درج کریں۔۔"></i></label>
+            <input type="number" class="form-control" id="weight_kg" name="weight_kg" placeholder="e.g., 70">
+        </div>
+        <div class="mb-3">
+            <label for="bmi" class="form-label">Body Mass Index (BMI) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Body Mass | اپنا باڈی ماس درج کریں۔۔"></i></label>
+            <input type="number" class="form-control" id="bmi" name="bmi" placeholder="e.g., 22.5">
+        </div>
+        <div class="mb-3">
+            <label for="systolic_bp" class="form-label">Systolic Blood Pressure (BP) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Upper Blood Pressure | اپنا اوپری بلڈ پریشر درج کریں۔"></i></label>
+            <input type="number" class="form-control" id="systolic_bp" name="systolic_bp" placeholder="e.g., 120">
+        </div>
+        <div class="mb-3">
+            <label for="diastolic_bp" class="form-label">Diastolic Blood Pressure (BP) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Lower Blood Pressure | اپنا لوئر بلڈ پریشر درج کریں۔۔"></i></label>
+            <input type="number" class="form-control" id="diastolic_bp" name="diastolic_bp" placeholder="e.g., 80">
+        </div>
+        <div class="mb-3">
+            <label for="heart_rate" class="form-label">Heart Rate <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Heart Rate  | اپنے دل کی شرح درج کریں۔"></i></label>
+            <input type="number" class="form-control" id="heart_rate" name="heart_rate" placeholder="e.g., 70">
+        </div>
+        <div class="mb-3">
+            <label for="temperature_celsius" class="form-label">Temperature (Celsius) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Temperature  Rate  | اپنے درجہ حرارت کی شرح درج کریں۔۔"></i></label>
+            <input type="number" class="form-control" id="temperature_celsius" name="temperature_celsius" placeholder="e.g., 37">
+        </div>
+        <div class="mb-3">
+            <label for="respiratory_rate" class="form-label">Respiratory Rate <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Respiratory Rate in breaths per minute"></i></label>
+            <input type="number" class="form-control" id="respiratory_rate" name="respiratory_rate" placeholder="e.g., 16">
+        </div>
+        <div class="mb-3">
+            <label for="hemoglobin" class="form-label">Hemoglobin <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Hemoglobin level in g/dL"></i></label>
+            <input type="number" class="form-control" id="hemoglobin" name="hemoglobin" placeholder="e.g., 13.5">
+        </div>
+        <div class="mb-3">
+            <label for="wbc_count" class="form-label">White Blood Cell (WBC) Count <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your WBC Count in cells/mcL"></i></label>
+            <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
+        </div>
+        <div class="mb-3">
+            <label for="platelet_count" class="form-label">Platelet Count <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Platelet Count in cells/mcL"></i></label>
+            <input type="number" class="form-control" id="platelet_count" name="platelet_count" placeholder="e.g., 250000">
+        </div>
+        <div class="mb-3">
+            <label for="creatinine" class="form-label">Creatinine <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Creatinine level in mg/dL"></i></label>
+            <input type="number" class="form-control" id="creatinine" name="creatinine" placeholder="e.g., 1.0">
+        </div>
+        <div class="mb-3">
+            <label for="alt" class="form-label">Alanine Aminotransferase (ALT) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your ALT level in U/L"></i></label>
+            <input type="number" class="form-control" id="alt" name="alt" placeholder="e.g., 30">
+        </div>
+        <div class="mb-3">
+            <label for="ast" class="form-label">Aspartate Aminotransferase (AST) <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your AST level in U/L"></i></label>
+            <input type="number" class="form-control" id="ast" name="ast" placeholder="e.g., 20">
+        </div>
+        <div class="mb-3">
+            <label for="total_bilirubin" class="form-label">Total Bilirubin <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Total Bilirubin level in mg/dL"></i></label>
+            <input type="number" class="form-control" id="total_bilirubin" name="total_bilirubin" placeholder="e.g., 1.0">
+        </div>
+        <div class="mb-3">
+            <label for="albumin" class="form-label">Albumin <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Albumin level in g/dL"></i></label>
+            <input type="number" class="form-control" id="albumin" name="albumin" placeholder="e.g., 4.0">
+        </div>
+        <div class="mb-3">
+            <label for="hiv_status" class="form-label">Human Immunodeficiency Virus (HIV) Status <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your HIV Status (Positive/Negative)"></i></label>
+            <select class="form-control" id="hiv_status" name="hiv_status">
+                <option value="">Select...</option>
+                <option value="Positive">Positive</option>
+                <option value="Negative">Negative</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="hbv_status" class="form-label">Hepatitis B Virus (HBV) Status <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your HBV Status (Positive/Negative)"></i></label>
+            <select class="form-control" id="hbv_status" name="hbv_status">
+                <option value="">Select...</option>
+                <option value="Positive">Positive</option>
+                <option value="Negative">Negative</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="hcv_status" class="form-label">Hepatitis C Virus (HCV) Status <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your HCV Status (Positive/Negative)"></i></label>
+            <select class="form-control" id="hcv_status" name="hcv_status">
+                <option value="">Select...</option>
+                <option value="Positive">Positive</option>
+                <option value="Negative">Negative</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="cmv_status" class="form-label">Cytomegalovirus (CMV) Status <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your CMV Status (Positive/Negative)"></i></label>
+            <select class="form-control" id="cmv_status" name="cmv_status">
+                <option value="">Select...</option>
+                <option value="Positive">Positive</option>
+                <option value="Negative">Negative</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="ebv_status" class="form-label">Epstein-Barr Virus (EBV) Status <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your EBV Status (Positive/Negative)"></i></label>
+            <select class="form-control" id="cmv_status" name="cmv_status">
+                <option value="">Select...</option>
+                <option value="Positive">Positive</option>
+                <option value="Negative">Negative</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="diabetes" class="form-label">Diabetes <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Diabetes status (Yes/No)"></i></label>
+            <select class="form-control" id="diabetes" name="diabetes">
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="hypertension" class="form-label">Hypertension <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Hypertension status (Yes/No)"></i></label>
+            <select class="form-control" id="hypertension" name="hypertension">
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="cardiac_disease" class="form-label">Cardiac Disease <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Cardiac Disease status (Yes/No)"></i></label>
+            <select class="form-control" id="cardiac_disease" name="cardiac_disease">
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="cancer_history" class="form-label">Cancer History <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter your Cancer History (Yes/No)"></i></label>
+            <select class="form-control" id="cancer_history" name="cancer_history">
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="organ_type" class="form-label">Organ Type <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the type of organ you are donating"></i></label>
+            <input type="text" class="form-control" id="organ_type" name="organ_type" placeholder="e.g., Kidney">
+        </div>
+        <div class="mb-5">
+            <label for="organ_condition_score" class="form-label">Organ Condition Score <i class="ri-information-line" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter the condition score of the organ (1-10)"></i></label>
+            <input type="number" class="form-control" id="organ_condition_score" name="organ_condition_score" placeholder="e.g., 8">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button onclick="window.location.href='{% url 'DonorResultpage' %}'" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<button onclick="window.location.href='{% url 'DonorResultpage' %}'" type="submit" class="btn btn-primary">Submit</button>
+
+{% endblock %}
+
+
+
+

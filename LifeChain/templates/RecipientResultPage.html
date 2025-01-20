@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static '404.css' %}" />
+
+<div class="error-container">
+    <h1><span>4</span>0<span>4</span></h1>
+    <p>Oops! This Recipient Result Page.</p>
+    <a href="{% url 'index' %}" class="btn">Homepage</a>
+</div>
+
+{% endblock content %}

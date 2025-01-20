@@ -1,0 +1,225 @@
+*,
+*:before,
+*:after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #434343;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  overflow-y: auto; /* Added vertical scroll for smaller screens */
+}
+
+.background {
+  width: 600px;
+  height: 700px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+}
+
+.background .shape {
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  border-radius: 50%;
+  animation: float 6s infinite ease-in-out;
+}
+
+.shape:first-child {
+  background: linear-gradient(#1845ad, #23a2f6);
+  left: -80px;
+  top: -80px;
+}
+
+.shape:last-child {
+  background: linear-gradient(to right, #ff512f, #f09819);
+  right: -30px;
+  bottom: -80px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+form {
+  width: 50vh;
+  background-color: rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 50px 35px;
+  margin: 20px 10px; /* Added side margin for small screens */
+  position: relative;
+  z-index: 1;
+}
+
+form * {
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  outline: none;
+  border: none;
+}
+
+form h3 {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 42px;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+input {
+  display: block;
+  height: 40px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  padding: 0 10px;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 300;
+  transition: border 0.3s, background 0.3s;
+}
+
+input:focus {
+  border: 1px solid #23a2f6;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+::placeholder {
+  color: #e5e5e5;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #376eb6;
+  color: #ffffff;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #1845ad;
+}
+
+.social {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between; /* Improved alignment */
+}
+
+.social div {
+  background: rgba(255, 255, 255, 0.27);
+  width: 45%; /* Adjusted width for equal spacing */
+  border-radius: 3px;
+  padding: 5px 10px;
+  color: #eaf0fb;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.social div:hover {
+  background-color: rgba(255, 255, 255, 0.47);
+}
+
+/* Style for the label */
+label[for="role"] {
+  display: block;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff; /* Match the form text color */
+}
+
+/* Style for the select dropdown */
+select#role {
+  display: block;
+  height: 40px;
+  width: 100%; /* Full width to match input fields */
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  padding: 0 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 300;
+  color: #e5e5e5; /* Placeholder color */
+  border: none;
+  outline: none;
+  transition: border 0.3s, background 0.3s;
+  appearance: none; /* Remove default arrow styles */
+  cursor: pointer;
+}
+
+/* Add focus effect for the dropdown */
+select#role:focus {
+  border: 1px solid #23a2f6;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style the dropdown arrow */
+select#role::-ms-expand {
+  display: none; /* Hide the default arrow on IE */
+}
+
+select#role:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Optional: Add custom arrow using background */
+select#role {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDExIDYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMUw1LjUgNUwxMCAxIiBzdHJva2U9IiNFMUUxRTEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 6px;
+}
+
+
+.ancher {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  margin: 1rem 0;
+  display: block;
+  text-align: center;
+}
+
+/* Add scroll for overflow content */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #23a2f6;
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #434343;
+}

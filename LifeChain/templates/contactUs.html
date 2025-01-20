@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section id="contact" class="contact">
+    <h1 class="heading">contact us</h1>
+    <h3 class="title">you can talk to us any times,</h3>
+    <div class="row">
+        <div class="images">
+            <img src="{% static 'form.png' %}" alt="">
+        </div>
+        <div class="form-container">
+            <input type="text" placeholder="full name">
+            <input type="email" placeholder="enter your email">
+            <input type="number" placeholder="phone number">
+            <textarea cols="30" rows="10"></textarea>
+            <input type="submit" value="send">
+        </div>
+    </div>
+</section>
+{% endblock content %}

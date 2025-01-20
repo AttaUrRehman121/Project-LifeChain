@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+  LifeChain
+{% endblock title %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'style.css' %}" />
+
+
+
+<section id="home" class="home">
+    <div class="row">
+        <!-- <div class="images">
+            <img src="{% static 'home.png' %}" alt="">
+        </div> -->
+
+        
+        <div class="content">
+            <h1><span>Be</span> A <span>Recipient</span> and <span> Save</span> Life.</h1>
+            <p>A Selfless act, an endless ripple of Hopes.</p>
+            <!-- <a href="#"><button onclick="window.location.href='{% url 'donorpridict' %}'" class="button">Be a Donor</button></a> -->
+            <a href="#"><button onclick="window.location.href='{% url 'recipientprictiction' %}'" class="button">Compatibility</button></a>
+        </div>
+    </div>
+</section>
+<section id="about" class="about">
+    <h1 class="heading">Our Motive</h1>
+    <h1 class="title">Learn and explore our facility</h1>
+    <div class="box-container">
+        <div class="box">
+            <div class="images">
+                <img src="{% static 'about-1.png' %}" alt="">
+            </div>
+            <div class="content">
+                <h3>Building Bridges Between Donors and Recipients</h3>
+                <p>Our motive is to create a platform that bridges the gap between kidney donors and recipients, ensuring timely support for those battling kidney disease. By fostering a culture of generosity and awareness, we aim to empower individuals to take action and transform lives through the gift of kidney donation.</p>
+                <a href="#"><button class="button">Be a Donor</button></a>
+                <a href="#"><button class="button">Learn more</button></a>
+            </div>
+        </div>
+        <div class="box">
+            <div class="images">
+                <img src="{% static 'about-2.png' %}" alt="">
+            </div>
+            <div class="content">
+                <h3>Saving Lives Through Kidney Donation</h3>
+                <p>Our mission is to save lives by raising awareness about the importance of kidney donation. We aim to connect generous donors with those in critical need, providing them with a second chance at life. Through compassion, education, and support, we strive to inspire a community dedicated to making a difference and fostering hope for a healthier and brighter future.</p>
+                <a href="#"><button class="button">Learn more</button></a>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+    </div>
+</section>
+<section id="doctor" class="card">
+    <div class="container">
+        <h1 class="heading">doctors</h1>
+        <h3 class="title">our professional doctors</h3>
+        <div class="box-container">
+            <div class="box">
+                <img src="{% static 'doctor-1.jpg' %}" alt="">
+                <div class="content">
+                    <a href="#">
+                        <h2>john doe</h2>
+                    </a>
+                    <p>professional</p>
+
+                    <div class="icons">
+                        <a href="#" class="fab fa-facebook-f"></a>
+                        <a href="#" class="fab fa-twitter"></a>
+                        <a href="#" class="fab fa-instagram"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <img src="{% static 'doctor-2.jpg' %}" alt="">
+                <div class="content">
+                    <a href="#">
+                        <h2>john doe</h2>
+                    </a>
+                    <p>professional</p>
+
+                    <div class="icons">
+                        <a href="#" class="fab fa-facebook-f"></a>
+                        <a href="#" class="fab fa-twitter"></a>
+                        <a href="#" class="fab fa-instagram"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <img src="{% static 'doctor-3.jpg' %}" alt="">
+                <div class="content">
+                    <a href="#">
+                        <h2>john doe</h2>
+                    </a>
+                    <p>professional</p>
+
+                    <div class="icons">
+                        <a href="#" class="fab fa-facebook-f"></a>
+                        <a href="#" class="fab fa-twitter"></a>
+                        <a href="#" class="fab fa-instagram"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="review" class="review">
+    <h1 class="heading">our patient review</h1>
+    <h3 class="title">what patient says about us</h3>
+    <div class="box-container">
+        <div class="box">
+            <i class="fas fa-quote-left"></i>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quod ea placeat dicta dolore odit illo libero laudantium velit, iure officia.</p>
+            <div class="images">
+                <img src="{% static 'img-1.jpg' %}" alt="">
+
+                <div class="info">
+                    <h3>john doe</h3>
+                    <span>date : 11 2024</span>
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-quote-left"></i>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quod ea placeat dicta dolore odit illo libero laudantium velit, iure officia.</p>
+            <div class="images">
+                <img src="{% static 'img-2.jpg' %}" alt="">
+
+                <div class="info">
+                    <h3>john doe</h3>
+                    <span>date : 11 2024</span>
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-quote-left"></i>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quod ea placeat dicta dolore odit illo libero laudantium velit, iure officia.</p>
+            <div class="images">
+                <img src="{% static 'img-3.jpg' %}" alt="">
+
+                <div class="info">
+                    <h3>john doe</h3>
+                    <span>date : 11 2024</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- <section id="contact" class="contact">
+    <h1 class="heading">contact us</h1>
+    <h3 class="title">you can talk to us any times,</h3>
+    <div class="row">
+        <div class="images">
+            <img src="{% static 'form.png' %}" alt="">
+        </div>
+        <div class="form-container">
+            <input type="text" placeholder="full name">
+            <input type="email" placeholder="enter your email">
+            <input type="number" placeholder="phone number">
+            <textarea cols="30" rows="10"></textarea>
+            <input type="submit" value="send">
+        </div>
+    </div>
+</section> -->
+<section id="blog" class="blog">
+    <h1 class="heading">blog</h1>
+    <h3 class="title">Lorem ipsum dolor sit amet.</h3>
+    <div class="box-container">
+        <div class="box">
+            <img src="{% static 'blog 1.png' %}" alt="">
+            <div class="content">
+                <a href="#">
+                    <h2>diabetes</h2>
+                </a>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil delectus sunt molestiae quibusdam inventore optio.</p>
+                <a href="#"><button class="button">learn more</button></a>
+            </div>
+        </div>
+        <div class="box">
+            <img src="{% static 'blog 2.png' %}" alt="">
+            <div class="content">
+                <a href="#">
+                    <h2>covid-19 vaccine</h2>
+                </a>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil delectus sunt molestiae quibusdam inventore optio.</p>
+                <a href="#"><button class="button">learn more</button></a>
+            </div>
+        </div>
+        <div class="box">
+            <img src="{% static 'blog 3.png' %}" alt="">
+            <div class="content">
+                <a href="#">
+                    <h2>prevent epidemic</h2>
+                </a>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil delectus sunt molestiae quibusdam inventore optio.</p>
+                <a href="#"><button class="button">learn more</button></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}
