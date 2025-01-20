@@ -14,7 +14,7 @@ h1 span{
     color: var(--blue);
 }
 
-.error-container p {
+.error-container p {  
     font-size: 20px;
     margin-bottom: 30px;
 }
