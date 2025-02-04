@@ -137,17 +137,16 @@ margin-right: 4px;
   <link rel="stylesheet" href="{% static 'login.css' %}" />
 
 
-<body>
+
   <div class="background">
       <div class="shape"></div>
       <div class="shape"></div>
   </div>
-  <form method="post">
+  <form action="{% url 'login' %}" method="post">
     <h3>Login Here</h3>
     {% csrf_token %}
-    
-    <label for="email">Email</label>
-    <input type="text" placeholder="Enter Email" id="email" name="email" required>
+    <label for="email">Enter User Name</label>
+    <input type="text" placeholder="Enter UserName" id="username" name="username" required>
 
     <label for="password">Password</label>
     <input type="password" placeholder="Password" id="password" name="password" required>
@@ -161,7 +160,15 @@ margin-right: 4px;
 {% if messages %}
     <ul>
         {% for message in messages %}
-            <li>{{ message }}</li>
+            <script>
+              Swal.fire({
+                position: "center",
+                icon: "info",
+                title: "{{message}}",
+                showConfirmButton: false,
+                timer: 1000
+              });
+            </script>
         {% endfor %}
     </ul>
 {% endif %}

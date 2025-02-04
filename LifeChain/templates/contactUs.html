@@ -10,13 +10,38 @@
         <div class="images">
             <img src="{% static 'form.png' %}" alt="">
         </div>
+
         <div class="form-container">
-            <input type="text" placeholder="full name">
-            <input type="email" placeholder="enter your email">
-            <input type="number" placeholder="phone number">
-            <textarea cols="30" rows="10"></textarea>
-            <input type="submit" value="send">
+            <form action="{% url 'contact' %}" method="POST">
+                {% csrf_token %}
+                <input name="name" type="text" placeholder="Full Name" required>
+                <input name="email" type="email" placeholder="Enter your email" required>
+                <input name="phone_number" type="number" placeholder="Phone Number" required>
+                <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+                <button class="btn btn-primary" type="submit" value="send">Send</button>
+            </form>
         </div>
     </div>
 </section>
+
+
+
+<script>
+    // Reset the form after submission 
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Thank you for contacting us",
+            showConfirmButton: false,
+            timer: 1000
+          });
+        // Perform form submission logic here (e.g., AJAX request)
+        this.reset(); // Clear the form
+    });
+    </script>
 {% endblock content %}
+
+

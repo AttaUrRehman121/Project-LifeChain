@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'LifeChain.wsgi.application'
 
 
 # connetcion to mysql database
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'mysql.connector.django',
 #        'NAME': 'lifechain',
@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'LifeChain.wsgi.application'
 #        'HOST': 'localhost',
 #        'PORT': '3306', 
 #    }
-#}
+# }
 
 
 # Password validation

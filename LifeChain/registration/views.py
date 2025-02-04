@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from .models import UserProfile
 
 @csrf_protect
@@ -24,6 +24,10 @@ def signup(request):
         if UserProfile.objects.filter(email=email).exists():
             messages.error(request, "Email is already registered.")
             return render(request, 'signup.html')
+        
+        if password != request.POST.get('password2'):
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'signup.html')
 
         try:
             # Create a new user and hash the password
@@ -34,26 +38,42 @@ def signup(request):
                 role=role,
                 contact=contact,
                 address=address,
-                password=make_password(password),  # Ensure the password is hashed
+                password=password,  # Ensure the password is hashed
             )
-
-            # Authenticate the user and log them in
-            user_auth = authenticate(request, username=username, password=password)
-            if user_auth is not None:
-                auth_login(request, user_auth)
-                # Redirect based on the user's role
-                if user.role == 'donor':
-                    return redirect('donorPage.html')  # Replace with actual donor page URL name
-                elif user.role == 'recipient':
-                    return redirect('recipientPage.html')  # Replace with actual recipient page URL name
-            else:
-                messages.error(request, "Login failed after sign-up.")
-                return redirect('login')
-
-        except Exception as e:
-            messages.error(request, f"An error occurred: {str(e)}")
+        except IntegrityError:
+            messages.error(request, "An error occurred while creating the user. Please try again.")
             return render(request, 'signup.html')
 
+        redirect('login')
+            # Authenticate the user and log them in
     return render(request, 'signup.html')
 
 
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            user = UserProfile.objects.get(username=username)
+            
+            # Check hashed password
+            request.session['username'] = user.username
+            request.session['role'] = user.role
+
+            if user.role == 'donor':
+                    return redirect('donorpage')  
+            elif user.role == 'recipient':
+                    return redirect('recipientpage')
+            else:
+                messages.error(request, "Invalid username or password.")
+                return redirect('login')
+
+        except UserProfile.DoesNotExist:
+            messages.error(request, "Invalid username or password.")
+            return redirect('login')
+
+    return render(request, 'login.html')
+
+ 

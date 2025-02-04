@@ -11,8 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  margin: 0;
+  min-height: 150vh;
   overflow-y: auto; /* Added vertical scroll for smaller screens */
 }
 
@@ -55,7 +54,7 @@ body {
 }
 
 form {
-  width: 50vh;
+  width: 150vh;
   background-color: rgba(255, 255, 255, 0.13);
   border-radius: 10px;
   backdrop-filter: blur(10px);
@@ -121,7 +120,7 @@ button {
   font-weight: 600;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s; /* Smooth background color transition */
 }
 
 button:hover {
@@ -155,7 +154,7 @@ label[for="role"] {
   margin-top: 20px;
   font-size: 16px;
   font-weight: 500;
-  color: #ffffff; /* Match the form text color */
+  color: #161313; /* Match the form text color */
 }
 
 /* Style for the select dropdown */
