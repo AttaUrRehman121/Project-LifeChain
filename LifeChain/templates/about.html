@@ -2,7 +2,80 @@
 {% load static %}
 
 {% block content %}
+<style>
+    #heading
+    {
+        color: rgb(24, 116, 173);
+        font-weight: 500;
+        font-size: 40px;
+    }
+    img {
+        vertical-align: middle;
+        size: a4;
+        width: 650px;
+        height: 400px;
+        border: 3px solid #000000;
+        margin-bottom: 10px;
+    }
 
+    .lead
+    {
+        font-size: 20px;
+        margin-left: -3px;
+        text-indent: 3px;
+       
+    }
+
+    #tagline
+    {
+        color: rgb(24, 170, 173);
+        font-weight: 500;
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+
+</style>
+
+<section id="about1" class="about">
+    <h1 id="heading" class="head text-center  text-primary">About Us</h1>
+    <!-- Added text-primary -->
+    <h3 id="tagline" class="title text-center mb-5">Our Mission: Saving Lives
+        Through Organ
+        Donation</h3>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="images text-center">
+                <img src="{% static 'images\image.png' %}" alt="Our Team"
+                    class="img-fluid">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-container p-4 bg-light rounded shadow">
+                <p class="lead">
+                    At <strong class="text-primary">LifeChain</strong>, we are a
+                    dedicated team of
+                    healthcare professionals, advocates, and volunteers
+                    committed to raising awareness about the importance of organ
+                    donation. Our mission is to save lives by encouraging people
+                    to become organ donors and by supporting families through
+                    the donation process.
+                </p>
+                <p class="lead">
+                    Organ donation is one of the most selfless acts one can
+                    perform. It has the power to transform lives, giving hope to
+                    those in need of a second chance. Every year, thousands of
+                    lives are saved or significantly improved through organ
+                    transplants. However, the demand for organs far exceeds the
+                    supply, and we are here to bridge that gap.
+                </p>
+                <p class="lead">
+                    Join us in our mission to make a difference. Together, we
+                    can create a world where no one has to wait for a
+                    life-saving organ.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock content %}
-
-  

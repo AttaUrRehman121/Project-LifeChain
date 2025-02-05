@@ -23,4 +23,5 @@ from django.conf import settings
 urlpatterns = [
     path('', views.signup, name='signup'),
     path('login/', views.login, name='login'),
+    
 ]

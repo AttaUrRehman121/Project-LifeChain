@@ -1,5 +1,5 @@
  <!--Stylesheet-->
- <!-- <style media="screen">
+<!-- <style media="screen">
     *,
 *:before,
 *:after{
@@ -125,50 +125,39 @@ margin-right: 4px;
 
   </style> -->
 
+{% load static %}
 
-  {% load static %}
-
-  <style>
+<style>
     body{
       background-color: #434343;
     }
   </style>
 
-  <link rel="stylesheet" href="{% static 'login.css' %}" />
+<link rel="stylesheet" href="{% static 'login.css' %}" />
 
+<div class="background">
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+<form action="{% url 'login' %}" method="post">
+  <h3>Login Here</h3>
+  {% csrf_token %}
+  <label for="email">Enter User Name</label>
+  <input type="text" placeholder="Enter UserName" id="username" name="username"
+    required>
 
+  <label for="password">Password</label>
+  <input type="password" placeholder="Password" id="password" name="password"
+    required>
 
-  <div class="background">
-      <div class="shape"></div>
-      <div class="shape"></div>
-  </div>
-  <form action="{% url 'login' %}" method="post">
-    <h3>Login Here</h3>
-    {% csrf_token %}
-    <label for="email">Enter User Name</label>
-    <input type="text" placeholder="Enter UserName" id="username" name="username" required>
+  <button type="submit">Log In</button>
 
-    <label for="password">Password</label>
-    <input type="password" placeholder="Password" id="password" name="password" required>
-
-    <button type="submit">Log In</button>
-
-    <a href="{% url 'signup' %}" class="ancher">Create an account</a>
+  <a href="{% url 'signup' %}" class="ancher">Create an account</a>
 </form>
 
 <!-- Display error messages if any -->
 {% if messages %}
-    <ul>
-        {% for message in messages %}
-            <script>
-              Swal.fire({
-                position: "center",
-                icon: "info",
-                title: "{{message}}",
-                showConfirmButton: false,
-                timer: 1000
-              });
-            </script>
-        {% endfor %}
-    </ul>
+{% for message in messages %}
+<p class="{{ message.tags }}">{{ message }}</p>
+{% endfor %}
 {% endif %}

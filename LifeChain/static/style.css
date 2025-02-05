@@ -531,3 +531,25 @@ h1.text-center {
 .btn-danger:hover {
     background-color: #b02a37;
 }
+
+
+
+
+/* About Page  */
+
+.about1 .content {
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.about1 .content p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.about1 .content p strong {
+    color: #007bff;
+}

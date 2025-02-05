@@ -3,34 +3,51 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'DonorStyle.css' %}" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" />
 
+<style>
+        #Title
+        {
+            color: #FF0000;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        ;
+        }
+</style>
+
+<link rel="stylesheet" href="{% static 'DonorStyle.css' %}" />
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" />
+{% csrf_token %}
 <div class="bd-example m-0 border-0 d-flex justify-content-center">
-    <h4 class="text-center mb-4">Donor Compatibility Form</h4>
-    <form id="donor-form" class="border border-2 p-5 rounded-3" style="width: 30rem;" action="{% url 'recipientprictiction' %}" method="post">
-        
-        
+    <h4 id="Title" class="text-center mb-4">Donor Compatibility Form</h4>
+    <form id="donor-form" class="border border-2 p-5 rounded-3"
+        style="width: 30rem;" action="{% url 'donorpridict' %}"
+        method="post">
+        {% csrf_token %}
         <!-- Stage 1: Basic Demographics and Physical Attributes -->
         <div id="stage-1">
-            <h3 class="text-center mb-4">Basic Demographics and Physical Attributes</h3>
+            <h4 class="text-center mb-4">Basic Demographics and Physical
+                Attributes</h4>
             <div class="mb-3">
                 <label for="age" class="form-label">Age</label>
-                <input type="number" class="form-control" id="age" name="age" placeholder="e.g., 30">
+                <input type="number" class="form-control" id="age" name="age"
+                    placeholder="e.g., 30" required>
             </div>
             <div class="mb-3">
                 <label for="gender" class="form-label">Gender</label>
-                <select class="form-control" id="gender" name="gender">
-                    <option value="">Select...</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
+                <select class="form-control" id="gender" name="gender" required>
+                    <option value>Select...</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="blood_type" class="form-label">Blood Type</label>
-                <select class="form-control" id="blood_type" name="blood_type">
-                    <option value="">Select...</option>
+                <select class="form-control" id="blood_type" name="blood_type"
+                    required>
+                    <option value>Select...</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="AB">AB</option>
@@ -39,160 +56,202 @@
             </div>
             <div class="mb-3">
                 <label for="rh_factor" class="form-label">Rh Factor</label>
-                <select class="form-control" id="rh_factor" name="rh_factor">
-                    <option value="">Select...</option>
+                <select class="form-control" id="rh_factor" name="rh_factor"
+                    required>
+                    <option value>Select...</option>
                     <option value="+">Positive</option>
                     <option value="-">Negative</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="height_cm" class="form-label">Height (cm)</label>
-                <input type="number" class="form-control" id="height_cm" name="height_cm" placeholder="e.g., 175">
+                <input type="number" class="form-control" id="height_cm"
+                    name="height_cm" placeholder="e.g., 175" required>
             </div>
             <div class="mb-3">
                 <label for="weight_kg" class="form-label">Weight (kg)</label>
-                <input type="number" class="form-control" id="weight_kg" name="weight_kg" placeholder="e.g., 70">
+                <input type="number" class="form-control" id="weight_kg"
+                    name="weight_kg" placeholder="e.g., 70" required>
             </div>
             <div class="mb-3">
                 <label for="bmi" class="form-label">BMI</label>
-                <input type="number" step="0.1" class="form-control" id="bmi" name="bmi" placeholder="e.g., 24.2">
+                <input type="number" step="0.1" class="form-control" id="bmi"
+                    name="bmi" placeholder="e.g., 24.2" required>
             </div>
             <div class="mb-3">
                 <label for="systolic_bp" class="form-label">Systolic BP</label>
-                <input type="number" class="form-control" id="systolic_bp" name="systolic_bp" placeholder="e.g., 120">
+                <input type="number" class="form-control" id="systolic_bp"
+                    name="systolic_bp" placeholder="e.g., 120" required>
             </div>
             <div class="mb-3">
-                <label for="diastolic_bp" class="form-label">Diastolic BP</label>
-                <input type="number" class="form-control" id="diastolic_bp" name="diastolic_bp" placeholder="e.g., 80">
+                <label for="diastolic_bp" class="form-label">Diastolic
+                    BP</label>
+                <input type="number" class="form-control" id="diastolic_bp"
+                    name="diastolic_bp" placeholder="e.g., 80" required>
             </div>
             <div class="mb-3">
                 <label for="heart_rate" class="form-label">Heart Rate</label>
-                <input type="number" class="form-control" id="heart_rate" name="heart_rate" placeholder="e.g., 75">
+                <input type="number" class="form-control" id="heart_rate"
+                    name="heart_rate" placeholder="e.g., 75" required>
             </div>
             <div class="mb-3">
-                <label for="temperature_celsius" class="form-label">Temperature (°C)</label>
-                <input type="number" step="0.1" class="form-control" id="temperature_celsius" name="temperature_celsius" placeholder="e.g., 37.0">
+                <label for="temperature_celsius" class="form-label">Temperature
+                    (°C)</label>
+                <input type="number" step="0.1" class="form-control"
+                    id="temperature_celsius" name="temperature_celsius"
+                    placeholder="e.g., 37.0" required>
             </div>
             <div class="mb-3">
-                <label for="respiratory_rate" class="form-label">Respiratory Rate</label>
-                <input type="number" class="form-control" id="respiratory_rate" name="respiratory_rate" placeholder="e.g., 16">
+                <label for="respiratory_rate" class="form-label">Respiratory
+                    Rate</label>
+                <input type="number" class="form-control" id="respiratory_rate"
+                    name="respiratory_rate" placeholder="e.g., 16" required>
             </div>
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" onclick="showNextStage()">Next</button>
+                <button type="button" class="btn btn-primary"
+                    onclick="showNextStage()">Next</button>
             </div>
         </div>
 
         <!-- Stage 2: Medical History and Current Condition -->
         <div id="stage-2" style="display: none;">
-            <h3 class="text-center mb-4">Medical History and Current Condition</h3>
+            <h4 class="text-center mb-4">Medical History and Current
+                Condition</h4>
             <div class="mb-3">
                 <label for="hemoglobin" class="form-label">Hemoglobin</label>
-                <input type="number" step="0.1" class="form-control" id="hemoglobin" name="hemoglobin" placeholder="e.g., 13.5">
+                <input type="number" step="0.1" class="form-control"
+                    id="hemoglobin" name="hemoglobin" placeholder="e.g., 13.5"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="wbc_count" class="form-label">WBC Count</label>
-                <input type="number" class="form-control" id="wbc_count" name="wbc_count" placeholder="e.g., 7000">
+                <input type="number" class="form-control" id="wbc_count"
+                    name="wbc_count" placeholder="e.g., 7000" required>
             </div>
             <div class="mb-3">
-                <label for="platelet_count" class="form-label">Platelet Count</label>
-                <input type="number" class="form-control" id="platelet_count" name="platelet_count" placeholder="e.g., 250000">
+                <label for="platelet_count" class="form-label">Platelet
+                    Count</label>
+                <input type="number" class="form-control" id="platelet_count"
+                    name="platelet_count" placeholder="e.g., 250000" required>
             </div>
             <div class="mb-3">
                 <label for="creatinine" class="form-label">Creatinine</label>
-                <input type="number" step="0.1" class="form-control" id="creatinine" name="creatinine" placeholder="e.g., 1.2">
+                <input type="number" step="0.1" class="form-control"
+                    id="creatinine" name="creatinine" placeholder="e.g., 1.2"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="alt" class="form-label">ALT</label>
-                <input type="number" step="0.1" class="form-control" id="alt" name="alt" placeholder="e.g., 25">
+                <input type="number" step="0.1" class="form-control" id="alt"
+                    name="alt" placeholder="e.g., 25" required>
             </div>
             <div class="mb-3">
                 <label for="ast" class="form-label">AST</label>
-                <input type="number" step="0.1" class="form-control" id="ast" name="ast" placeholder="e.g., 30">
+                <input type="number" step="0.1" class="form-control" id="ast"
+                    name="ast" placeholder="e.g., 30" required>
             </div>
             <div class="mb-3">
-                <label for="total_bilirubin" class="form-label">Total Bilirubin</label>
-                <input type="number" step="0.1" class="form-control" id="total_bilirubin" name="total_bilirubin" placeholder="e.g., 1.2">
+                <label for="total_bilirubin" class="form-label">Total
+                    Bilirubin</label>
+                <input type="number" step="0.1" class="form-control"
+                    id="total_bilirubin" name="total_bilirubin"
+                    placeholder="e.g., 1.2" required>
             </div>
             <div class="mb-3">
                 <label for="albumin" class="form-label">Albumin</label>
-                <input type="number" step="0.1" class="form-control" id="albumin" name="albumin" placeholder="e.g., 3.5">
+                <input type="number" step="0.1" class="form-control"
+                    id="albumin" name="albumin" placeholder="e.g., 3.5"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="hiv_status" class="form-label">HIV Status</label>
-                <select class="form-control" id="hiv_status" name="hiv_status">
-                    <option value="">Select...</option>
-                    <option value="positive">Positive</option>
-                    <option value="negative">Negative</option>
+                <select class="form-control" id="hiv_status" name="hiv_status"
+                    required>
+                    <option value>Select...</option>
+                    <option value="positive">Positive - Yes</option>
+                    <option value="negative">Negative - No</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="hbv_status" class="form-label">HBV Status</label>
-                <select class="form-control" id="hbv_status" name="hbv_status">
-                    <option value="">Select...</option>
-                    <option value="positive">Positive</option>
-                    <option value="negative">Negative</option>
+                <select class="form-control" id="hbv_status" name="hbv_status"
+                    required>
+                    <option value>Select...</option>
+                    <option value="positive">Positive - Yes</option>
+                    <option value="negative">Negative - No</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="hcv_status" class="form-label">HCV Status</label>
-                <select class="form-control" id="hcv_status" name="hcv_status">
-                    <option value="">Select...</option>
-                    <option value="positive">Positive</option>
-                    <option value="negative">Negative</option>
+                <select class="form-control" id="hcv_status" name="hcv_status"
+                    required>
+                    <option value>Select...</option>
+                    <option value="positive">Positive - Yes</option>
+                    <option value="negative">Negative - No</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="cmv_status" class="form-label">CMV Status</label>
-                <select class="form-control" id="cmv_status" name="cmv_status">
-                    <option value="">Select...</option>
-                    <option value="positive">Positive</option>
-                    <option value="negative">Negative</option>
+                <select class="form-control" id="cmv_status" name="cmv_status"
+                    required>
+                    <option value>Select...</option>
+                    <option value="positive">Positive - Yes</option>
+                    <option value="negative">Negative - No</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="ebv_status" class="form-label">EBV Status</label>
-                <select class="form-control" id="ebv_status" name="ebv_status">
-                    <option value="">Select...</option>
-                    <option value="positive">Positive</option>
-                    <option value="negative">Negative</option>
+                <select class="form-control" id="ebv_status" name="ebv_status"
+                    required>
+                    <option value>Select...</option>
+                    <option value="positive">Positive - Yes</option>
+                    <option value="negative">Negative - No</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="diabetes" class="form-label">Diabetes</label>
-                <select class="form-control" id="diabetes" name="diabetes">
-                    <option value="">Select...</option>
+                <select class="form-control" id="diabetes" name="diabetes"
+                    required>
+                    <option value>Select...</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="hypertension" class="form-label">Hypertension</label>
-                <select class="form-control" id="hypertension" name="hypertension">
-                    <option value="">Select...</option>
+                <label for="hypertension"
+                    class="form-label">Hypertension</label>
+                <select class="form-control" id="hypertension"
+                    name="hypertension" required>
+                    <option value>Select...</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="cardiac_disease" class="form-label">Cardiac Disease</label>
-                <select class="form-control" id="cardiac_disease" name="cardiac_disease">
-                    <option value="">Select...</option>
+                <label for="cardiac_disease" class="form-label">Cardiac
+                    Disease</label>
+                <select class="form-control" id="cardiac_disease"
+                    name="cardiac_disease" required>
+                    <option value>Select...</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="cancer_history" class="form-label">Cancer History</label>
-                <select class="form-control" id="cancer_history" name="cancer_history">
-                    <option value="">Select...</option>
+                <label for="cancer_history" class="form-label">Cancer
+                    History</label>
+                <select class="form-control" id="cancer_history"
+                    name="cancer_history" required>
+                    <option value>Select...</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="organ_type" class="form-label">Organ Type</label>
-                <select class="form-control" id="organ_type" name="organ_type">
-                    <option value="">Select...</option>
+                <select class="form-control" id="organ_type" name="organ_type"
+                    required>
+                    <option value>Select...</option>
                     <option value="kidney">Kidney</option>
                     <option value="liver">Liver</option>
                     <option value="heart">Heart</option>
@@ -201,12 +260,16 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="organ_condition_score" class="form-label">Organ Condition Score</label>
-                <input type="number" step="0.1" class="form-control" id="organ_condition_score" name="organ_condition_score" placeholder="e.g., 85.5">
+                <label for="organ_condition_score" class="form-label">Organ
+                    Condition Score</label>
+                <input type="number" step="0.1" class="form-control"
+                    id="organ_condition_score" name="organ_condition_score"
+                    placeholder="e.g., 85.5" required>
             </div>
 
             <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary" onclick="showPreviousStage()">Previous</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="showPreviousStage()">Previous</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
@@ -223,5 +286,7 @@
         document.getElementById('stage-1').style.display = 'block';
         document.getElementById('stage-2').style.display = 'none';
     }
+
+
 </script>
 {% endblock %}
