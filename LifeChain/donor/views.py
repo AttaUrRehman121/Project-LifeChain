@@ -111,3 +111,7 @@ def download_pdf(request, record_id):
 # Result Page of Prediction 
 def DonorResultpage(request):
     return render(request, 'RecipientResultPage.html')
+
+
+def DonorResult(request):
+    return render(request, 'DonorResult.html')

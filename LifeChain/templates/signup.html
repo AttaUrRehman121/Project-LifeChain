@@ -1,11 +1,11 @@
  {% load static %}
 <style>
     body{
-      background-color: #b9abab;
+      background-color: #267dff;
     }
   </style>
 
-<link rel="stylesheet" href="{% static 'signup.css' %}" />
+<link rel="stylesheet" href="{% static 'signinStlye.css' %}" />
 <link rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -17,7 +17,7 @@
 
 <form action="{% url 'signup' %}" method="post">
   {% csrf_token %}
-  <h3>Signup Here</h3>
+  <h3 class="signiin">Signup Here</h3>
 
   <label for="username">Full Name</label>
   <input type="text" placeholder="Enter FullName" name="username" id="username"
@@ -56,17 +56,25 @@
     id="password2" required minlength="8">
 
   <button id="signup" type="submit">Signup</button>
-  <a href="{% url 'login' %}">I already have an account</a>
+  <a class="ancher" href="{% url 'login' %}">I already have an account</a>
 </form>
 
-<!-- Display error messages if any -->
+<script>
 {% if messages %}
 {% for message in messages %}
-<p class="{{ message.tags }}">{{ message }}</p>
+<script>
+Swal.fire({
+  title: '{{ message.tags }}',
+  text: '{{ message }}',
+  icon: '{{ message.tags }}',
+  timer: 1500
+});
+</script>
 {% endfor %}
 {% endif %}
+</script>
 
-<script>
+<script>  
 signupButton.addEventListener('click', (e) => {
     // Check if passwords match
     if (password.value !== password2.value) {
