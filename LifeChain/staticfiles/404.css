@@ -1,0 +1,40 @@
+
+
+.error-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.error-container h1 {
+    font-size: 100px;
+    margin-bottom: 20px;
+}
+
+h1 span{
+    color: var(--blue);
+}
+
+.error-container p {  
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.error-container .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+   
+}
+
+.error-container .btn:hover {
+    background-color: #0056b3;
+    transform: scale(0.98);
+}
+
+
+

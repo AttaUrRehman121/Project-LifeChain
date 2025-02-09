@@ -1,0 +1,119 @@
+:root {
+    --blue: #0188df;
+    --black: #444d53;
+    --white: #fff;
+    --danger: #dc3545;
+}
+
+/* General container styling */
+.container {
+    margin: auto;
+    margin-top: 20px;
+    max-width: 800px;
+    background-color: var(--black); /* Black background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: var(--white); /* White text for contrast */
+    text-align: center; /* Center align content */
+}
+
+/* Section heading */
+h1.text-center {
+    font-size: 2rem;
+    color: var(--blue); /* Blue color for the heading */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Profile image container */
+.profile-img-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-img {
+    width: 120px; /* Adjust image size */
+    height: 120px;
+    border: 4px solid var(--blue); /* Blue border for profile picture */
+    padding: 5px;
+    border-radius: 50%; /* Circular frame */
+    object-fit: cover; /* Ensure the image scales properly */
+    display: inline-block;
+}
+
+/* Profile details */
+.profile-details {
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.profile-details .col {
+    width: 48%; /* Adjust column width */
+    font-size: 1rem;
+    color: var(--white);
+}
+
+.profile-details .col label {
+    font-weight: bold;
+    color: var(--blue); /* Blue labels */
+    display: block;
+}
+
+.profile-details .col span {
+    font-size: 0.9rem;
+    color: var(--white);
+}
+
+/* Buttons */
+.edit-form .btn-primary {
+    background-color: var(--blue); /* Blue button */
+    color: var(--white);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.edit-form .btn-primary:hover {
+    background-color: #016bb5; /* Darker blue on hover */
+}
+
+.edit-form .btn-danger {
+    background-color: var(--danger); /* Red button for delete */
+    color: var(--white);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.edit-form .btn-danger:hover {
+    background-color: #b02a37; /* Darker red on hover */
+}
+
+/* Footer alignment for Delete Account */
+.delete-account-section {
+    margin-top: 20px;
+    color: var(--danger);
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-details {
+        flex-direction: column;
+    }
+
+    .profile-details .col {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
