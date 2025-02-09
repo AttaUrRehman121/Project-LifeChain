@@ -4,12 +4,206 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static '404.css' %}" />
+<!-- Custom CSS -->
+<style>
+        
+        .summary-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .summary-container h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .summary-container table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        .summary-container table, .summary-container th, .summary-container td {
+            border: 1px solid #dee2e6;
+        }
+        .summary-container th, .summary-container td {
+            padding: 10px;
+            text-align: left;
+        }
+        .summary-container th {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .summary-container .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        .summary-container .contact-info {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .download-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 
-<div class="error-container">
-    <h1><span>4</span>0<span>4</span></h1>
-    <p>Oops! This Recipient Result Page.</p>
-    <a href="{% url 'index' %}" class="btn">Homepage</a>
+<!-- Discharge Summary Content -->
+<div class="summary-container" id="report-content">
+    <h2>Recipient Information</h2>
+
+    <!-- Patient Demographics Section -->
+    <div class="section-title">Patient Demographics</div>
+    <table>
+        <tr>
+            <th>Name</th>
+            <td>Gain to Stay</td>
+            <th>Gender</th>
+            <td>Female</td>
+        </tr>
+        <tr>
+            <th>Location</th>
+            <td>In Tax Visit</td>
+            <th>In Tax Visit</th>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <th>18 No.</th>
+            <td>Total (1)</td>
+            <th>Male & Male</th>
+            <td>Male & Male</td>
+        </tr>
+        <tr>
+            <th>Female, % Years</th>
+            <td>Female, % Years</td>
+            <th>Moderately</th>
+            <td>Moderately</td>
+        </tr>
+        <tr>
+            <th>7 Years</th>
+            <td>7 Years</td>
+            <th>Total No.</th>
+            <td>Total No.</td>
+        </tr>
+        <tr>
+            <th>2020-24-2022</th>
+            <td>2020-24-2022</td>
+            <th>Age</th>
+            <td>>9 Years</td>
+        </tr>
+        <tr>
+            <th>Race</th>
+            <td>Race</td>
+            <th>Change</th>
+            <td>Change</td>
+        </tr>
+    </table>
+
+    <!-- Medical History and Current Condition Section -->
+    <div class="section-title">Medical History and Current Condition</div>
+    <table>
+        <tr>
+            <th>Hemoglobin</th>
+            <td>13.5</td>
+            <th>WBC Count</th>
+            <td>7000</td>
+        </tr>
+        <tr>
+            <th>Platelet Count</th>
+            <td>250000</td>
+            <th>Creatinine</th>
+            <td>1.2</td>
+        </tr>
+        <tr>
+            <th>ALT</th>
+            <td>25</td>
+            <th>AST</th>
+            <td>30</td>
+        </tr>
+        <tr>
+            <th>Total Bilirubin</th>
+            <td>1.2</td>
+            <th>Albumin</th>
+            <td>3.5</td>
+        </tr>
+        <tr>
+            <th>HIV Status</th>
+            <td>Negative</td>
+            <th>HBV Status</th>
+            <td>Negative</td>
+        </tr>
+        <tr>
+            <th>HCV Status</th>
+            <td>Negative</td>
+            <th>CMV Status</th>
+            <td>Negative</td>
+        </tr>
+        <tr>
+            <th>EBV Status</th>
+            <td>Negative</td>
+            <th>Diabetes</th>
+            <td>No</td>
+        </tr>
+        <tr>
+            <th>Hypertension</th>
+            <td>No</td>
+            <th>Cardiac Disease</th>
+            <td>No</td>
+        </tr>
+        <tr>
+            <th>Cancer History</th>
+            <td>No</td>
+            <th>Organ Type</th>
+            <td>Kidney</td>
+        </tr>
+        <tr>
+            <th>Organ Condition Score</th>
+            <td>85.5</td>
+        </tr>
+    </table>
+
+    <!-- Contact Information -->
+    <div class="contact-info">
+        <strong>Contact:</strong> +19 000-765-7993<br>
+        <strong>Address:</strong> NGO San Pablo Street
+    </div>
 </div>
+
+<!-- Download Button -->
+<a href="#" class="download-button" onclick="downloadPDF()">Download PDF</a>
+
+<!-- PDF Download Script -->
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+        function downloadPDF() {
+            const element = document.getElementById('report-content');
+            const opt = {
+                margin: 0,
+                filename: 'Donor Test Result.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 1 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
 
 {% endblock content %}
