@@ -5,9 +5,15 @@ from django.contrib.auth.decorators import login_required
 # @login_required
 def recipientpage(request):
     return render(request, 'recipientPage.html')
-
+ 
 
 def recipientprictiction(request):
+    
+    
+    
+    
+    
+    
     return render(request, 'RecipientPrediction.html')
 
 

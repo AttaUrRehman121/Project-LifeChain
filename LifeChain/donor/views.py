@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.http import Http404
 from django.views.decorators.csrf import csrf_protect
 
-
+ 
 from.models import PredictionRecord
 
 # Create your views here.
@@ -18,7 +18,7 @@ def donorpage(request):
 
 
 # Load the model
-model_path = os.path.join(os.path.dirname(__file__), '../static/ML_Models/donor_decision_tree_96.pkl')
+model_path = os.path.join(os.path.dirname(__file__), 'MLmodel\donor_decision_tree_96.pkl')
 with open(model_path, 'rb') as file:
     loaded_object = pickle.load(file)
     if isinstance(loaded_object, dict) and 'model' in loaded_object:
@@ -92,25 +92,15 @@ def donorpridict(request):
     
         # Render the result in HTML
         context = {**data, 'prediction': donation_status, 'record': record}
-        return render(request, 'result.html', context)
+        return render(request, 'ResultResult.html', context)
     else:
         return render(request, 'DonorPredict.html')
-def download_pdf(request, record_id):
-    # Fetch the record from the database
-    record = PredictionRecord.objects.get(id=record_id)
-
-    # Render the HTML template with the record data
-    html_string = render_to_string('pdf_template.html', {'record': record})
-
-    # # Create a PDF using WeasyPrint
-    # html = HTML(string=html_string)
-    # pdf_file = html.write_pdf()
 
     return render(request, 'DonorPredict.html')
 
 # Result Page of Prediction 
 def DonorResultpage(request):
-    return render(request, 'RecipientResultPage.html')
+    return render(request, 'DonorResult.html')
 
 
 def DonorResult(request):
