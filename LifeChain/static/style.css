@@ -58,14 +58,14 @@ html {
     font-weight: 300;
 }
 
-/* .heading {
+.heading {
     text-align: center;
     font-size: 4rem;
     padding: 1rem;
     padding-top: 8rem;
     color: var(--blue);
     letter-spacing: .1rem;
-} */
+}
 
 .home {
     min-height: 100vh;
