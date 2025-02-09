@@ -47,10 +47,23 @@ html {
     transform: scale(0.98);
 }
 
-.title, .heading, .home .content h1, .about .box-container .box .content h3, .card .box-container .box .content h2, .review .box-container .box .info h3, .contact .row .form-container input[type="submit"], .blog .box-container .box .content h2, .footer .box .logo, .footer .credit span {
-    color: var(--black);
+.title, .heading, .home .content h1, .about .box-container .box .content h3, .card .box-container .box .content h2, .review .box-container .box .info h3, .contact .row .form-container input[type="submit"], .blog .box-container .box .content h2
+ {
+    color: var(--blue);
 }
 
+.footer .box .logo, .footer .credit span {
+    color: var(--white);
+}
+span {
+    color: var(--blue);
+}
+.box-container p
+{
+    /* top left bottom right */
+    margin : 6px 6px 6px 16px;
+    
+}
 .title {
     text-align: center;
     padding: 0 1rem;
@@ -65,6 +78,7 @@ html {
     padding-top: 8rem;
     color: var(--blue);
     letter-spacing: .1rem;
+    text-align: center;
 }
 
 .home {
@@ -168,7 +182,7 @@ html {
 }
 
 .review .box-container .box i {
-    font-size: 6rem;
+    
     margin-top: -3rem;
     opacity: .4;
 }
@@ -249,10 +263,19 @@ html {
 
 .footer .box .logo:hover {
     color: var(--blue);
+    
 }
 
-.footer .box a:hover {
+.footer .box  a:hover {
     text-decoration: underline;
+    font-size: larger;
+    
+}
+.footer .box  i:hover {
+    
+    font-size: 50px;
+    
+    
 }
 
 .footer .credit {
@@ -261,6 +284,7 @@ html {
     font-size: 2rem;
     text-align: center;
     border-top: .2rem solid var(--white);
+    color: var(--white);
 }
 
 @media (max-width: 768px) {
@@ -458,3 +482,12 @@ h1.text-center {
 .about1 .content p strong {
     color: #007bff;
 }
+
+
+
+.qoute {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
