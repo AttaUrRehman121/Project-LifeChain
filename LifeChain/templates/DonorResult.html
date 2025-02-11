@@ -107,39 +107,39 @@
     <table>
         <tr>
             <th>Age</th>
-            <td>{{ record.age }}</td>
+            <td>{{ record.age|default:"N/A" }}</td>
             <th>Gender</th>
-            <td>{{ record.gender }}</td>
+            <td>{{ record.gender|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Blood Type</th>
-            <td>{{ record.blood_type }}</td>
+            <td>{{ record.blood_type|default:"N/A" }}</td>
             <th>Rh Factor</th>
-            <td>{{ record.rh_factor }}</td>
+            <td>{{ record.rh_factor|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Height (cm)</th>
-            <td>{{ record.height_cm }}</td>
+            <td>{{ record.height_cm|default:"N/A" }}</td>
             <th>Weight (kg)</th>
-            <td>{{ record.weight_kg }}</td>
+            <td>{{ record.weight_kg|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>BMI</th>
-            <td>{{ record.bmi }}</td>
+            <td>{{ record.bmi|default:"N/A" }}</td>
             <th>Systolic BP</th>
-            <td>{{ record.systolic_bp }}</td>
+            <td>{{ record.systolic_bp|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Diastolic BP</th>
-            <td>{{ record.diastolic_bp }}</td>
+            <td>{{ record.diastolic_bp|default:"N/A" }}</td>
             <th>Heart Rate</th>
-            <td>{{ record.heart_rate }}</td>
+            <td>{{ record.heart_rate|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Temperature (°C)</th>
-            <td>{{ record.temperature_celsius }}</td>
+            <td>{{ record.temperature_celsius|default:"N/A" }}</td>
             <th>Respiratory Rate</th>
-            <td>{{ record.respiratory_rate }}</td>
+            <td>{{ record.respiratory_rate|default:"N/A" }}</td>
         </tr>
     </table>
 
@@ -147,61 +147,61 @@
     <table>
         <tr>
             <th>Hemoglobin</th>
-            <td>{{ record.hemoglobin }}</td>
+            <td>{{ record.hemoglobin|default:"N/A" }}</td>
             <th>WBC Count</th>
-            <td>{{ record.wbc_count }}</td>
+            <td>{{ record.wbc_count|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Platelet Count</th>
-            <td>{{ record.platelet_count }}</td>
+            <td>{{ record.platelet_count|default:"N/A" }}</td>
             <th>Creatinine</th>
-            <td>{{ record.creatinine }}</td>
+            <td>{{ record.creatinine|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>ALT</th>
-            <td>{{ record.alt }}</td>
+            <td>{{ record.alt|default:"N/A" }}</td>
             <th>AST</th>
-            <td>{{ record.ast }}</td>
+            <td>{{ record.ast|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Total Bilirubin</th>
-            <td>{{ record.total_bilirubin }}</td>
+            <td>{{ record.total_bilirubin|default:"N/A" }}</td>
             <th>Albumin</th>
-            <td>{{ record.albumin }}</td>
+            <td>{{ record.albumin|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>HIV Status</th>
-            <td>{{ record.hiv_status }}</td>
+            <td>{{ record.hiv_status|default:"N/A" }}</td>
             <th>HBV Status</th>
-            <td>{{ record.hbv_status }}</td>
+            <td>{{ record.hbv_status|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>HCV Status</th>
-            <td>{{ record.hcv_status }}</td>
+            <td>{{ record.hcv_status|default:"N/A" }}</td>
             <th>CMV Status</th>
-            <td>{{ record.cmv_status }}</td>
+            <td>{{ record.cmv_status|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>EBV Status</th>
-            <td>{{ record.ebv_status }}</td>
+            <td>{{ record.ebv_status|default:"N/A" }}</td>
             <th>Diabetes</th>
-            <td>{{ record.diabetes }}</td>
+            <td>{{ record.diabetes|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Hypertension</th>
-            <td>{{ record.hypertension }}</td>
+            <td>{{ record.hypertension|default:"N/A" }}</td>
             <th>Cardiac Disease</th>
-            <td>{{ record.cardiac_disease }}</td>
+            <td>{{ record.cardiac_disease|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Cancer History</th>
-            <td>{{ record.cancer_history }}</td>
+            <td>{{ record.cancer_history|default:"N/A" }}</td>
             <th>Organ Type</th>
-            <td>{{ record.organ_type }}</td>
+            <td>{{ record.organ_type|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Organ Condition Score</th>
-            <td>{{ record.organ_condition_score }}</td>
+            <td>{{ record.organ_condition_score|default:"N/A" }}</td>
         </tr>
     </table>
 
