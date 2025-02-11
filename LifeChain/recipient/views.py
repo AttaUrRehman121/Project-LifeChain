@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-
+from .models import Recipient
 # Create your views here.
 # @login_required
 def recipientpage(request):
@@ -40,7 +40,7 @@ def recipientprictiction(request):
             }
 
             # Save the data to the database
-            record = PredictionRecord(**data)
+            record = Recipient(**data)
             record.save()
 
             # Render the result with a success message
