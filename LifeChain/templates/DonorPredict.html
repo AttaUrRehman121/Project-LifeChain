@@ -19,6 +19,8 @@
 <link rel="stylesheet" href="{% static 'DonorStyle.css' %}" />
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 {% csrf_token %}
 <div class="bd-example m-0 border-0 d-flex justify-content-center">
     <h4 id="Title" class="text-center mb-4">Donor Compatibility Form</h4>
@@ -59,8 +61,8 @@
                 <select class="form-control" id="rh_factor" name="rh_factor"
                     required>
                     <option value>Select...</option>
-                    <option value="+">Positive</option>
-                    <option value="-">Negative</option>
+                    <option value="positive">Positive</option>
+                    <option value="negative">Negative</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -275,6 +277,19 @@
         </div>
     </form>
 </div>
+{% comment %} we used sweetalart2 to display messages {% endcomment %}
+{% if message %}
+<script>
+    Swal.fire({
+        icon: "{{message.tag}}"",
+        title: "{{ message|escapejs }}",
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        button: okay 
+    });
+</script>
+{% endif %}
 
 <script>
     function showNextStage() {
@@ -288,5 +303,9 @@
     }
 
 
+     
+            
+        
+        
 </script>
 {% endblock %}

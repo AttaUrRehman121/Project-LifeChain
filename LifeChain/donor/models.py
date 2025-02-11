@@ -1,22 +1,10 @@
 from django.db import models
 
-# # Create your models here.
-
-# class Signup(models.Model):
-#     username = models.CharField(max_length=255)
-#     email = models.EmailField()
-#     password = models.CharField(max_length=255)
-#     cpassword = models.CharField(max_length=255)
-    
-# # 
-
-from django.db import models
-
 class PredictionRecord(models.Model):
     age = models.FloatField()
-    gender = models.CharField(max_length=1)  # 'M' or 'F'
-    blood_type = models.CharField(max_length=2)  # 'A', 'B', 'AB', 'O'
-    rh_factor = models.CharField(max_length=1)  # '+' or '-'
+    gender = models.IntegerField()  # this will store like This 1 for 'M', 0 for 'F'
+    blood_type = models.CharField(max_length=2)  # this will store like This 'A', 'B', 'AB', 'O'
+    rh_factor = models.IntegerField()  # this will store like This 1 for '+', 0 for '-'
     height_cm = models.FloatField()
     weight_kg = models.FloatField()
     bmi = models.FloatField()
@@ -33,20 +21,21 @@ class PredictionRecord(models.Model):
     ast = models.FloatField()
     total_bilirubin = models.FloatField()
     albumin = models.FloatField()
-    hiv_status = models.CharField(max_length=10)  # 'negative' or 'positive'
-    hbv_status = models.CharField(max_length=10)  # 'negative' or 'positive'
-    hcv_status = models.CharField(max_length=10)  # 'negative' or 'positive'
-    cmv_status = models.CharField(max_length=10)  # 'negative' or 'positive'
-    ebv_status = models.CharField(max_length=10)  # 'negative' or 'positive'
-    diabetes = models.CharField(max_length=3)  # 'no' or 'yes'
-    hypertension = models.CharField(max_length=3)  # 'no' or 'yes'
-    cardiac_disease = models.CharField(max_length=3)  # 'no' or 'yes'
-    cancer_history = models.CharField(max_length=3)  # 'no' or 'yes'
+    hiv_status = models.IntegerField()  #  this will store like This 1 for 'positive', 0 for 'negative'
+    hbv_status = models.IntegerField()  #  this will store like This 1 for 'positive', 0 for 'negative'
+    hcv_status = models.IntegerField()  # this will store like This 1 for 'positive', 0 for 'negative'
+    cmv_status = models.IntegerField()  #  this will store like This 1 for 'positive', 0 for 'negative'
+    ebv_status = models.IntegerField()  # this will store like This 1 for 'positive', 0 for 'negative'
+    diabetes = models.IntegerField()  # this will store like This 1 for 'yes', 0 for 'no'
+    hypertension = models.IntegerField()  # this will store like This 1 for 'yes', 0 for 'no'
+    cardiac_disease = models.IntegerField()  # this will store like This 1 for 'yes', 0 for 'no'
+    cancer_history = models.IntegerField()  # this will store like This 1 for 'yes', 0 for 'no'
     organ_type = models.CharField(max_length=20)  # 'kidney', 'liver', etc.
     organ_condition_score = models.FloatField()
-    donation_status = models.CharField(max_length=20)  # 'eligible' or 'not eligible'
-    prediction_result = models.CharField(max_length=20)  # 'eligible' or 'not eligible'
+    donation_status = models.IntegerField()  # this will store like This 1 for 'eligible', 0 for 'not eligible'
+    prediction_result = models.CharField(max_length=20)  # this will store like This 'eligible' or 'not eligible'
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Record {self.id} - Prediction: {self.prediction_result}"
+    

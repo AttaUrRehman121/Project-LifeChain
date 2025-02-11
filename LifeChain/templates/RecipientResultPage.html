@@ -4,185 +4,210 @@
 
 {% block content %}
 
-<!-- Custom CSS -->
 <style>
+    /* PDF-Specific CSS */
+    .summary-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 10px 10px 10px 10px rgba(4, 50, 97, 0.1);
+        max-width: 900px;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+    }
+
+    .summary-container h2 {
+        color: #007bff;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .summary-container table {
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+    .summary-container th, .summary-container td {
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        text-align: left;
+    }
+    .summary-container th {
+        background-color: #007bff;
+        color: #ffffff;
+        width: 20%;
+    }
+
+    .summary-container .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #343a40;
         
-        .summary-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .summary-container h2 {
-            color: #007bff;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .summary-container table {
-            width: 100%;
-            margin: 20px 0;
-            border-collapse: collapse;
-        }
-        .summary-container table, .summary-container th, .summary-container td {
-            border: 1px solid #dee2e6;
-        }
-        .summary-container th, .summary-container td {
-            padding: 10px;
-            text-align: left;
-        }
-        .summary-container th {
-            background-color: #007bff;
-            color: #ffffff;
-        }
-        .summary-container .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            color: #343a40;
-        }
-        .summary-container .contact-info {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #6c757d;
-        }
-        .download-button {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
-            padding: 10px;
-            background-color: #007bff;
-            color: #ffffff;
-            text-align: center;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .download-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+        margin: 15px 0 5px 0;
+        
+        text-align: center;
+    }
+    .summary-container h1
+    {
+        font-size: 54px !important;
+        margin: 10px 0 20px;
+        text-align: center;
+    }
 
-<!-- Discharge Summary Content -->
+    .summary-container  h2 {
+        font-size: 16px !important;
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    .section-title {
+        
+    }
+
+    .summary-container .contact-info {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #6c757d;
+        text-align: center;
+    }
+
+    .download-button {
+        display: block;
+        width: 200px;
+        margin: 20px auto;
+        padding: 10px;
+        background-color: #007bff;
+        color: #ffffff;
+        text-align: center;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .download-button:hover {
+        background-color: #abb5c0;
+    }
+</style>
+
+<!-- SweetAlert2 -->
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Report Content -->
 <div class="summary-container" id="report-content">
-    <h2>Recipient Information</h2>
+    <h1><span>L</span>ife<span>C</span>hain.</h2>
+    <h2>Donor Report - {{ record.created_at|date:"Y-m-d" }}</h2>
 
-    <!-- Patient Demographics Section -->
     <div class="section-title">Patient Demographics</div>
     <table>
         <tr>
-            <th>Name</th>
-            <td>Gain to Stay</td>
-            <th>Gender</th>
-            <td>Female</td>
-        </tr>
-        <tr>
-            <th>Location</th>
-            <td>In Tax Visit</td>
-            <th>In Tax Visit</th>
-            <td>Yes</td>
-        </tr>
-        <tr>
-            <th>18 No.</th>
-            <td>Total (1)</td>
-            <th>Male & Male</th>
-            <td>Male & Male</td>
-        </tr>
-        <tr>
-            <th>Female, % Years</th>
-            <td>Female, % Years</td>
-            <th>Moderately</th>
-            <td>Moderately</td>
-        </tr>
-        <tr>
-            <th>7 Years</th>
-            <td>7 Years</td>
-            <th>Total No.</th>
-            <td>Total No.</td>
-        </tr>
-        <tr>
-            <th>2020-24-2022</th>
-            <td>2020-24-2022</td>
             <th>Age</th>
-            <td>>9 Years</td>
+            <td>{{ record.age }}</td>
+            <th>Gender</th>
+            <td>{{ record.gender }}</td>
         </tr>
         <tr>
-            <th>Race</th>
-            <td>Race</td>
-            <th>Change</th>
-            <td>Change</td>
+            <th>Blood Type</th>
+            <td>{{ record.blood_type }}</td>
+            <th>Rh Factor</th>
+            <td>{{ record.rh_factor }}</td>
+        </tr>
+        <tr>
+            <th>Height (cm)</th>
+            <td>{{ record.height_cm }}</td>
+            <th>Weight (kg)</th>
+            <td>{{ record.weight_kg }}</td>
+        </tr>
+        <tr>
+            <th>BMI</th>
+            <td>{{ record.bmi }}</td>
+            <th>Systolic BP</th>
+            <td>{{ record.systolic_bp }}</td>
+        </tr>
+        <tr>
+            <th>Diastolic BP</th>
+            <td>{{ record.diastolic_bp }}</td>
+            <th>Heart Rate</th>
+            <td>{{ record.heart_rate }}</td>
+        </tr>
+        <tr>
+            <th>Temperature (°C)</th>
+            <td>{{ record.temperature_celsius }}</td>
+            <th>Respiratory Rate</th>
+            <td>{{ record.respiratory_rate }}</td>
         </tr>
     </table>
 
-    <!-- Medical History and Current Condition Section -->
     <div class="section-title">Medical History and Current Condition</div>
     <table>
         <tr>
             <th>Hemoglobin</th>
-            <td>13.5</td>
+            <td>{{ record.hemoglobin }}</td>
             <th>WBC Count</th>
-            <td>7000</td>
+            <td>{{ record.wbc_count }}</td>
         </tr>
         <tr>
             <th>Platelet Count</th>
-            <td>250000</td>
+            <td>{{ record.platelet_count }}</td>
             <th>Creatinine</th>
-            <td>1.2</td>
+            <td>{{ record.creatinine }}</td>
         </tr>
         <tr>
             <th>ALT</th>
-            <td>25</td>
+            <td>{{ record.alt }}</td>
             <th>AST</th>
-            <td>30</td>
+            <td>{{ record.ast }}</td>
         </tr>
         <tr>
             <th>Total Bilirubin</th>
-            <td>1.2</td>
+            <td>{{ record.total_bilirubin }}</td>
             <th>Albumin</th>
-            <td>3.5</td>
+            <td>{{ record.albumin }}</td>
         </tr>
         <tr>
             <th>HIV Status</th>
-            <td>Negative</td>
+            <td>{{ record.hiv_status }}</td>
             <th>HBV Status</th>
-            <td>Negative</td>
+            <td>{{ record.hbv_status }}</td>
         </tr>
         <tr>
             <th>HCV Status</th>
-            <td>Negative</td>
+            <td>{{ record.hcv_status }}</td>
             <th>CMV Status</th>
-            <td>Negative</td>
+            <td>{{ record.cmv_status }}</td>
         </tr>
         <tr>
             <th>EBV Status</th>
-            <td>Negative</td>
+            <td>{{ record.ebv_status }}</td>
             <th>Diabetes</th>
-            <td>No</td>
+            <td>{{ record.diabetes }}</td>
         </tr>
         <tr>
             <th>Hypertension</th>
-            <td>No</td>
+            <td>{{ record.hypertension }}</td>
             <th>Cardiac Disease</th>
-            <td>No</td>
+            <td>{{ record.cardiac_disease }}</td>
         </tr>
         <tr>
             <th>Cancer History</th>
-            <td>No</td>
+            <td>{{ record.cancer_history }}</td>
             <th>Organ Type</th>
-            <td>Kidney</td>
+            <td>{{ record.organ_type }}</td>
         </tr>
         <tr>
             <th>Organ Condition Score</th>
-            <td>85.5</td>
+            <td>{{ record.organ_condition_score }}</td>
         </tr>
     </table>
 
-    <!-- Contact Information -->
     <div class="contact-info">
-        <strong>Contact:</strong> +19 000-765-7993<br>
-        <strong>Address:</strong> NGO San Pablo Street
+        <strong>Contact:</strong> LifeChain_Team@uskt.edu.pk<br>
+        <strong>Address:</strong> University of Sialkot, Main Daska Road,
+        Sialkot, Pakistan
     </div>
 </div>
 
@@ -193,17 +218,38 @@
 <script
     src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-        function downloadPDF() {
-            const element = document.getElementById('report-content');
-            const opt = {
-                margin: 0,
-                filename: 'Donor Test Result.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 1 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-    </script>
+    function downloadPDF() {
+        const element = document.getElementById('report-content');
+        const options = {
+            margin: [5, 5],
+            filename: 'Donor_Report_{{ record.id }}.pdf',
+            image: { 
+                type: 'jpeg', 
+                quality: 0.98 
+            },
+            html2canvas: { 
+                scale: 3, // Higher resolution
+                scrollY: 0, 
+                useCORS: true 
+            },
+            jsPDF: { 
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        };
+
+        
+
+        html2pdf()
+          .set(options)
+          .from(element)
+          .save()
+          .then(() => {
+              Swal.fire('Success', 'PDF downloaded!', 'success');
+             
+          });
+    }
+</script>
 
 {% endblock content %}
