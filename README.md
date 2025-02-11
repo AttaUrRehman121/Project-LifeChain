@@ -59,9 +59,9 @@ http://127.0.0.1:8000  # Django
 | `POST` | `/match` | Run ML model to find matches |
 
 ## 🤝 Contributors
-- **[Your Name]** – Machine Learning & Backend
-- **[Teammate 1]** – Frontend & UI/UX
-- **[Teammate 2]** – Blockchain & Security
+- **[Atta Ur Rehman]** – Machine Learning & Backend – Blockchain & Security
+- **[Ahmed Ali]** – Frontend & UI/UX
+
 
 ## 📌 Future Enhancements
 - **Real-time Donor-Recipient Tracking** using IoT.
@@ -73,5 +73,5 @@ This project is licensed under the **MIT License**.
 
 ---
 
-**🔗 Stay Connected:** [LinkedIn](https://linkedin.com/in/yourprofile) | [GitHub](https://github.com/yourusername)
+**🔗 Stay Connected:** [LinkedIn](https://www.linkedin.com/in/atta-ur-rehman62/) | [GitHub](https://github.com/AttaUrRehman121)
 
