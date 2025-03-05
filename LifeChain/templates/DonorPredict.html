@@ -19,7 +19,8 @@
 <link rel="stylesheet" href="{% static 'DonorStyle.css' %}" />
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 {% csrf_token %}
 <div class="bd-example m-0 border-0 d-flex justify-content-center">
@@ -68,12 +69,12 @@
             <div class="mb-3">
                 <label for="height_cm" class="form-label">Height (cm)</label>
                 <input type="number" class="form-control" id="height_cm"
-                    name="height_cm" placeholder="e.g., 175" required>
+                    name="height_cm" placeholder="e.g., 175" required tabindex="0">
             </div>
             <div class="mb-3">
                 <label for="weight_kg" class="form-label">Weight (kg)</label>
                 <input type="number" class="form-control" id="weight_kg"
-                    name="weight_kg" placeholder="e.g., 70" required>
+                    name="weight_kg" placeholder="e.g., 70" required tabindex="0">
             </div>
             <div class="mb-3">
                 <label for="bmi" class="form-label">BMI</label>
@@ -111,7 +112,7 @@
             </div>
             <div class="d-flex justify-content-end">
                 <button type="button" class="btn btn-primary"
-                    onclick="showNextStage()">Next</button>
+                    onclick="showNextStage();" tabindex="0">Next</button>
             </div>
         </div>
 
@@ -271,7 +272,7 @@
 
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary"
-                    onclick="showPreviousStage()">Previous</button>
+                    onclick="showPreviousStage();" tabindex="0">Previous</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
@@ -281,7 +282,7 @@
 {% if message %}
 <script>
     Swal.fire({
-        icon: "{{message.tag}}"",
+        icon: "{{message.tag}}""",
         title: "{{ message|escapejs }}",
         toast: true,
         position: 'top-end',
@@ -302,10 +303,5 @@
         document.getElementById('stage-2').style.display = 'none';
     }
 
-
-     
-            
-        
-        
 </script>
 {% endblock %}
