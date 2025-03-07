@@ -158,43 +158,44 @@
         </tr>
         <tr>
             <th>ALT</th>
-            <td>{{ record.alt }}</td>
+            <td>{{ record.alt|default:"N/A" }}</td>
             <th>AST</th>
-            <td>{{ record.ast }}</td>
+            <td>{{ record.ast|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Total Bilirubin</th>
-            <td>{{ record.total_bilirubin }}</td>
+            <td>{{ record.total_bilirubin|default:"N/A" }}</td>
             <th>Albumin</th>
-            <td>{{ record.albumin }}</td>
+            <td>{{ record.albumin|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>HIV Status</th>
-            <td>{{ record.hiv_status }}</td>
+            <td>{% if record.hiv_status == 1 %}Positive{% elif record.hiv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
             <th>HBV Status</th>
-            <td>{{ record.hbv_status }}</td>
+            <td>{% if record.hbv_status == 1 %}Positive{% elif record.hbv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>HCV Status</th>
-            <td>{{ record.hcv_status }}</td>
+            <td>{% if record.hcv_status == 1 %}Positive{% elif record.hcv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
             <th>CMV Status</th>
-            <td>{{ record.cmv_status }}</td>
+            <td>{% if record.cmv_status == 1 %}Positive{% elif record.cmv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>EBV Status</th>
-            <td>{{ record.ebv_status }}</td>
+            <td>{% if record.ebv_status == 1 %}Positive{% elif record.ebv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
             <th>Diabetes</th>
-            <td>{{ record.diabetes }}</td>
+            <td>{% if record.diabetes == 1 %}Yes{% elif record.diabetes == 0 %}No{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Hypertension</th>
-            <td>{{ record.hypertension }}</td>
+            <td>{% if record.hypertension == 1 %}Yes{% elif record.hypertension == 0 %}No{% else %}N/A{% endif %}</td>
             <th>Cardiac Disease</th>
-            <td>{{ record.cardiac_disease }}</td>
+            <td>{% if record.cardiac_disease == 1 %}Yes{% elif record.cardiac_disease == 0 %}No{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Cancer History</th>
-            <td>{{ record.cancer_history }}</td>
+            <td>{% if record.cancer_history == 1 %}Yes{% elif record.cancer_history == 0 %}No{% else %}N/A{% endif %}</td>
+        </tr>
             <th>Organ Type</th>
             <td>{{ record.organ_type }}</td>
         </tr>
