@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'registration',
     'home',
+    'custom_admin'
 ]
 
 MIDDLEWARE = [
