@@ -25,4 +25,5 @@ urlpatterns = [
     path('registration/', include('registration.urls')),   
     path('donor/', include('donor.urls')),
     path('recipient/', include('recipient.urls')),
+    path('', include('custom_admin.urls')),
 ]
