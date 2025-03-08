@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'donor',
     'recipient',
-    'bootstrap5',
+    'django_bootstrap5', 
     'registration',
     'home',
     'custom_admin'
@@ -87,16 +87,16 @@ WSGI_APPLICATION = 'LifeChain.wsgi.application'
 
 
 # connetcion to mysql database
-DATABASES = {
-   'default': {
-       'ENGINE': 'mysql.connector.django',
-       'NAME': 'lifechain',
-       'USER': 'root',
-       'PASSWORD' : 'Atta786@',
-       'HOST': 'localhost',
-       'PORT': '3306', 
-   }
-}
+#DATABASES = {
+#   'default': {
+#       'ENGINE': 'mysql.connector.django',
+#       'NAME': 'lifechain',
+#       'USER': 'root',
+#       'PASSWORD' : 'Atta786@',
+#       'HOST': 'localhost',
+#       'PORT': '3306', 
+#   }
+#}
 
 
 # Password validation
