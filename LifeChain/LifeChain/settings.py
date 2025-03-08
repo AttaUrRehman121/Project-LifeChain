@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'donor',
     'recipient',
-    'django_bootstrap5', 
+    'bootstrap5', 
     'registration',
     'home',
     'custom_admin'

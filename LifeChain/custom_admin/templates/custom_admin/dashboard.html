@@ -1,193 +1,200 @@
-{% load django_bootstrap5 %}
+{% load bootstrap5 %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LifeChain Admin Dashboard</title>
-  <link rel="stylesheet" href="{% static 'adminstyles.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="logo">
-      <i class="fas fa-link"></i>
-      <span>LifeChain</span>
-    </div>
-    <nav>
-      <ul>
-        <li><a href="#" data-page="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="#" data-page="donors"><i class="fas fa-user"></i> Donors</a></li>
-        <li><a href="#" data-page="receptors"><i class="fas fa-user-friends"></i> Receptors</a></li>
-        <li><a href="#" data-page="user-activity"><i class="fas fa-chart-line"></i> User Activity</a></li>
-        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-      </ul>
-    </nav>
-  </aside>
-
-  <!-- Main Content -->
-  <main class="main-content">
-    <!-- Header -->
-    <header class="header">
-      <div class="header-left">
-        <h1 id="page-title">Dashboard</h1>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeChain Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'adminstyles.css' %}">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <i class="fas fa-link"></i>
+        <span>LifeChain</span>
       </div>
-      <div class="header-right">
-        <div class="search-bar">
-          <input type="text" placeholder="Search...">
-          <i class="fas fa-search"></i>
-        </div>
-        <div class="notifications">
-          <i class="fas fa-bell"></i>
-          <span class="badge">3</span>
-        </div>
-        <div class="profile">
-          <img src="{% static 'profilepic.jpg' %}" alt="Profile">
-          <span>Admin</span>
-          <i class="fas fa-chevron-down"></i>
-        </div>
-      </div>
-    </header>
+      <nav>
+        <ul>
+          <li><a href="#" data-page="dashboard"><i class="fas fa-home"></i>
+              Dashboard</a></li>
+          <li><a href="#" data-page="donors"><i class="fas fa-user"></i>
+              Donors</a></li>
+          <li><a href="#" data-page="receptors"><i
+                class="fas fa-user-friends"></i> Receptors</a></li>
+          <li><a href="#" data-page="user-activity"><i
+                class="fas fa-chart-line"></i> User Activity</a></li>
+          <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
 
-    <!-- Page Content -->
-    <section id="page-content">
-      <!-- Dashboard Content -->
-      <div id="dashboard" class="page">
-        <h2>Dashboard Overview</h2>
-        <section class="metrics">
-          <!-- Total Visitors -->
-          <div class="card">
-            <i class="fas fa-users"></i>
-            <h3>Total Visitors</h3>
-            <p>1,234</p>
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <div class="search-bar">
+            <input type="text" placeholder="Search...">
+            <i class="fas fa-search"></i>
           </div>
-
-          <!-- Predictions Made -->
-          <div class="card">
-            <i class="fas fa-chart-bar"></i>
-            <h3>Predictions Made</h3>
-            <p>567</p>
+          <div class="notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
           </div>
-
-          <!-- Prediction Results -->
-          <div class="card">
-            <i class="fas fa-file-alt"></i>
-            <h3>Prediction Results</h3>
-            <p>400</p>
+          <div class="profile">
+            <img src="{% static 'profilepic.jpg' %}" alt="Profile">
+            <span>Admin</span>
+            <i class="fas fa-chevron-down"></i>
           </div>
+        </div>
+      </header>
 
-          <!-- Registered Donors -->
-          <div class="card">
-            <i class="fas fa-heart"></i>
-            <h3>Registered Donors</h3>
-            <p>123</p>
+      <!-- Page Content -->
+      <section id="page-content">
+        <!-- Dashboard Content -->
+        <div id="dashboard" class="page">
+          <h2>Dashboard Overview</h2>
+          <section class="metrics">
+            <!-- Total Visitors -->
+            <div class="card">
+              <i class="fas fa-users"></i>
+              <h3>Total Visitors</h3>
+              <p>1,234</p>
+            </div>
+
+            <!-- Predictions Made -->
+            <div class="card">
+              <i class="fas fa-chart-bar"></i>
+              <h3>Predictions Made</h3>
+              <p>567</p>
+            </div>
+
+            <!-- Prediction Results -->
+            <div class="card">
+              <i class="fas fa-file-alt"></i>
+              <h3>Prediction Results</h3>
+              <p>400</p>
+            </div>
+
+            <!-- Registered Donors -->
+            <div class="card">
+              <i class="fas fa-heart"></i>
+              <h3>Registered Donors</h3>
+              <p>123</p>
+            </div>
+
+            <!-- Registered Receptors -->
+            <div class="card">
+              <i class="fas fa-hand-holding-heart"></i>
+              <h3>Registered Receptors</h3>
+              <p>456</p>
+            </div>
+          </section>
+
+          <!-- Dashboard Chart -->
+          <div class="chart-container">
+            <canvas id="dashboard-chart"></canvas>
           </div>
+        </div>
 
-          <!-- Registered Receptors -->
-          <div class="card">
-            <i class="fas fa-hand-holding-heart"></i>
-            <h3>Registered Receptors</h3>
-            <p>456</p>
+        <!-- Donors Table -->
+        <div id="donors" class="page" style="display: none;">
+          <h2>Donors</h2>
+          <div class="search-filter">
+            <input type="text" id="donor-search" placeholder="Search donors...">
           </div>
-        </section>
+          <div class="data-table">
+            <table id="donor-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Age</th>
+                  <th>Blood Group</th>
+                  <th>Location</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Donor data will be populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+          <div class="chart-container">
+            <canvas id="donor-chart"></canvas>
+          </div>
+        </div>
 
-        <!-- Dashboard Chart -->
-        <div class="chart-container">
-          <canvas id="dashboard-chart"></canvas>
+        <!-- Receptors Table -->
+        <div id="receptors" class="page" style="display: none;">
+          <h2>Receptors</h2>
+          <div class="search-filter">
+            <input type="text" id="receptor-search"
+              placeholder="Search receptors...">
+          </div>
+          <div class="data-table">
+            <table id="receptor-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Age</th>
+                  <th>Blood Group</th>
+                  <th>Location</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Receptor data will be populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+          <div class="chart-container">
+            <canvas id="receptor-chart"></canvas>
+          </div>
         </div>
-      </div>
 
-      <!-- Donors Table -->
-      <div id="donors" class="page" style="display: none;">
-        <h2>Donors</h2>
-        <div class="search-filter">
-          <input type="text" id="donor-search" placeholder="Search donors...">
+        <!-- User Activity Table -->
+        <div id="user-activity" class="page" style="display: none;">
+          <h2>User Activity</h2>
+          <div class="search-filter">
+            <input type="text" id="activity-search"
+              placeholder="Search user activity...">
+          </div>
+          <div class="data-table">
+            <table id="activity-table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Prediction Date</th>
+                  <th>Prediction Result</th>
+                  <th>Prediction Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- User activity data will be populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+          <div class="chart-container">
+            <canvas id="activity-chart"></canvas>
+          </div>
         </div>
-        <div class="data-table">
-          <table id="donor-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Age</th>
-                <th>Blood Group</th>
-                <th>Location</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Donor data will be populated dynamically -->
-            </tbody>
-          </table>
-        </div>
-        <div class="chart-container">
-          <canvas id="donor-chart"></canvas>
-        </div>
-      </div>
+      </section>
+    </main>
 
-      <!-- Receptors Table -->
-      <div id="receptors" class="page" style="display: none;">
-        <h2>Receptors</h2>
-        <div class="search-filter">
-          <input type="text" id="receptor-search" placeholder="Search receptors...">
-        </div>
-        <div class="data-table">
-          <table id="receptor-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Age</th>
-                <th>Blood Group</th>
-                <th>Location</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Receptor data will be populated dynamically -->
-            </tbody>
-          </table>
-        </div>
-        <div class="chart-container">
-          <canvas id="receptor-chart"></canvas>
-        </div>
-      </div>
-
-      <!-- User Activity Table -->
-      <div id="user-activity" class="page" style="display: none;">
-        <h2>User Activity</h2>
-        <div class="search-filter">
-          <input type="text" id="activity-search" placeholder="Search user activity...">
-        </div>
-        <div class="data-table">
-          <table id="activity-table">
-            <thead>
-              <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Prediction Date</th>
-                <th>Prediction Result</th>
-                <th>Prediction Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- User activity data will be populated dynamically -->
-            </tbody>
-          </table>
-        </div>
-        <div class="chart-container">
-          <canvas id="activity-chart"></canvas>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="{% static 'adminscripts.js' %}"></script>
-</body>
+    <script src="{% static 'adminscripts.js' %}"></script>
+  </body>
 </html>
