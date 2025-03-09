@@ -32,7 +32,7 @@ class PredictionRecord(models.Model):
     cancer_history = models.IntegerField()  # this will store like This 1 for 'yes', 0 for 'no'
     organ_type = models.CharField(max_length=20)  # 'kidney', 'liver', etc.
     organ_condition_score = models.FloatField()
-    donation_status = models.IntegerField()  # this will store like This 1 for 'eligible', 0 for 'not eligible'
+    donation_status = models.IntegerField(default=0) # this will store like This 1 for 'eligible', 0 for 'not eligible'
     prediction_result = models.CharField(max_length=20)  # this will store like This 'eligible' or 'not eligible'
     created_at = models.DateTimeField(auto_now_add=True)
 

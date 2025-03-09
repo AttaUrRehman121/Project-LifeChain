@@ -56,6 +56,6 @@ class Recipient(models.Model):
     pra_score = models.FloatField()
     donation_status = models.IntegerField(default=0)
     prediction_result = models.CharField(max_length=50, default='not eligible')
-
+    
     def __str__(self):
         return f"{self.required_organ} - {self.prediction_result}"
