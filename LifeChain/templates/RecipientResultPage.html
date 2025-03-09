@@ -99,22 +99,24 @@
 
 <!-- Report Content -->
 <div class="summary-container" id="report-content">
-    <h1><span>L</span>ife<span>C</span>hain.</h2>
+    <h1><span>L</span>ife<span>C</span>hain.</h1>
     <h2>Donor Report - {{ record.created_at|date:"Y-m-d" }}</h2>
 
     <div class="section-title">Patient Demographics</div>
+    <!-- Personal Details Section -->
+    <div class="section-title">Personal Details</div>
     <table>
         <tr>
             <th>Age</th>
             <td>{{ record.age }}</td>
             <th>Gender</th>
-            <td>{{ record.gender }}</td>
+            <td>{% if record.gender == 1 %}Male{% elif record.gender == 0 %}Female{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Blood Type</th>
             <td>{{ record.blood_type }}</td>
             <th>Rh Factor</th>
-            <td>{{ record.rh_factor }}</td>
+            <td>{% if record.rh_factor == 1 %}Positive{% elif record.rh_factor == 0 %}Negative{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Height (cm)</th>
@@ -125,25 +127,18 @@
         <tr>
             <th>BMI</th>
             <td>{{ record.bmi }}</td>
-            <th>Systolic BP</th>
-            <td>{{ record.systolic_bp }}</td>
-        </tr>
-        <tr>
-            <th>Diastolic BP</th>
-            <td>{{ record.diastolic_bp }}</td>
-            <th>Heart Rate</th>
-            <td>{{ record.heart_rate }}</td>
-        </tr>
-        <tr>
-            <th>Temperature (°C)</th>
-            <td>{{ record.temperature_celsius }}</td>
-            <th>Respiratory Rate</th>
-            <td>{{ record.respiratory_rate }}</td>
         </tr>
     </table>
 
-    <div class="section-title">Medical History and Current Condition</div>
+    <!-- Medical Details Section -->
+    <div class="section-title">Medical Details</div>
     <table>
+        <tr>
+            <th>Wait List Days</th>
+            <td>{{ record.wait_list_days }}</td>
+            <th>Medical Urgency Score</th>
+            <td>{{ record.medical_urgency_score }}</td>
+        </tr>
         <tr>
             <th>Hemoglobin</th>
             <td>{{ record.hemoglobin }}</td>
@@ -163,45 +158,28 @@
             <td>{{ record.ast|default:"N/A" }}</td>
         </tr>
         <tr>
-            <th>Total Bilirubin</th>
-            <td>{{ record.total_bilirubin|default:"N/A" }}</td>
-            <th>Albumin</th>
-            <td>{{ record.albumin|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>HIV Status</th>
-            <td>{% if record.hiv_status == 1 %}Positive{% elif record.hiv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
-            <th>HBV Status</th>
-            <td>{% if record.hbv_status == 1 %}Positive{% elif record.hbv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
-        </tr>
-        <tr>
-            <th>HCV Status</th>
-            <td>{% if record.hcv_status == 1 %}Positive{% elif record.hcv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
-            <th>CMV Status</th>
-            <td>{% if record.cmv_status == 1 %}Positive{% elif record.cmv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
-        </tr>
-        <tr>
-            <th>EBV Status</th>
-            <td>{% if record.ebv_status == 1 %}Positive{% elif record.ebv_status == 0 %}Negative{% else %}N/A{% endif %}</td>
             <th>Diabetes</th>
             <td>{% if record.diabetes == 1 %}Yes{% elif record.diabetes == 0 %}No{% else %}N/A{% endif %}</td>
-        </tr>
-        <tr>
             <th>Hypertension</th>
             <td>{% if record.hypertension == 1 %}Yes{% elif record.hypertension == 0 %}No{% else %}N/A{% endif %}</td>
-            <th>Cardiac Disease</th>
-            <td>{% if record.cardiac_disease == 1 %}Yes{% elif record.cardiac_disease == 0 %}No{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
-            <th>Cancer History</th>
-            <td>{% if record.cancer_history == 1 %}Yes{% elif record.cancer_history == 0 %}No{% else %}N/A{% endif %}</td>
-        </tr>
-            <th>Organ Type</th>
-            <td>{{ record.organ_type }}</td>
+            <th>Previous Transplant</th>
+            <td>{% if record.previous_transplant == 1 %}Yes{% elif record.previous_transplant == 0 %}No{% else %}N/A{% endif %}</td>
+            <th>Dialysis Status</th>
+            <td>{% if record.dialysis_status == 1 %}Yes{% elif record.dialysis_status == 0 %}No{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
-            <th>Organ Condition Score</th>
-            <td>{{ record.organ_condition_score }}</td>
+            <th>Required Organ</th>
+            <td>{{ record.required_organ }}</td>
+            <th>Antibody Screen</th>
+            <td>{% if record.dialysis_status == 1 %}Positive{% elif record.dialysis_status == 0 %}Negative{% else %}N/A{% endif %}</td>
+        </tr>
+        <tr>
+            <th>PRA Score</th>
+            <td>{{ record.pra_score }}</td>
+            <th>Transplant Eligibility</th>
+            <td>{{ record.prediction_result }}</td>
         </tr>
     </table>
 
@@ -240,15 +218,12 @@
             }
         };
 
-        
-
         html2pdf()
           .set(options)
           .from(element)
           .save()
           .then(() => {
               Swal.fire('Success', 'PDF downloaded!', 'success');
-             
           });
     }
 </script>
