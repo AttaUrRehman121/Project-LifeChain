@@ -54,8 +54,7 @@ class Recipient(models.Model):
     required_organ = models.CharField(max_length=50)
     antibody_screen = models.FloatField()
     pra_score = models.FloatField()
-    donation_status = models.IntegerField(default=0)
-    prediction_result = models.CharField(max_length=50, default='not eligible')
+    transplant_eligibility = models.CharField(max_length=50, default='not eligible')
     
     def __str__(self):
-        return f"{self.required_organ} - {self.prediction_result}"
+        return f"{self.required_organ} - {self.transplant_eligibility}"

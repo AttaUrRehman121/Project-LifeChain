@@ -28,11 +28,13 @@
         border-collapse: collapse;
         font-size: 14px;
     }
+
     .summary-container th, .summary-container td {
         border: 1px solid #dee2e6;
         padding: 10px;
         text-align: left;
     }
+
     .summary-container th {
         background-color: #007bff;
         color: #ffffff;
@@ -45,26 +47,19 @@
         margin-top: 20px;
         margin-bottom: 10px;
         color: #343a40;
-        
-        margin: 15px 0 5px 0;
-        
         text-align: center;
     }
-    .summary-container h1
-    {
+
+    .summary-container h1 {
         font-size: 54px !important;
         margin: 10px 0 20px;
         text-align: center;
     }
 
-    .summary-container  h2 {
+    .summary-container h2 {
         font-size: 16px !important;
         margin: 10px 0;
         text-align: center;
-    }
-
-    .section-title {
-        
     }
 
     .summary-container .contact-info {
@@ -93,8 +88,7 @@
 </style>
 
 <!-- SweetAlert2 -->
-<link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Report Content -->
@@ -102,7 +96,6 @@
     <h1><span>L</span>ife<span>C</span>hain.</h1>
     <h2>Donor Report - {{ record.created_at|date:"Y-m-d" }}</h2>
 
-    <div class="section-title">Patient Demographics</div>
     <!-- Personal Details Section -->
     <div class="section-title">Personal Details</div>
     <table>
@@ -173,59 +166,46 @@
             <th>Required Organ</th>
             <td>{{ record.required_organ }}</td>
             <th>Antibody Screen</th>
-            <td>{% if record.dialysis_status == 1 %}Positive{% elif record.dialysis_status == 0 %}Negative{% else %}N/A{% endif %}</td>
+            <td>{% if record.antibody_screen == 1 %}Positive{% elif record.antibody_screen == 0 %}Negative{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>PRA Score</th>
             <td>{{ record.pra_score }}</td>
             <th>Transplant Eligibility</th>
-            <td>{{ record.prediction_result }}</td>
+            <td>{{ record.transplant_eligibility }}</td>
         </tr>
     </table>
 
     <div class="contact-info">
         <strong>Contact:</strong> LifeChain_Team@uskt.edu.pk<br>
-        <strong>Address:</strong> University of Sialkot, Main Daska Road,
-        Sialkot, Pakistan
+        <strong>Address:</strong> University of Sialkot, Main Daska Road, Sialkot, Pakistan
     </div>
+
+    <!-- Download Button -->
+    <a href="#" class="download-button" onclick="downloadPDF()">Download PDF</a>
 </div>
 
-<!-- Download Button -->
-<a href="#" class="download-button" onclick="downloadPDF()">Download PDF</a>
-
 <!-- PDF Download Script -->
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-    function downloadPDF() {
-        const element = document.getElementById('report-content');
-        const options = {
-            margin: [5, 5],
-            filename: 'Donor_Report_{{ record.id }}.pdf',
-            image: { 
-                type: 'jpeg', 
-                quality: 0.98 
-            },
-            html2canvas: { 
-                scale: 3, // Higher resolution
-                scrollY: 0, 
-                useCORS: true 
-            },
-            jsPDF: { 
-                unit: 'mm',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
+function downloadPDF() {
+    const element = document.getElementById('report-content');
+    const options = {
+        margin: [5, 5],
+        filename: 'Donor_Report_{{ record.id }}.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 3, scrollY: 0, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-        html2pdf()
-          .set(options)
-          .from(element)
-          .save()
-          .then(() => {
-              Swal.fire('Success', 'PDF downloaded!', 'success');
-          });
-    }
+    html2pdf()
+      .set(options)
+      .from(element)
+      .save()
+      .then(() => {
+          Swal.fire('Success', 'PDF downloaded!', 'success');
+      });
+}
 </script>
 
-{% endblock content %}
+{% endblock %}
