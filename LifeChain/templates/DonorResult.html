@@ -231,13 +231,26 @@
 
 <!-- Download Button -->
 <a href="#" class="download-button" onclick="downloadPDF()">Download PDF</a>
-
 <!-- PDF Download Script -->
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- Include ONLY ONE version of html2pdf.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <script>
     function downloadPDF() {
         const element = document.getElementById('report-content');
+        
+        // First check if element exists
+        if (!element) {
+            Swal.fire('Error', 'Report content not found!', 'error');
+            return;
+        }
+        const loader = Swal.fire({
+            title: 'Generating PDF...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         const options = {
             margin: [5, 5],
             filename: 'Donor_Report_{{ record.id }}.pdf',
@@ -246,9 +259,10 @@
                 quality: 0.98 
             },
             html2canvas: { 
-                scale: 3, // Higher resolution
-                scrollY: 0, 
-                useCORS: true 
+                scale: 3,
+                scrollY: 0,
+                useCORS: true,
+                logging: true // Added for debugging
             },
             jsPDF: { 
                 unit: 'mm',
@@ -257,16 +271,18 @@
             }
         };
 
-        
-
+        // Proper method chaining order
         html2pdf()
-          .set(options)
-          .from(element)
-          .save()
-          .then(() => {
-              Swal.fire('Success', 'PDF downloaded!', 'success');
-             
-          });
+            .from(element)  // Should come first
+            .set(options)
+            .save()
+            .then(() => {
+                Swal.fire('Success', 'PDF downloaded!', 'success');
+            })
+            .catch((error) => {
+                console.error('PDF generation error:', error);
+                Swal.fire('Error', 'Failed to generate PDF', 'error');
+            });
     }
 </script>
 
