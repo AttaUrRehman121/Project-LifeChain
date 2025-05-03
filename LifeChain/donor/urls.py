@@ -8,7 +8,8 @@ urlpatterns = [
    path('', views.donorpage, name='donorpage'),
    path('donorpridict/', views.donorpridict, name='donorpridict'),
    path('donorresultpage/', views.DonorResultpage, name='DonorResultpage'),
-   
+   path('donor_Applicants/', views.donor_Applicants, name='donor_Applicants'),
+
    
    
 ]

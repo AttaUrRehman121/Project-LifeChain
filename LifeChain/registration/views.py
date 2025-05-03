@@ -1,13 +1,10 @@
-from django.shortcuts import redirect, render, HttpResponse
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile
-from django.contrib.auth import authenticate, login as auth_login
 from django.db import IntegrityError
-from django.http import Http404
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.hashers import make_password, check_password
 
 @csrf_protect
 def signup(request):
@@ -26,7 +23,7 @@ def signup(request):
         uppercaseCriteria = any(char.isupper() for char in password)
         numberCriteria = any(char.isdigit() for char in password)
         specialCharCriteria = any(char in '!@#$%^&*(),.?":{}|<>' for char in password)
-        
+
         if not (lengthCriteria and uppercaseCriteria and numberCriteria and specialCharCriteria):
             messages.error(request, "Password must be at least 8 characters long, contain an uppercase letter, a number, and a special character.")
             return render(request, 'signup.html')
@@ -44,21 +41,19 @@ def signup(request):
             return render(request, 'signup.html')
 
         try:
-            user = UserProfile(
+            user = UserProfile.objects.create_user(
                 username=username,
                 email=email,
+                password=password,
                 nationality=nationality,
                 role=role,
                 contact=contact,
                 address=address
             )
-            user.set_password(password)  # Hash password
-            user.save()
-
             messages.success(request, "Account created successfully. Please log in.")
             return redirect('login')
         except IntegrityError:
-            messages.error(request, "An error occurred while creating the user. Please try again.")
+            messages.error(request, "An error occurred while creating the user.")
             return render(request, 'signup.html')
 
     return render(request, 'signup.html')
@@ -69,25 +64,26 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        try:
-            user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            messages.error(request, "Invalid username or password.")
-            return redirect('login')
+        user = authenticate(request, username=username, password=password)
 
-        if user.check_password(password):  # Check hashed password
-            request.session['username'] = user.username
-            request.session['role'] = user.role
+        if user is not None:
+            auth_login(request, user)
 
+            # Redirect based on role
             if user.role == 'donor':
                 return redirect('donorpage')
             elif user.role == 'recipient':
                 return redirect('recipientpage')
             else:
-                messages.error(request, "Invalid role.")
-                return redirect('login')
+                return redirect('dashboard')
         else:
             messages.error(request, "Invalid username or password.")
-            return redirect('login')
+            return render(request, 'login.html')
 
     return render(request, 'login.html')
+
+@login_required
+def logout(request):
+    auth_logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('/')

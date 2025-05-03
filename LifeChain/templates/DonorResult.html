@@ -235,6 +235,8 @@
 <!-- Include ONLY ONE version of html2pdf.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+
+
 <script>
     function downloadPDF() {
         const element = document.getElementById('report-content');
@@ -252,7 +254,7 @@
             }
         });
         const options = {
-            margin: [5, 5],
+            margin: [3, 3],
             filename: 'Donor_Report_{{ record.id }}.pdf',
             image: { 
                 type: 'jpeg', 
@@ -277,7 +279,47 @@
             .set(options)
             .save()
             .then(() => {
-                Swal.fire('Success', 'PDF downloaded!', 'success');
+            Swal.fire({
+                title: 'PDF downloaded!',
+                text: 'Do you want to become a donor?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                // Save user data to the database
+                fetch('/donor/donor_Applicants/', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                    },
+                    body: JSON.stringify({
+                    user_id: '{{ user.id }}',
+                    username: '{{ user.username }}', 
+                    contact: '{{ user.contact }}',
+                    email: '{{ user.email }}',
+                    address: '{{ user.address }}',
+                    eligibility: '{{ record.prediction_result }}',
+                    organ_type: '{{ record.organ_type }}',
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                    Swal.fire('Thank you!', 'You have chosen to become a donor.', 'success');
+                    } else {
+                    Swal.fire('Error', 'Failed to save donor information.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving donor:', error);
+                    Swal.fire('Error', 'Failed to save donor information.', 'error');
+                });
+                } else {
+                Swal.fire('Maybe next time!', 'You chose not to become a donor.', 'info');
+                }
+            });
             })
             .catch((error) => {
                 console.error('PDF generation error:', error);

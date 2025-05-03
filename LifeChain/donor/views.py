@@ -1,15 +1,16 @@
+import json
 import os
 import pickle
-
 import pandas as pd
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.http import Http404
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import joblib
-from.models import PredictionRecord
+from.models import donor_Registered, PredictionRecord
+from django.contrib.auth import get_user_model
 import logging
 
 # Create your views here.
@@ -77,10 +78,10 @@ def donorpridict(request):
 
             logger.debug(f"Extracted form data: {data}")
             
-            # Ensure required fields are present for prediction
+            # This Will Ensure required fields are present for prediction
             input_df = pd.DataFrame([data])
 
-            # Ensure only feature columns are used (exclude target variable)
+            # This Will Ensure only feature columns are used (exclude target variable)
             feature_columns = [col for col in input_df.columns if col != 'donation_status']
             input_df = input_df[feature_columns]
             logger.debug(f"DataFrame for prediction: {input_df}")
@@ -165,6 +166,55 @@ def donorpridict(request):
 #             return render(request, 'DonorPredict.html', {'error_message': f'Error: {str(e)}'})
 #     # Render the prediction form on GET request
 #     return render(request, 'DonorPredict.html')
+
+
+
+# Set up logging
+logger = logging.getLogger(__name__)
+User = get_user_model()
+@csrf_exempt
+def donor_Applicants(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            # Log incoming request data for debugging
+            logger.debug(f"Received POST data: {data}")
+
+            # Ensure user_id is present in the incoming data
+            user_id = data.get('user_id')
+            if not user_id:
+                logger.error("user_id not found in request data")
+                return JsonResponse({'error': 'user_id is required'}, status=400)
+
+            # Fetch the User instance by the user_id
+            try:
+                user_instance = User.objects.get(id=user_id)  # Get the user from the User model
+                logger.debug(f"User found: {user_instance}")
+            except User.DoesNotExist:
+                logger.error(f"User with ID {user_id} not found")
+                return JsonResponse({'error': 'User not found'}, status=404)
+
+            # Now create the donor_Registered object
+            donor = donor_Registered.objects.create(
+                user=user_instance,  # Assign the User instance here
+                username=data.get('username'),
+                contact=data.get('contact'),
+                email=data.get('email'),
+                address=data.get('address'),
+                eligibility=data.get('eligibility'),
+                organ_type=data.get('organ_type')
+            )
+
+            logger.info(f"Donor saved successfully: {donor_Registered}")
+            return JsonResponse({'message': 'Donor saved successfully'})
+
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 def DonorResultpage(request):
     return render(request, 'DonorResult.html')

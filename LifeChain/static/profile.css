@@ -4,11 +4,11 @@
     --white: #fff;
     --danger: #dc3545;
 }
-
 /* General container styling */
 .container {
     margin: auto;
     margin-top: 20px;
+    padding: 20px;
     max-width: 800px;
     background-color: var(--black); /* Black background */
     padding: 20px;

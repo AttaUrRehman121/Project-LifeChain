@@ -3,28 +3,32 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'style.css' %}" />
+
 <section id="contact" class="contact">
     <h1 class="heading">contact us</h1>
     <h3 class="title">you can talk to us any times,</h3>
     <div class="row">
         <div class="images">
-            <img src="{% static 'form.png' %}" alt="">
+            <img src="{% static 'form.png' %}" alt>
         </div>
 
         <div class="form-container">
             <form action="{% url 'contact' %}" method="POST">
                 {% csrf_token %}
                 <input name="name" type="text" placeholder="Full Name" required>
-                <input name="email" type="email" placeholder="Enter your email" required>
-                <input name="phone_number" type="number" placeholder="Phone Number" required>
-                <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
-                <button class="btn btn-primary" type="submit" value="send">Send</button>
+                <input name="email" type="email" placeholder="Enter your email"
+                    required>
+                <input name="phone_number" type="number"
+                    placeholder="Phone Number" required>
+                <textarea name="message" cols="30" rows="10"
+                    placeholder="Your Message" required></textarea>
+                <button class="btn btn-primary" type="submit"
+                    value="send">Send</button>
             </form>
         </div>
     </div>
 </section>
-
-
 
 <script>
     // Reset the form after submission 
@@ -43,5 +47,3 @@
     });
     </script>
 {% endblock content %}
-
-

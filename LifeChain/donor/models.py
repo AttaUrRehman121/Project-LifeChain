@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+
 
 class PredictionRecord(models.Model):
     age = models.FloatField()
@@ -39,3 +41,17 @@ class PredictionRecord(models.Model):
     def __str__(self):
         return f"Record {self.id} - Prediction: {self.prediction_result}"
     
+    
+    
+    
+class donor_Registered(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Assuming you have a User model in your project
+    username = models.CharField(max_length=100)
+    contact = models.CharField(max_length=15)
+    email = models.EmailField()
+    address = models.TextField()
+    eligibility = models.CharField(max_length=50)
+    organ_type = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.username

@@ -6,7 +6,6 @@
 
 <body>
 
-
   <div class="background">
     <div class="shape"></div>
     <div class="shape"></div>
@@ -14,7 +13,7 @@
   <form class="loginn" action="{% url 'login' %}" method="post">
     <h3>Login Here</h3>
     {% csrf_token %}
-    <label for="email">Enter User Name</label>
+    <label for="email">Enter UserName </label>
     <input type="text" placeholder="Enter UserName" id="username"
       name="username"
       required>

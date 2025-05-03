@@ -4,95 +4,76 @@
 {% block content %}
 
 <section>
-    <link rel="stylesheet" href="{% static 'profile.css' %}" />
-    <div class="container mt-1">
-      <h1 class="text-center">User Profile</h1>
-  
-      <!-- Profile Image Section -->
-      <div class="profile-img-container">
-        {% if user_profile.user.profile.picture %}
-        <img
-          src="{{ user_profile.user.profile.picture.url }}"
-          alt="{{ user_profile.user.profile.picture.url }}"
-          class="profile-img rounded-circle"
-          height="200px"
-        />
-        {% else %}
-        <img
-          src="{% static 'images/default-image.png' %}"
-          alt="Default Image"
-          class="profile-img rounded-circle"
-          height="200px"
-        />
-        {% endif %}
-      </div>
-  
-      <!-- User Profile Form -->
-      <form method="post" enctype="multipart/form-data" class="edit-form">
-        {% csrf_token %}
-        <div class="row justify-content-md-around">
-          <!-- Left Column -->
-          <div class="col-5">
-            <div class="form-group mt-2">
-              <label for="id_username" class="h5">Username:</label>
-              <p>{{ user_profile.username }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_email" class="h5">Email:</label>
-              <p>{{ user_profile.email }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_gender" class="h5">Gender:</label>
-              <p>{{ user_profile.user.profile.gender }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_nationality" class="h5">Nationality:</label>
-              <p>{{ user_profile.nationality }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_role" class="h5">Role:</label>
-              <p>{{ user_profile.role }}</p>
-            </div>
+  <link rel="stylesheet" href="{% static 'profile.css' %}" />
+  <div class="container mt-1">
+    <h1 class="text-center mt-4">User Profile</h1>
+    <!-- User Profile Form -->
+    <form method="post" enctype="multipart/form-data" class="edit-form">
+      {% csrf_token %}
+      <div class="row justify-content-md-around">
+        <!-- Left Column -->
+        <div class="col-5">
+          <div class="form-group mt-2">
+            <label for="id_username" class="h5">Username:</label>
+            <p>{{ user_profile.username }}</p>
           </div>
-  
-          <!-- Right Column -->
-          <div class="col-5">
-            <div class="form-group mt-2">
-              <label for="id_date_of_birth" class="h5">Date of Birth:</label>
-              <p>{{ user_profile.user.profile.date_of_birth }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_picture" class="h5">Picture:</label>
-              <p>{{ user_profile.user.profile.picture }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_phone" class="h5">Phone:</label>
-              <p>{{ user_profile.user.profile.phone }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_contact" class="h5">Contact:</label>
-              <p>{{ user_profile.contact }}</p>
-            </div>
-            <div class="form-group mt-2">
-              <label for="id_address" class="h5">Address:</label>
-              <p>{{ user_profile.address }}</p>
-            </div>
+          <div class="form-group mt-2">
+            <label for="id_email" class="h5">Email:</label>
+            <p>{{ user_profile.email }}</p>
+          </div>
+          <div class="form-group mt-2">
+            <label for="id_gender" class="h5">Gender:</label>
+            <p>{{ user_profile.user.profile.gender }}</p>
+          </div>
+          <div class="form-group mt-2">
+            <label for="id_nationality" class="h5">Nationality:</label>
+            <p>{{ user_profile.nationality }}</p>
+          </div>
+          <div class="form-group mt-2">
+            <label for="id_role" class="h5">Role:</label>
+            <p>{{ user_profile.role }}</p>
           </div>
         </div>
-  
-        <!-- Save Changes Button -->
-        <div class="row w-25 mx-auto">
-          <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+
+        <!-- Right Column -->
+        <div class="col-5">
+          <div class="form-group mt-2">
+            <label for="id_date_of_birth" class="h5">Date of Birth:</label>
+            <p>{{ user_profile.user.profile.date_of_birth }}</p>
+          </div>
+          <div class="form-group mt-2">
+            <label for="id_picture" class="h5">Picture:</label>
+            <p>{{ user_profile.user.profile.picture }}</p>
+          </div>
+          <div class="form-group mt-2">
+            <label for="id_phone" class="h5">Phone:</label>
+            <p>{{ user_profile.user.profile.phone }}</p>
+          </div>
+          <div class="form-group mt-2">
+            <label for="id_contact" class="h5">Contact:</label>
+            <p>{{ user_profile.contact }}</p>
+          </div>
+          <div class="form-group mt-2">
+            <label for="id_address" class="h5">Address:</label>
+            <p>{{ user_profile.address }}</p>
+          </div>
         </div>
-      </form>
-  
-      <!-- Delete Account Section -->
-      <div class="row mt-4 mx-4 text-center">
-        <p class="h4 text-danger fw-bolder">Delete Account</p>
-        <p class="fw-bold">Do you want to delete your account?</p>
-        <a class="btn btn-danger w-25" onclick="confirmRedirect('deleteuser')">Delete</a>
       </div>
+
+      <!-- Save Changes Button -->
+      <div class="row w-25 mx-auto">
+        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+      </div>
+    </form>
+
+    <!-- Delete Account Section -->
+    <div class="row mt-4 mx-4 text-center">
+      <p class="h4 text-danger fw-bolder">Delete Account</p>
+      <p class="fw-bold">Do you want to delete your account?</p>
+      <a class="btn btn-danger w-25"
+        onclick="confirmRedirect('deleteuser')">Delete</a>
     </div>
-  </section>
-  
+  </div>
+</section>
+
 {% endblock %}

@@ -4,18 +4,21 @@
     --white: #fff;
 }
 
+
 #buttonH {
-    width: 7rem;
-    height: 3.5rem;
+    width: auto;
+    height: auto;
     background: var(--blue);
     color: var(--white);
-    font-size: 1.7rem;
+    font-size: 1.9rem;
     text-transform: capitalize;
     border-radius: .5rem;
     cursor: pointer;
     margin: 1rem 0;
     border: .1rem solid var(--blue);
     transition: all 0.3s ease;
+    text-align: center;
+    padding: 5px;
 }
 
 #buttonH:hover {
