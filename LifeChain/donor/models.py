@@ -1,5 +1,8 @@
+from urllib import request
 from django.db import models
 from django.conf import settings
+
+from registration.models import UserProfile
 
 
 class PredictionRecord(models.Model):
@@ -44,14 +47,35 @@ class PredictionRecord(models.Model):
     
     
     
+from django.conf import settings
+from django.db import models
+from django.db import models
+
 class donor_Registered(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Assuming you have a User model in your project
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     contact = models.CharField(max_length=15)
     email = models.EmailField()
+    age = models.FloatField()
+    
+    # Changed gender to store 'Male' and 'Female' as strings
+    gender = models.CharField(max_length=6, choices=[('Male', 'Male'), ('Female', 'Female')])
+    
+    # Changed blood_type to store 'A', 'B', 'AB', 'O' as strings
+    blood_type = models.CharField(max_length=2, choices=[('A', 'A'), ('B', 'B'), ('AB', 'AB'), ('O', 'O')])
+    
+    # Changed rh_factor to store '+' and '-' as strings
+    rh_factor = models.CharField(max_length=1, choices=[('+', '+'), ('-', '-')])
+    
+    organ_type = models.CharField(max_length=50, choices=[
+        ('Kidney', 'Kidney'),
+        ('Liver', 'Liver'),
+        ('Heart', 'Heart'),
+        ('Lungs', 'Lungs'),
+        ('Pancreas', 'Pancreas')
+    ])
     address = models.TextField()
     eligibility = models.CharField(max_length=50)
-    organ_type = models.CharField(max_length=50)
-
+    
     def __str__(self):
         return self.username

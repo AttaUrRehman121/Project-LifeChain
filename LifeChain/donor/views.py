@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from django.http import Http404
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import joblib
+
+from registration.models import UserProfile
 from.models import donor_Registered, PredictionRecord
 from django.contrib.auth import get_user_model
 import logging
@@ -187,26 +189,56 @@ def donor_Applicants(request):
                 logger.error("user_id not found in request data")
                 return JsonResponse({'error': 'user_id is required'}, status=400)
 
-            # Fetch the User instance by the user_id
+            # Fetch the UserProfile instance by the user_id
             try:
-                user_instance = User.objects.get(id=user_id)  # Get the user from the User model
+                user_instance = UserProfile.objects.get(id=user_id)
                 logger.debug(f"User found: {user_instance}")
-            except User.DoesNotExist:
+            except UserProfile.DoesNotExist:
                 logger.error(f"User with ID {user_id} not found")
                 return JsonResponse({'error': 'User not found'}, status=404)
 
-            # Now create the donor_Registered object
+            # Convert gender from 1/0 to 'Male'/'Female'
+            gender = 'Male' if data.get('gender') == '1' else 'Female'
+
+            # Convert blood_type from 0-3 to 'A', 'B', 'AB', 'O'
+            blood_type_mapping = {
+                '0': 'A',
+                '1': 'B',
+                '2': 'AB',
+                '3': 'O'
+            }
+            blood_type = blood_type_mapping.get(data.get('blood_type'), 'Unknown')  # Default to 'Unknown' if not found
+            
+            
+            # Convert rh_factor from 1/0 to '+'/'-'
+            rh_factor = '+' if data.get('rh_factor') == '1' else '-'
+            
+            # Convert organ_type from '1' to 'Kidney' (you can add more mappings if needed)
+            organ_type_mapping = {
+                '1': 'Kidney',
+                '2': 'Liver',
+                '3': 'Heart',
+                '4': 'Lungs',
+                '5': 'Pancreas'
+            }
+            organ_type = organ_type_mapping.get(data.get('organ_type'), 'Unknown')
+
+            # Create the donor_Registered object
             donor = donor_Registered.objects.create(
-                user=user_instance,  # Assign the User instance here
+                user=user_instance,  # Assign the UserProfile instance here
                 username=data.get('username'),
-                contact=data.get('contact'),
+                contact=data.get('contact', ''),  # Default empty string if contact not provided
                 email=data.get('email'),
-                address=data.get('address'),
+                age=float(data.get('age')),  # Ensure age is a float
+                gender=gender,  # Set the gender to 'Male' or 'Female'
+                blood_type=blood_type,  # Convert and set the blood type
+                rh_factor=rh_factor,  # Convert and set the rh_factor
+                address=data.get('address', ''),  # Default empty string if address not provided
                 eligibility=data.get('eligibility'),
-                organ_type=data.get('organ_type')
+                 organ_type=organ_type
             )
 
-            logger.info(f"Donor saved successfully: {donor_Registered}")
+            logger.info(f"Donor saved successfully: {donor}")
             return JsonResponse({'message': 'Donor saved successfully'})
 
         except Exception as e:

@@ -113,13 +113,20 @@
             <th>Age</th>
             <td>{{ record.age|default:"N/A" }}</td>
             <th>Gender</th>
-            <td>{{ record.gender|default:"N/A" }}</td>
+            <td>{% if record.gender == 1 %}Male{% elif record.gender == 0 %}Female{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Blood Type</th>
-            <td>{{ record.blood_type|default:"N/A" }}</td>
+            <td>
+                {% if record.blood_type == 0 %}A
+                {% elif record.blood_type == 1 %}B
+                {% elif record.blood_type == 2 %}AB
+                {% elif record.blood_type == 3 %}O
+                {% else %}N/A
+                {% endif %}
+            </td>
             <th>Rh Factor</th>
-            <td>{{ record.rh_factor|default:"N/A" }}</td>
+            <td>{% if record.rh_factor == 1 %}+{% elif record.rh_factor == 0 %}-{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Height (cm)</th>
@@ -137,7 +144,7 @@
             <th>Diastolic BP</th>
             <td>{{ record.diastolic_bp|default:"N/A" }}</td>
             <th>Heart Rate</th>
-            <td>{{ record.heart_rate|default:"N/A" }}</td>
+            <td>{{ record.heart_rate}}</td>
         </tr>
         <tr>
             <th>Temperature (°C)</th>
@@ -205,20 +212,10 @@
         </tr>
         <tr>
             <th>Organ Condition Score</th>
-            <td>{{ record.organ_condition_score|default:"N/A" }}</td>
+            <td>{{ record.organ_condition_score}}</td>
             <th>Prediction Result</th>
             <td>{{ record.prediction_result|default:"N/A" }}</td>
         </tr>
-            <th>Organ Type</th>
-            <td>{{ record.organ_type|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>Organ Condition Score</th>
-            <td>{{ record.organ_condition_score|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>Organ Condition Score</th>
-            <td>{{ record.prediction_result|default:"N/A" }}</td>
         </tr>
     </table>
 
@@ -300,6 +297,10 @@
                     username: '{{ user.username }}', 
                     contact: '{{ user.contact }}',
                     email: '{{ user.email }}',
+                    age: '{{ record.age }}',
+                    gender: '{{ record.gender }}',
+                    blood_type: '{{ record.blood_type }}',
+                    rh_factor: '{{ record.rh_factor }}',
                     address: '{{ user.address }}',
                     eligibility: '{{ record.prediction_result }}',
                     organ_type: '{{ record.organ_type }}',
@@ -307,7 +308,11 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                    Swal.fire('Thank you!', 'You have chosen to become a donor.', 'success');
+                    Swal.fire('Thank you!', 'You have chosen to become a donor.', 'success' );
+                    setTimeout(() => {
+                        window.location.href = '/donor/';
+                    }, 5000); // Redirect after 2 seconds
+                    
                     } else {
                     Swal.fire('Error', 'Failed to save donor information.', 'error');
                     }
@@ -319,12 +324,13 @@
                 } else {
                 Swal.fire('Maybe next time!', 'You chose not to become a donor.', 'info');
                 }
-            });
+            })
             })
             .catch((error) => {
                 console.error('PDF generation error:', error);
                 Swal.fire('Error', 'Failed to generate PDF', 'error');
             });
+
     }
 </script>
 

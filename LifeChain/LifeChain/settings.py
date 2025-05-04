@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
+    #'admin_volt.apps.AdminVoltConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +44,7 @@ INSTALLED_APPS = [
     'bootstrap5', 
     'registration',
     'home',
-    'custom_admin'
+   
 ]
 
 MIDDLEWARE = [
@@ -155,3 +157,19 @@ AUTH_USER_MODEL = 'registration.UserProfile'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "LifeChain Admin",
+    "site_header": "LifeChain Admin",
+    "site_brand": "LifeChain",
+    "site_logo": "images/logo.png",
+    "welcome_sign": "Welcome to LifeChain Admin",
+    
+    
+    
+    
+}
+    
+
+
+

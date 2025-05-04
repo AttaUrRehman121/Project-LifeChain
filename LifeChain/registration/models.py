@@ -1,4 +1,5 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.utils import timezone
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 
 class UserProfileManager(BaseUserManager):
@@ -7,7 +8,6 @@ class UserProfileManager(BaseUserManager):
             raise ValueError('Email is required')
         if not username:
             raise ValueError('Username is required')
-
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
@@ -19,7 +19,7 @@ class UserProfileManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(username, email, password, **extra_fields)
 
-class UserProfile(AbstractBaseUser):
+class UserProfile(AbstractBaseUser, PermissionsMixin):  # ⬅️ Inherit PermissionsMixin
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     nationality = models.CharField(max_length=100)
@@ -27,7 +27,8 @@ class UserProfile(AbstractBaseUser):
     contact = models.CharField(max_length=15)
     address = models.TextField()
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)       # ⬅️ Add explicitly
+    date_joined = models.DateTimeField(default=timezone.now)  # ⬅️ Fix datetime issue
 
     objects = UserProfileManager()
 
