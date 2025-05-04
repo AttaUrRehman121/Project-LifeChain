@@ -1,4 +1,6 @@
 import os
+from venv import logger
+from django.http import JsonResponse
 import joblib
 import numpy as np
 import logging
@@ -6,6 +8,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 from .models import Recipient
+from donor.models import donor_Registered
 # Create your views here.
 # @login_required
 def recipientpage(request):
@@ -196,6 +199,36 @@ def recipientprictiction(request):
 #             return render(request, 'RecipientPrediction.html', context)
 #     else:  
 #         return render(request, 'RecipientPrediction.html')
+
+
+
+    #  this function is to display all  available donors in the database which are eligible for donation and they choose to be a donor  
+def eligible_donors(request):
+    try:
+        eligible_donors = donor_Registered.objects.filter(eligibility='Eligible')
+
+        donors_data = [
+            {
+                'id': donor.id,
+                'username': donor.username,
+                'contact': donor.contact,
+                'email': donor.email,
+                'age': donor.age,
+                'gender': donor.gender,
+                'blood_type': donor.blood_type,
+                'rh_factor': donor.rh_factor,
+                'organ_type': donor.organ_type,
+                'address': donor.address,
+                'eligibility': donor.eligibility,
+            }
+            for donor in eligible_donors
+        ]
+
+        return render(request, 'eligibleDonors.html', {'donors': donors_data})
+        
+    except Exception as e:
+        logger.error(f"Error fetching eligible donors: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 def RecipientResultpage(request):

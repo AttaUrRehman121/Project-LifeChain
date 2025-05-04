@@ -3,6 +3,7 @@ import os
 import pickle
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
+from django.core.mail import send_mail
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -10,6 +11,7 @@ from django.http import Http404
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import joblib
 
+from LifeChain.settings import EMAIL_HOST_USER
 from registration.models import UserProfile
 from.models import donor_Registered, PredictionRecord
 from django.contrib.auth import get_user_model
@@ -239,15 +241,68 @@ def donor_Applicants(request):
             )
 
             logger.info(f"Donor saved successfully: {donor}")
+            send_mail(
+                subject='Donor Registration Confirmation',
+                message=(
+                    f"Dear {user_instance.username},\n\n"
+                    f"Thank you for registering as an organ donor. Below are your registration details:\n\n"
+                    f"Username: {data.get('username')}\n"
+                    f"Contact: {data.get('contact', 'Not provided')}\n"
+                    f"Email: {data.get('email')}\n"
+                    f"Age: {data.get('age')}\n"
+                    f"Gender: {gender}\n"
+                    f"Blood Type: {blood_type} {rh_factor}\n"
+                    f"Address: {data.get('address', 'Not provided')}\n\n"
+                    f"We deeply appreciate your selfless decision to contribute to saving lives. "
+                    f"Your generosity and compassion make a significant impact.\n\n"
+                    f"Should you have any questions or need further assistance, please do not hesitate to contact us.\n\n"
+                    f"Best regards,\n"
+                    f"LifeChain Team"
+                ),
+                from_email=EMAIL_HOST_USER,
+                recipient_list=[user_instance.email],
+                fail_silently=False
+            )
             return JsonResponse({'message': 'Donor saved successfully'})
-
-            
 
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+# Fetching All Eligible Donors 
+def fetch_eligible_donors(request):
+    try:
+        # Fetch all eligible donors from the database
+        eligible_donors = donor_Registered.objects.filter(eligibility='Eligible')
+        
+        # Serialize the data into a list of dictionaries
+        donors_data = [
+            {
+                'id': donor.id,
+                'username': donor.username,
+                'contact': donor.contact,
+                'email': donor.email,
+                'age': donor.age,
+                'gender': donor.gender,
+                'blood_type': donor.blood_type,
+                'rh_factor': donor.rh_factor,
+                'organ_type': donor.organ_type,
+                'address': donor.address,
+                'eligibility': donor.eligibility,
+            }
+            for donor in eligible_donors
+        ]
+
+        # Return the data as JSON response
+        return JsonResponse(donors_data, safe=False)
+    except Exception as e:
+        # Log the error and return an error response
+        logger.error(f"Error fetching eligible donors: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+    
 
 
 def DonorResultpage(request):

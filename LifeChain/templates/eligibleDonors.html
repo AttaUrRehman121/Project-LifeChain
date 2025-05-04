@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'style.css' %}" />
+
+<h2 class="text-2xl font-bold mb-4">Eligible Donors</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    {% for donor in donors %}
+    <div class="bg-white shadow-md rounded-xl p-4 border">
+        <h3 class="text-xl font-semibold">{{ donor.username }}</h3>
+        <p><strong>ID:</strong> {{ donor.id }}</p>
+        <p><strong>Age:</strong> {{ donor.age }}</p>
+        <p><strong>Gender:</strong> {{ donor.gender }}</p>
+        <p>
+            <strong>Blood Type:</strong> {{ donor.blood_type }}
+            {% if donor.rh_factor %}+{% else %}-{% endif %}
+        </p>
+        <p>
+            <strong>Organ:</strong>
+            {{ donor.organ_type }}
+
+        </p>
+        <p><strong>Email:</strong> {{ donor.email }}</p>
+        <p><strong>Contact:</strong> {{ donor.contact }}</p>
+        <p><strong>Address:</strong> {{ donor.address }}</p>
+        <p><strong>Eligibility:</strong> {{ donor.eligibility }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
