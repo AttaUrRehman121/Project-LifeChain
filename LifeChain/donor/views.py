@@ -241,6 +241,8 @@ def donor_Applicants(request):
             logger.info(f"Donor saved successfully: {donor}")
             return JsonResponse({'message': 'Donor saved successfully'})
 
+            
+
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)

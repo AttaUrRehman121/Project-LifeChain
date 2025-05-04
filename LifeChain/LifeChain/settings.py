@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
-    #'admin_volt.apps.AdminVoltConfig',
+    #'admin_volt.apps.AdminVoltConfig', # an other admin panel 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -165,11 +167,54 @@ JAZZMIN_SETTINGS = {
     "site_logo": "images/logo.png",
     "welcome_sign": "Welcome to LifeChain Admin",
     
+    "topmenu_links": [
+        {"name": "Home", "url": "/", "permissions": ["auth.view_user"]},
+        
+        
+    ],
     
     
-    
-}
     
 
+}
+
+
+# JAZZMIN_UI_TWEAKS = {
+#     "theme": "flatly",
+#     "dark_mode_theme": "darkly",
+#     "navbar_small_text": True,
+#     "body_small_text": True,
+#     "navbar_search_bar": True,
+#     "navbar_search_bar_text": "Search...",
+#     "navbar_search_bar_place_holder": "Search...",
+#     "navbar_search_results": True,
+#     "navbar_search_results_omit": ["auth.User", "auth.Group"],
+#     "show_sidebar_shortcuts": True,
+#     "show_sidebar_shortcuts_top": True,
+#     "show_sidebar_shortcuts_bottom": True,
+#     "show_sidebar_shortcuts_icons": True,
+#     "show_sidebar_shortcuts_text": True,
+#     "sidebar_fixed": True,
+#     "sidebar_nav_compact_style": True,
+#     "sidebar_nav_child_indent": True,
+#     "sidebar_nav_flat_style": True,
+#     "sidebar_nav_accordion": True,
+#     "sidebar_nav_hide_child": False,
+#     "show_ui_builder": True,
+#     "actions_sticky_top": True,
+# }
+    
+
+
+
+# send for email to Donor and Recipients
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 

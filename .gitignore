@@ -1,3 +1,5 @@
 venv/
 
 LifeChain/LifeChain/__pycache__/
+
+env/
