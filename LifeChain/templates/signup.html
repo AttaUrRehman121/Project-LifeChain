@@ -1,11 +1,12 @@
  {% load static %}
+ 
+<link rel="stylesheet" href="{% static 'signinStlye.css' %}" />
 <style>
     body{
       background-color: #267dff;
     }
   </style>
 
-<link rel="stylesheet" href="{% static 'signinStlye.css' %}" />
 <link rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -34,7 +35,6 @@
   <label for="role">Select Role</label>
   <select name="role" id="role" aria-placeholder="Select Role" required>
     <option value>....</option>
-    <option value="donor">Admin</option>
     <option value="donor">Donor</option>
     <option value="recipient">Recipient</option>
   </select>
@@ -55,7 +55,7 @@
   <input type="password" placeholder="Conform Password" name="password2"
     id="password2" required minlength="8">
 
-  <button id="signup" type="submit">Signup</button>
+  <button id="signup-btn" type="submit">Signup</button>
   <a class="ancher" href="{% url 'login' %}">I already have an account</a>
 </form>
 

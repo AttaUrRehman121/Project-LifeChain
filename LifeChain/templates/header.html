@@ -32,7 +32,7 @@
                                 onclick="window.location.href='{% url 'profile_view' %}'">Hello,
                                 {{user.username}}</li>
 
-                        <li><button
+                        <li><button class="logout-btn"
                                         onclick="window.location.href='{% url 'logout' %}'"
                                         id="buttonH">Logout</button></li>
                         {% else %}

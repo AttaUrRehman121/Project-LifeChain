@@ -74,8 +74,7 @@ def login(request):
                 return redirect('donorpage')
             elif user.role == 'recipient':
                 return redirect('recipientpage')
-            else:
-                return redirect('dashboard')
+            
         else:
             messages.error(request, "Invalid username or password.")
             return render(request, 'login.html')

@@ -1,4 +1,3 @@
-
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'loginStyle.css' %}" />
@@ -22,7 +21,7 @@
     <input type="password" placeholder="Password" id="password" name="password"
       required>
 
-    <button type="submit">Log In</button>
+    <button id="login-btn" type="submit">Log In</button>
 
     <a href="{% url 'signup' %}" class="ancher">Create an account</a>
   </form>
