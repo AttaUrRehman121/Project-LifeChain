@@ -3,5 +3,6 @@
     "cSpell.words": [
         ".venv"
     ],
-    "djlint.showInstallError": false
+    "djlint.showInstallError": false,
+    "postman.settings.dotenv-detection-notification-visibility": false
 }

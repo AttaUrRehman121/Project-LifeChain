@@ -19,7 +19,8 @@
             <h3 class="text-center mb-4">Basic Demographics and Physical
                 Attributes</h3>
             <div class="mb-3">
-                <label for="age" class="form-label">Age (in years)</label>
+                <label for="age" name="age" class="form-label">Age (in
+                    years)</label>
                 <input type="number" class="form-control" id="age" name="age"
                     placeholder="e.g., 30">
             </div>
@@ -206,9 +207,10 @@
                     id="pra_score" name="pra_score" placeholder="e.g., 85.5">
             </div>
             <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary"
-                    onclick="showPreviousStage2()">Back</button>
-                <button type="submit" class="btn btn-success">Submit</button>
+                <!-- <button type="button" class="btn btn-secondary"
+                    onclick="showPreviousStage2()">Back</button> -->
+                <button type="submit" name="Submit"
+                    class="btn btn-success">Submit</button>
             </div>
         </div>
     </form>

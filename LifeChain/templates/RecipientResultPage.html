@@ -88,7 +88,8 @@
 </style>
 
 <!-- SweetAlert2 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Report Content -->
@@ -100,26 +101,39 @@
     <div class="section-title">Personal Details</div>
     <table>
         <tr>
+            <th>Patient Name</th>
+            <td>{{ user.username| default:"N/A" }}</td>
+        </tr>
+        <tr>
             <th>Age</th>
-            <td>{{ record.age }}</td>
+            <td>{{ record.age | default:"N/A" }}</td>
             <th>Gender</th>
-            <td>{% if record.gender == 1 %}Male{% elif record.gender == 0 %}Female{% else %}N/A{% endif %}</td>
+            <td>{% if record.gender == 1 %}Male{% elif record.gender == 0
+                %}Female{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Blood Type</th>
-            <td>{{ record.blood_type }}</td>
+            <td>
+                {% if record.blood_type == 0 %}A
+                {% elif record.blood_type == 1 %}B
+                {% elif record.blood_type == 2 %}AB
+                {% elif record.blood_type == 3 %}O
+                {% else %}N/A
+                {% endif %}
+            </td>
             <th>Rh Factor</th>
-            <td>{% if record.rh_factor == 1 %}Positive{% elif record.rh_factor == 0 %}Negative{% else %}N/A{% endif %}</td>
+            <td>{% if record.rh_factor == 1 %}+{% elif record.rh_factor == 0
+                %}-{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Height (cm)</th>
-            <td>{{ record.height_cm }}</td>
+            <td>{{ record.height_cm|default:"N/A" }}</td>
             <th>Weight (kg)</th>
-            <td>{{ record.weight_kg }}</td>
+            <td>{{ record.weight_kg|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>BMI</th>
-            <td>{{ record.bmi }}</td>
+            <td>{{ record.bmi|default:"N/A" }}</td>
         </tr>
     </table>
 
@@ -128,21 +142,21 @@
     <table>
         <tr>
             <th>Wait List Days</th>
-            <td>{{ record.wait_list_days }}</td>
+            <td>{{ record.wait_list_days |default:"N/A" }}</td>
             <th>Medical Urgency Score</th>
-            <td>{{ record.medical_urgency_score }}</td>
+            <td>{{ record.medical_urgency_score |default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Hemoglobin</th>
-            <td>{{ record.hemoglobin }}</td>
+            <td>{{ record.hemoglobin |default:"N/A" }}</td>
             <th>WBC Count</th>
-            <td>{{ record.wbc_count }}</td>
+            <td>{{ record.wbc_count |default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Platelet Count</th>
-            <td>{{ record.platelet_count }}</td>
+            <td>{{ record.platelet_count |default:"N/A" }}</td>
             <th>Creatinine</th>
-            <td>{{ record.creatinine }}</td>
+            <td>{{ record.creatinine |default:"N/A" }}</td>
         </tr>
         <tr>
             <th>ALT</th>
@@ -152,40 +166,59 @@
         </tr>
         <tr>
             <th>Diabetes</th>
-            <td>{% if record.diabetes == 1 %}Yes{% elif record.diabetes == 0 %}No{% else %}N/A{% endif %}</td>
+            <td>{% if record.diabetes == 1 %}Yes{% elif record.diabetes
+                == 0 %}No{% else %}N/A{% endif %}</td>
+
             <th>Hypertension</th>
-            <td>{% if record.hypertension == 1 %}Yes{% elif record.hypertension == 0 %}No{% else %}N/A{% endif %}</td>
+            <td>{% if record.hypertension == 1 %}Yes{% elif record.hypertension
+                == 0 %}No{% else %}N/A{% endif %}</td>
         </tr>
         <tr>
             <th>Previous Transplant</th>
-            <td>{% if record.previous_transplant == 1 %}Yes{% elif record.previous_transplant == 0 %}No{% else %}N/A{% endif %}</td>
+            <td>{% if record.previous_transplant == 1 %}Yes{% elif
+                record.previous_transplant
+                == 0 %}No{% else %}N/A{% endif %}</td>
+
             <th>Dialysis Status</th>
-            <td>{% if record.dialysis_status == 1 %}Yes{% elif record.dialysis_status == 0 %}No{% else %}N/A{% endif %}</td>
+            <td>{% if record.dialysis_status == 1 %}Yes{% elif
+                record.dialysis_status
+                == 0 %}No{% else %}N/A{% endif %}</td>
+
         </tr>
         <tr>
             <th>Required Organ</th>
-            <td>{{ record.required_organ }}</td>
+            <td>{{ record.required_organ| default:"N/A" }}</td>
             <th>Antibody Screen</th>
-            <td>{% if record.antibody_screen == 1 %}Positive{% elif record.antibody_screen == 0 %}Negative{% else %}N/A{% endif %}</td>
+            <td>
+                {% if record.antibody_screen == 1 %}
+                Positive
+                {% elif record.antibody_screen == 0 %}
+                Negative
+                {% else %}
+                N/A
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>PRA Score</th>
-            <td>{{ record.pra_score }}</td>
+            <td>{{ record.pra_score | default:"N/A" }}</td>
             <th>Transplant Eligibility</th>
-            <td>{{ record.transplant_eligibility }}</td>
+            <td>{{ record.transplant_eligibility| default:"N/A" }}</td>
         </tr>
     </table>
 
     <div class="contact-info">
         <strong>Contact:</strong> LifeChain_Team@uskt.edu.pk<br>
-        <strong>Address:</strong> University of Sialkot, Main Daska Road, Sialkot, Pakistan
+        <strong>Address:</strong> University of Sialkot, Main Daska Road,
+        Sialkot, Pakistan
     </div>
 
     <!-- Download Button -->
     <a href="#" class="download-button" onclick="downloadPDF()">Download PDF</a>
 </div>
-<!-- Include only ONE version of html2pdf -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- html2pdf -->
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 function downloadPDF() {
@@ -226,7 +259,35 @@ function downloadPDF() {
         .set(options)
         .save()
         .then(() => {
-            Swal.fire('Success', 'PDF downloaded!', 'success');
+            Swal.fire({
+                title: 'PDF downloaded!',
+                text: 'Do you want to see the available donors?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then(() => {
+                if ("{{ record.transplant_eligibility }}" === "Eligible") {
+                    Swal.fire({
+                        title: 'PDF downloaded!',
+                        text: 'Redirecting to available donors...',
+                        icon: 'success',
+                        timer: 5000,
+                        loader: true,
+                        showConfirmButton: false
+                    });
+                    setTimeout(() => {
+                        window.location.href = "recipient/eligibleDonors/";
+                    }, 3000);
+                } else {
+                    Swal.fire({
+                        title: 'Not Eligible',
+                        text: 'You are not eligible to view the available donors.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+        }); 
         })
         .catch((error) => {
             console.error('PDF generation failed:', error);
