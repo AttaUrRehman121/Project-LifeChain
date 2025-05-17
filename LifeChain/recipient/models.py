@@ -58,3 +58,6 @@ class Recipient(models.Model):
     
     def __str__(self):
         return f"{self.required_organ} - {self.transplant_eligibility}"
+    
+    
+    

@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #114ca48b;
+  background-color: #199fe2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -174,7 +174,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #23a2f6;
+  background-color: #4f95c4;
   border-radius: 10px;
 }
 

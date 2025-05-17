@@ -3,188 +3,179 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'style1.css' %}" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-        @import url("https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css");
-    
-        #WpContainer
-        {
-            margin-top: 10px;
-            max-width: 900px;
-            background-color:white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .containerEB {
-            display: inline-flex;
-            flex-direction: column; 
-            align-items: center;    
-            padding: 20px;
-            
-        }
-    .profile-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        max-width: 370px;
-        width: 100%;
-        background: #fff;
-        border-radius: 24px;
-        padding: 25px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        position: relative;
-      }
-      .profile-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 5%;
-        width: 100%;
-        border-radius: 24px 24px 0 0;
-        background-color: #4070f4;
-      }
-      
-      .image .profile-img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 3px solid #fff;
-      }
-      .profile-card .text-data {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: #333;
-      }
-      .text-data .name {
-        font-size: 22px;
-        font-weight: 500;
-      }
-      .text-data .job {
-        font-size: 15px;
-        font-weight: 400;
-      }
-      .profile-card .media-buttons {
-        display: flex;
-        align-items: center;
-        margin-top: 15px;
-      }
-      .media-buttons .link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 18px;
-        height: 34px;
-        width: 34px;
-        border-radius: 50%;
-        margin: 0 8px;
-        background-color: #4070f4;
-        text-decoration: none;
-      }
-      .profile-card .buttons {
-        display: flex;
-        align-items: center;
-        margin-top: 25px;
-      }
-      .buttons .button {
-        color: #fff;
-        font-size: 14px;
-        font-weight: 400;
-        border: none;
-        border-radius: 24px;
-        margin: 0 10px;
-        padding: 8px 24px;
-        background-color: #4070f4;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-      .buttons .button:hover {
-        background-color: #0e4bf1;
-      }
-      .profile-card .analytics {
-        display: flex;
-        align-items: center;
-        margin-top: 25px;
-      }
-      .analytics .data {
-        display: flex;
-        align-items: center;
-        color: #333;
-        padding: 0 20px;
-        border-right: 2px solid #e7e7e7;
-      }
-      .data i {
-        font-size: 18px;
-        margin-right: 6px;
-      }
-      .data:last-child {
-        border-right: none;
-      }
-</style>
-<div class="container">
-    <h2 class="text-2xl font-bold mb-4">Eligible Donors</h2>
+  @import url("https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css");
 
+  #WpContainer {
+    margin-top: 10px;
+    max-width: 900px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .containerEB {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 370px;
+    width: 100%;
+    background: #fff;
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .profile-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 5%;
+    width: 100%;
+    border-radius: 24px 24px 0 0;
+    background-color: #4070f4;
+  }
+
+  .image .profile-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #fff;
+  }
+
+  .text-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+  }
+
+  .text-data .name {
+    font-size: 22px;
+    font-weight: 500;
+  }
+
+  .text-data .job {
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .media-buttons .link,
+  .buttons .button {
+    background-color: #4070f4;
+    color: #fff;
+    border-radius: 24px;
+    padding: 8px 24px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .buttons .button:hover {
+    background-color: #0e4bf1;
+  }
+
+  .processing-layout {
+    display: none;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 20px;
+    color: #0e4bf1;
+    font-weight: bold;
+  }
+</style>
+
+<div class="container">
+  <h2 class="text-2xl font-bold mb-4">Eligible Donors</h2>
+
+  <div id="donor-list">
     {% for donor in donors %}
-    <div class="containerEB">
-        <div class="profile-card">
-            <div class="image">
-            </div>
-            <div class="text-data">
-                <span class="name ">{{ donor.username }}</span>
-                <span class="job">ID: {{ donor.id }}</span>
-                <p><strong>Age:</strong> {{ donor.age }}</p>
-                <p><strong>Gender:</strong> {{ donor.gender }}</p>
-                <p>
-                    <strong>Blood Type:</strong> {{ donor.blood_type }}
-                    {% if donor.rh_factor %}+{% else %}-{% endif %}
-                </p>
-                <p>
-                    <strong>Organ:</strong>
-                    {{ donor.organ_type }}
-                </p>
-                <p><strong>Email:</strong> {{ donor.email }}</p>
-                <p><strong>Contact:</strong> {{ donor.contact }}</p>
-                <p><strong>Address:</strong> {{ donor.address }}</p>
-                <p><strong>Eligibility:</strong> {{ donor.eligibility }}</p>
-            </div>
-            <div class="media-buttons">
-                <a href="#" style="background: #4267b2" class="link">
-                    <i class="bx bxl-facebook"></i>
-                </a>
-                <a href="#" style="background: #1da1f2" class="link">
-                    <i class="bx bxl-twitter"></i>
-                </a>
-                <a href="#" style="background: #e1306c" class="link">
-                    <i class="bx bxl-instagram"></i>
-                </a>
-                <a href="#" style="background: #ff0000" class="link">
-                    <i class="bx bxl-youtube"></i>
-                </a>
-            </div>
-            <div class="buttons">
-                <button class="button">Subscribe</button>
-                <button class="button">Message</button>
-            </div>
-            <div class="analytics">
-                <div class="data">
-                    <i class="bx bx-heart"></i>
-                    <span class="number">60k</span>
-                </div>
-                <div class="data">
-                    <i class="bx bx-message-rounded"></i>
-                    <span class="number">20k</span>
-                </div>
-                <div class="data">
-                    <i class="bx bx-share"></i>
-                    <span class="number">12k</span>
-                </div>
-            </div>
+    <div class="containerEB donor-card" id="donor-{{ donor.id }}">
+      <div class="profile-card">
+        <div class="image"></div>
+        <div class="text-data">
+          <span class="name">{{ donor.username }}</span>
+          <span class="job">ID: {{ donor.id }}</span>
+          <p><strong>Age:</strong> {{ donor.age }}</p>
+          <p><strong>Gender:</strong> {{ donor.gender }}</p>
+          <p>
+            <strong>Blood Type:</strong> {{ donor.blood_type }}
+            {% if donor.rh_factor %}+{% else %}-{% endif %}
+          </p>
+          <p><strong>Organ:</strong> {{ donor.organ_type }}</p>
+          <p><strong>Email:</strong> {{ donor.email }}</p>
+          <p><strong>Contact:</strong> {{ donor.contact }}</p>
+          <p><strong>Address:</strong> {{ donor.address }}</p>
+          <p><strong>Eligibility:</strong> {{ donor.eligibility }}</p>
         </div>
+
+        <div class="buttons">
+          <button class="button allocate-btn"
+            data-donor-id="{{ donor.id }}">Allocate</button>
+        </div>
+      </div>
     </div>
     {% endfor %}
+  </div>
+
+  <div id="processing" class="processing-layout">
+    Allocation process started. Please wait...
+  </div>
 </div>
+
+<script>
+  document.querySelectorAll('.allocate-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const donorId = this.dataset.donorId;
+
+      Swal.fire({
+        title: 'Allocating Donor',
+        text: "The process of allocating this donor has started...",
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000
+      }).then(() => {
+        // Hide all other donors
+        document.querySelectorAll('.donor-card').forEach(card => {
+          if (!card.id.includes(donorId)) {
+            card.style.display = 'none';
+          }
+        });
+
+        // Show processing layout
+        document.getElementById('processing').style.display = 'block';
+
+        // Call backend to send email and allocate
+        fetch(`/recipient/allocate_donor/${donorId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire('Email Sent!', 'Waiting for donor response.', 'success');
+          } else {
+            Swal.fire('Error!', 'Something went wrong.', 'error');
+          }
+        });
+      });
+    });
+  });
+</script>
 {% endblock content %}

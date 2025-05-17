@@ -1,7 +1,8 @@
 {
     "liveServer.settings.port": 5502,
     "cSpell.words": [
-        ".venv"
+        ".venv",
+        "csrfmiddlewaretoken"
     ],
     "djlint.showInstallError": false,
     "postman.settings.dotenv-detection-notification-visibility": false

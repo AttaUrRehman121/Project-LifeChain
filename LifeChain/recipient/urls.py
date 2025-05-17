@@ -7,5 +7,6 @@ urlpatterns = [
   path('recipientprictiction/',recipientprictiction, name= "recipientprictiction"),
   path('recipientresultpage/',RecipientResultpage, name= "RecipientResultpage"),
   path('eligibleDonors/', eligible_donors, name='eligibleDdonors'),
+  
     
 ]

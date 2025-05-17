@@ -2,78 +2,92 @@
 {% load static %}
 
 {% block content %}
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f8fc;
+    margin: 0;
+    padding: 20px;
+    
+}
 
-<section>
-  <link rel="stylesheet" href="{% static 'profile.css' %}" />
-  <div class="container mt-1">
-    <h1 class="text-center mt-4">User Profile</h1>
-    <!-- User Profile Form -->
-    <form method="post" enctype="multipart/form-data" class="edit-form">
-      {% csrf_token %}
-      <div class="row justify-content-md-around">
-        <!-- Left Column -->
-        <div class="col-5">
-          <div class="form-group mt-2">
-            <label for="id_username" class="h5">Username:</label>
-            <p>{{ user_profile.username }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_email" class="h5">Email:</label>
-            <p>{{ user_profile.email }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_gender" class="h5">Gender:</label>
-            <p>{{ user_profile.user.profile.gender }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_nationality" class="h5">Nationality:</label>
-            <p>{{ user_profile.nationality }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_role" class="h5">Role:</label>
-            <p>{{ user_profile.role }}</p>
-          </div>
-        </div>
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+}
 
-        <!-- Right Column -->
-        <div class="col-5">
-          <div class="form-group mt-2">
-            <label for="id_date_of_birth" class="h5">Date of Birth:</label>
-            <p>{{ user_profile.user.profile.date_of_birth }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_picture" class="h5">Picture:</label>
-            <p>{{ user_profile.user.profile.picture }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_phone" class="h5">Phone:</label>
-            <p>{{ user_profile.user.profile.phone }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_contact" class="h5">Contact:</label>
-            <p>{{ user_profile.contact }}</p>
-          </div>
-          <div class="form-group mt-2">
-            <label for="id_address" class="h5">Address:</label>
-            <p>{{ user_profile.address }}</p>
-          </div>
-        </div>
-      </div>
+.card {
+    background-color: white;
+    border: 1px solid #d3e4f0;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+}
 
-      <!-- Save Changes Button -->
-      <div class="row w-25 mx-auto">
-        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
-      </div>
-    </form>
+.card h2 {
+    border-bottom: 2px solid #c4d8ec;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: #2a5d89;
+}
 
-    <!-- Delete Account Section -->
-    <div class="row mt-4 mx-4 text-center">
-      <p class="h4 text-danger fw-bolder">Delete Account</p>
-      <p class="fw-bold">Do you want to delete your account?</p>
-      <a class="btn btn-danger w-25"
-        onclick="confirmRedirect('deleteuser')">Delete</a>
-    </div>
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 10px;
+    vertical-align: top;
+}
+
+    </style>
+
+<div class="container">
+  <!-- Personal Information -->
+  <div class="card">
+    <h2>Personal Information</h2>
+    <table>
+      <tr>
+        <td><strong>Name:</strong></td>
+        <td>{{user.username}}</td>
+        <td><strong>Email</strong></td>
+        <td>{{user.email}}</td>
+      </tr>
+      <tr>
+        <td><strong>Role:</strong></td>
+        <td>{{user.role}}</td>
+        <td><strong>Phone No:</strong></td>
+        <td>{{user.contact}}</td>
+      </tr>
+      <tr>
+        <td><strong>Nationality</strong></td>
+        <td>{{user.nationality}}</td>
+        <td><strong>Address</strong></td>
+        <td>{{user.address}}</td>
+      </tr>
+
+    </table>
   </div>
-</section>
 
+  <!-- Degree Information -->
+  <div class="card">
+    <h2>Your Result For Compatibility </h2>
+    <table>
+      <tr>
+        <td><strong>{{ donor.eligibility }}</strong></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Allocated To Receiver</h2>
+    <tr>
+      <td><strong></strong></td>
+      <td colspan="3">21101001-100</td>
+    </tr>
+  </div>
+</div>
 {% endblock %}
