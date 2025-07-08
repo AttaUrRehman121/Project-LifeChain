@@ -5,6 +5,17 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import login as auth_login, authenticate
 from .models import Contact
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from donor.models import donor_Registered
+from recipient.models import AllocatedDonorToRecipient, Recipient
+from registration.models import UserProfile
+from django.contrib.auth.decorators import login_required
+
+
+
 
 # Create your views here.
 def index(request):
@@ -31,15 +42,28 @@ def contact(request):
 def about(request):
     return render(request, 'about.html')
 
+
+
+@login_required
 def profile_view(request):
-    return render(request, 'profile.html')
+    user = request.user
 
+    # Donor section
+    donor = donor_Registered.objects.filter(user=user).first()
+    donor_allocation = None
+    if donor:
+        donor_allocation = AllocatedDonorToRecipient.objects.filter(donor=donor).last()
 
-# def login(request):
-#     return render(request, 'login.html')
+    # Recipient section
+    recipient = Recipient.objects.filter(user=user).first()
+    recipient_allocations = []
+    if recipient:
+        recipient_allocations = AllocatedDonorToRecipient.objects.filter(recipient=recipient)
 
-
-# def logout(request):
-#     return render(request, 'profile.html')
-
-
+    return render(request, 'profile.html', {
+        'user': user,
+        'donor': donor,
+        'donor_allocation': donor_allocation,
+        'recipient': recipient,
+        'recipient_allocations': recipient_allocations,
+    })

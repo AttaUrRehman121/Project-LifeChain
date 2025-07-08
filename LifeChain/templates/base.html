@@ -3,44 +3,45 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} {% endblock title %} </title>
-    <link
-      rel="stylesheet"
-      href="{% static 'bootstrap.min.css' %}" />
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %} {% endblock title %} </title>
+        <link
+            rel="stylesheet"
+            href="{% static 'bootstrap.min.css' %}" />
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
-      rel="stylesheet" />
-    <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
-      integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
-      integrity="sha512-XcIsjKMcuVe0Ucj/xgIXQnytNwBttJbNjltBV18IOnru2lDPe9KRRyvCXw6Y5H415vbBLRm8+q6fmLUU7DfO6Q=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+            rel="stylesheet" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
+            integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+            integrity="sha512-XcIsjKMcuVe0Ucj/xgIXQnytNwBttJbNjltBV18IOnru2lDPe9KRRyvCXw6Y5H415vbBLRm8+q6fmLUU7DfO6Q=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+            integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" type="text/css"
-      href="{% static 'style.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'style1.css' %}" />
+        <link rel="stylesheet" type="text/css"
+            href="{% static 'style.css' %}" />
+        <link rel="stylesheet" type="text/css"
+            href="{% static 'style1.css' %}" />
 
-  </head>
-  <body>
-    {% include "header.html" %}
-    {% block content %}
+    </head>
+    <body>
+        {% include "header.html" %}
+        {% block content %}
 
-    {% endblock content %}
-    {% include "footer.html" %}
+        {% endblock content %}
+        {% include "footer.html" %}
 
-    <style>
+        <style>
     /* --- Chat styles --- */
     .chat-popup {
         position: fixed;
@@ -141,32 +142,34 @@
     }
 </style>
 
-    <!-- Bubble Icon -->
-    <div class="chat-bubble" id="chatBubble">
-      <i class="fas fa-comment"></i>
-      <div class="notification-badge" id="notificationBadge"
-        style="display: none;">0</div>
-    </div>
-
-    <!-- Chat Popup -->
-    <div class="chat-popup" id="chatPopup">
-      <div class="chat-header">
-        <span>{{user.role}} | {{user.username}}</span>
-        <div class="chat-controls">
-          <button id="minimizeBtn"><i
-              class="fas fa-window-minimize"></i></button>
-          <button id="closeBtn"><i class="fas fa-times"></i></button>
+        <!-- Bubble Icon -->
+        <div class="chat-bubble" id="chatBubble">
+            <i class="fas fa-comment"></i>
+            <div class="notification-badge" id="notificationBadge"
+                style="display: none;">0</div>
         </div>
-      </div>
-      <div class="chat-body" id="chatbox"></div>
-      <div class="chat-footer">
-        <input type="text" id="chatMessageInput" class="form-control mb-2"
-          placeholder="Type a message...">
-        <button id="chatMessageSend" class="btn btn-primary w-100">Send</button>
-      </div>
-    </div>
 
-    <script>
+        <!-- Chat Popup -->
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <span>{{user.role}} | {{user.username}}</span>
+                <div class="chat-controls">
+                    <button id="minimizeBtn"><i
+                            class="fas fa-window-minimize"></i></button>
+                    <button id="closeBtn"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="chat-body" id="chatbox"></div>
+            <div class="chat-footer">
+                <input type="text" id="chatMessageInput"
+                    class="form-control mb-2"
+                    placeholder="Type a message...">
+                <button id="chatMessageSend"
+                    class="btn btn-primary w-100">Send</button>
+            </div>
+        </div>
+
+        <script>
     const chatPopup = document.getElementById('chatPopup');
     const chatBubble = document.getElementById('chatBubble');
     const notificationBadge = document.getElementById('notificationBadge');
@@ -297,11 +300,19 @@
     window.addEventListener('beforeunload', saveState);
 </script>
 
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="{% static 'script.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="{% static 'script.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  </body>
+    </body>
 
 </html>
+
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}

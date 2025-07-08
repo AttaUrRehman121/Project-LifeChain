@@ -5,6 +5,9 @@
 <link rel="stylesheet" href="{% static 'style1.css' %}" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- Hidden CSRF token to be accessed in JS -->
+<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
 <style>
   @import url("https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css");
 
@@ -125,7 +128,7 @@
 
         <div class="buttons">
           <button class="button allocate-btn"
-            data-donor-id="{{ donor.id }}">Allocate</button>
+            data-donor-id='{{ donor.id }}'>Allocate</button>
         </div>
       </div>
     </div>
@@ -138,43 +141,56 @@
 </div>
 
 <script>
+  const csrftoken = document.getElementById("csrf-token").value;
+
   document.querySelectorAll('.allocate-btn').forEach(btn => {
     btn.addEventListener('click', function () {
-      const donorId = this.dataset.donorId;
+      const donorId = this.getAttribute('data-donor-id');
 
       Swal.fire({
         title: 'Allocating Donor',
         text: "The process of allocating this donor has started...",
         icon: 'info',
         showConfirmButton: false,
-        timer: 2000
-      }).then(() => {
-        // Hide all other donors
-        document.querySelectorAll('.donor-card').forEach(card => {
-          if (!card.id.includes(donorId)) {
-            card.style.display = 'none';
-          }
-        });
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
-        // Show processing layout
-        document.getElementById('processing').style.display = 'block';
-
-        // Call backend to send email and allocate
-        fetch(`/recipient/allocate_donor/${donorId}/`, {
+      fetch(`/recipient/allocate_donor/${donorId}/`, {
           method: 'POST',
           headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+        })
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url; // Login redirect
+            return;
+          }
+          if (response.ok) {
+            document.querySelectorAll('.donor-card').forEach(card => {
+              if (card.id !== `donor-${donorId}`) {
+                card.style.display = 'none';
+              }
+            });
+            document.getElementById('processing').style.display = 'block';
+
+            setTimeout(() => {
+              Swal.fire('Email Sent!', 'Waiting for donor response.', 'success').then(() => {
+                window.location.href = "{% url 'profile_view' %}";
+              });
+            }, 1500);
+          } else {
+            return response.json().then(data => {
+              Swal.fire('Error', data.error || 'Failed to allocate donor.', 'error');
+            });
           }
         })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire('Email Sent!', 'Waiting for donor response.', 'success');
-          } else {
-            Swal.fire('Error!', 'Something went wrong.', 'error');
-          }
+        .catch(() => {
+          Swal.fire('Error', 'Network error.', 'error');
         });
-      });
     });
   });
 </script>

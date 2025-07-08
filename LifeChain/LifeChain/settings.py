@@ -179,31 +179,6 @@ JAZZMIN_SETTINGS = {
 }
 
 
-# JAZZMIN_UI_TWEAKS = {
-#     "theme": "flatly",
-#     "dark_mode_theme": "darkly",
-#     "navbar_small_text": True,
-#     "body_small_text": True,
-#     "navbar_search_bar": True,
-#     "navbar_search_bar_text": "Search...",
-#     "navbar_search_bar_place_holder": "Search...",
-#     "navbar_search_results": True,
-#     "navbar_search_results_omit": ["auth.User", "auth.Group"],
-#     "show_sidebar_shortcuts": True,
-#     "show_sidebar_shortcuts_top": True,
-#     "show_sidebar_shortcuts_bottom": True,
-#     "show_sidebar_shortcuts_icons": True,
-#     "show_sidebar_shortcuts_text": True,
-#     "sidebar_fixed": True,
-#     "sidebar_nav_compact_style": True,
-#     "sidebar_nav_child_indent": True,
-#     "sidebar_nav_flat_style": True,
-#     "sidebar_nav_accordion": True,
-#     "sidebar_nav_hide_child": False,
-#     "show_ui_builder": True,
-#     "actions_sticky_top": True,
-# }
-    
 
 
 
@@ -215,5 +190,3 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-
-

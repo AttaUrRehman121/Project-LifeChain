@@ -102,14 +102,18 @@
     <table>
         <tr>
             <th>Patient Name</th>
-            <td>{{ user.username| default:"N/A" }}</td>
+            <td colspan="3">{{ user.username|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Age</th>
-            <td>{{ record.age | default:"N/A" }}</td>
+            <td>{{ record.age|default:"N/A" }}</td>
             <th>Gender</th>
-            <td>{% if record.gender == 1 %}Male{% elif record.gender == 0
-                %}Female{% else %}N/A{% endif %}</td>
+            <td>
+                {% if record.gender == 1 %}Male
+                {% elif record.gender == 0 %}Female
+                {% else %}N/A
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Blood Type</th>
@@ -133,7 +137,7 @@
         </tr>
         <tr>
             <th>BMI</th>
-            <td>{{ record.bmi|default:"N/A" }}</td>
+            <td colspan="3">{{ record.bmi|default:"N/A" }}</td>
         </tr>
     </table>
 
@@ -142,21 +146,21 @@
     <table>
         <tr>
             <th>Wait List Days</th>
-            <td>{{ record.wait_list_days |default:"N/A" }}</td>
+            <td>{{ record.wait_list_days|default:"N/A" }}</td>
             <th>Medical Urgency Score</th>
-            <td>{{ record.medical_urgency_score |default:"N/A" }}</td>
+            <td>{{ record.medical_urgency_score|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Hemoglobin</th>
-            <td>{{ record.hemoglobin |default:"N/A" }}</td>
+            <td>{{ record.hemoglobin|default:"N/A" }}</td>
             <th>WBC Count</th>
-            <td>{{ record.wbc_count |default:"N/A" }}</td>
+            <td>{{ record.wbc_count|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>Platelet Count</th>
-            <td>{{ record.platelet_count |default:"N/A" }}</td>
+            <td>{{ record.platelet_count|default:"N/A" }}</td>
             <th>Creatinine</th>
-            <td>{{ record.creatinine |default:"N/A" }}</td>
+            <td>{{ record.creatinine|default:"N/A" }}</td>
         </tr>
         <tr>
             <th>ALT</th>
@@ -166,44 +170,52 @@
         </tr>
         <tr>
             <th>Diabetes</th>
-            <td>{% if record.diabetes == 1 %}Yes{% elif record.diabetes
-                == 0 %}No{% else %}N/A{% endif %}</td>
-
+            <td>
+                {% if record.diabetes == 1 %}Yes
+                {% elif record.diabetes == 0 %}No
+                {% else %}N/A
+                {% endif %}
+            </td>
             <th>Hypertension</th>
-            <td>{% if record.hypertension == 1 %}Yes{% elif record.hypertension
-                == 0 %}No{% else %}N/A{% endif %}</td>
+            <td>
+                {% if record.hypertension == 1 %}Yes
+                {% elif record.hypertension == 0 %}No
+                {% else %}N/A
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Previous Transplant</th>
-            <td>{% if record.previous_transplant == 1 %}Yes{% elif
-                record.previous_transplant
-                == 0 %}No{% else %}N/A{% endif %}</td>
-
+            <td>
+                {% if record.previous_transplant == 1 %}Yes
+                {% elif record.previous_transplant == 0 %}No
+                {% else %}N/A
+                {% endif %}
+            </td>
             <th>Dialysis Status</th>
-            <td>{% if record.dialysis_status == 1 %}Yes{% elif
-                record.dialysis_status
-                == 0 %}No{% else %}N/A{% endif %}</td>
-
+            <td>
+                {% if record.dialysis_status == 1 %}Yes
+                {% elif record.dialysis_status == 0 %}No
+                {% else %}N/A
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Required Organ</th>
-            <td>{{ record.required_organ| default:"N/A" }}</td>
+            <td>{{ record.required_organ|default:"N/A" }}</td>
             <th>Antibody Screen</th>
             <td>
-                {% if record.antibody_screen == 1 %}
-                Positive
-                {% elif record.antibody_screen == 0 %}
-                Negative
-                {% else %}
-                N/A
+                {% if record.antibody_screen == 1 %}Positive
+                {% elif record.antibody_screen == 0 %}Negative
+                {% else %}N/A
                 {% endif %}
             </td>
         </tr>
         <tr>
             <th>PRA Score</th>
-            <td>{{ record.pra_score | default:"N/A" }}</td>
+            <td>{{ record.pra_score|default:"N/A" }}</td>
             <th>Transplant Eligibility</th>
-            <td>{{ record.transplant_eligibility| default:"N/A" }}</td>
+            <td>{{ record.transplant_eligibility|default:"N/A" }}</td>
         </tr>
     </table>
 
@@ -245,7 +257,7 @@ function downloadPDF() {
             scale: 3,
             scrollY: 0,
             useCORS: true,
-            logging: true  // Add logging for debugging
+            logging: true  
         },
         jsPDF: { 
             unit: 'mm', 
@@ -277,7 +289,7 @@ function downloadPDF() {
                         showConfirmButton: false
                     });
                     setTimeout(() => {
-                        window.location.href = "recipient/eligibleDonors/";
+                        window.location.href = "eligibleDonors/";
                     }, 3000);
                 } else {
                     Swal.fire({

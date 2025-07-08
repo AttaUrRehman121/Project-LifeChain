@@ -27,3 +27,4 @@ class DonorRegisteredAdmin(admin.ModelAdmin):
 # Register models with custom admin views
 admin.site.register(PredictionRecord, PredictionRecordAdmin)
 admin.site.register(donor_Registered, DonorRegisteredAdmin)
+

@@ -1,8 +1,11 @@
 from urllib import request
 from django.db import models
 from django.conf import settings
-
 from registration.models import UserProfile
+
+from django.db import models
+    
+
 
 
 class PredictionRecord(models.Model):
@@ -46,10 +49,6 @@ class PredictionRecord(models.Model):
     
     
     
-    
-from django.conf import settings
-from django.db import models
-from django.db import models
 
 class donor_Registered(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -79,3 +78,7 @@ class donor_Registered(models.Model):
     
     def __str__(self):
         return self.username
+
+
+
+

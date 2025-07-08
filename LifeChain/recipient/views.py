@@ -1,16 +1,22 @@
+from datetime import timezone
 import os
+from django.contrib import messages
 from venv import logger
+from django.conf import settings
 from django.http import JsonResponse
+from django.urls import reverse
 import joblib
 import numpy as np
 import logging
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 import pandas as pd
-from .models import Recipient
+from .models import AllocatedDonorToRecipient, Recipient
 from donor.models import donor_Registered
+from django.core.mail import send_mail
+from django.utils import timezone
 # Create your views here.
-# @login_required
+@login_required
 def recipientpage(request):
     return render(request, 'recipientPage.html')
  
@@ -46,7 +52,9 @@ def recipientprictiction(request):
     if request.method == 'POST':
         try:
             logging.info("Received POST request for recipient prediction.")
-
+            #login user 
+            logging.info("User is authenticated: %s", request.user.id)
+            
             # Extract input values safely
             age = float(request.POST.get('age', 0))
             gender = 1 if request.POST.get('gender') == 'male' else 0
@@ -87,9 +95,10 @@ def recipientprictiction(request):
             else:
                 transplant_eligibility = 'Model not available'
                 logging.warning("Prediction could not be made because the model is missing.")
-
+            #
             # Save the data to the database
             record = Recipient(
+                user = request.user,  
                 age=age,
                 gender=gender,
                 blood_type=blood_type,
@@ -229,8 +238,102 @@ def eligible_donors(request):
     except Exception as e:
         logger.error(f"Error fetching eligible donors: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
+    
+    
 
+    
 
+@login_required
+def allocate_donor(request, donor_id):
+    print("Allocate donor triggered", donor_id)
+    donor = get_object_or_404(donor_Registered, id=donor_id)
+    user = request.user
+    recipient = get_object_or_404(Recipient, user=user)
+
+    # Avoid duplicate allocation
+    if AllocatedDonorToRecipient.objects.filter(donor=donor, recipient=recipient).exists():
+        return JsonResponse({'error': 'Already allocated'}, status=400)
+
+    # Create allocation with token and expiry
+    allocation = AllocatedDonorToRecipient.objects.create(
+        recipient=recipient,
+        donor=donor
+    )
+
+    # Generate verification URL
+    verify_url = request.build_absolute_uri(
+        reverse('verify_donor_email', args=[allocation.verification_token])
+    )
+
+    # Send verification email to donor
+    send_mail(
+        subject='Organ Donation Request',
+        message=f'''Dear {donor.username},
+
+            You have been matched with a recipient for organ donation.
+
+            Recipient: {recipient.user.username}
+            Organ Requested: {donor.organ_type}
+            Blood Type: {donor.blood_type}
+
+            Please confirm your agreement to donate by clicking the link below within 24 hours:
+            {verify_url}
+
+            If you do not respond within 1 day, this request will be canceled.
+
+            Thank you,
+            LifeChain Team
+            ''',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[donor.email],
+        fail_silently=False,
+    )
+
+    return JsonResponse({'status': 'success'})
+
+def verify_donor_email(request, token):
+    try:
+        allocation = AllocatedDonorToRecipient.objects.get(verification_token=token)
+
+        if timezone.now() > allocation.token_expiry:
+            recipient_user = allocation.recipient.user
+            donor_name = allocation.donor.username
+
+            # Delete expired allocation
+            allocation.delete()
+
+            # Notify recipient via email
+            send_mail(
+                subject='Donation Request Expired',
+                message=f'''Dear {recipient_user.username},
+
+                Unfortunately, the donor "{donor_name}" did not verify their donation within 24 hours. The request has now been cancelled.
+
+                You may try allocating a different donor.
+
+                Regards,  
+                LifeChain Team
+                ''',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[recipient_user.email],
+                fail_silently=False,
+            )
+
+            messages.error(request, "Verification link expired. Allocation has been cancelled.")
+            return redirect('profile_view')
+
+        # Mark as verified
+        allocation.verification_status = True
+        allocation.save()
+
+        messages.success(request, "Thank you for confirming your donation.")
+        return redirect('profile_view')
+
+    except AllocatedDonorToRecipient.DoesNotExist:
+        messages.error(request, "Invalid or expired verification link.")
+        return redirect('profile_view')
+    
+    
 def RecipientResultpage(request):
     return render(request, 'RecipientResultPage.html')
 

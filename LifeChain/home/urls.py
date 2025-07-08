@@ -1,8 +1,8 @@
-from django.contrib import admin
+
 from django.urls import path, include
 from .views import contact, about, index, profile_view
 from registration.views import signup
-from django.conf import settings
+
 
 
 urlpatterns = [

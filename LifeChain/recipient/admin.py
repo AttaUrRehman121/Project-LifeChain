@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Recipient
+from .models import Recipient , AllocatedDonorToRecipient
 
 class RecipientAdmin(admin.ModelAdmin):
     list_display = (
@@ -13,5 +13,15 @@ class RecipientAdmin(admin.ModelAdmin):
     search_fields = ('required_organ', 'transplant_eligibility', 'blood_type')
     list_per_page = 20
 
+class AllocatedDonorToRecipientAdmin(admin.ModelAdmin):
+    list_display = ('recipient', 'donor', 'verification_status', 'verification_token', 'token_expiry', 'allocation_date')
+    list_filter = ('verification_status', 'allocation_date')
+    search_fields = ('recipient__user__username', 'donor__username')
+    list_per_page = 20
+
 # Register the Recipient model with the admin interface
 admin.site.register(Recipient, RecipientAdmin)
+admin.site.register(AllocatedDonorToRecipient, AllocatedDonorToRecipientAdmin)
+
+
+admin.site.site_header = "LifeChain Admin"

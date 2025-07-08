@@ -3,91 +3,163 @@
 
 {% block content %}
 <style>
-    body {
+  body {
     font-family: Arial, sans-serif;
     background-color: #f5f8fc;
     margin: 0;
     padding: 20px;
-    
-}
+  }
 
-.container {
+  .container {
     width: 90%;
     max-width: 1000px;
     margin: auto;
-}
+  }
 
-.card {
+  .card {
     background-color: white;
     border: 1px solid #d3e4f0;
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     padding: 20px;
     margin-bottom: 30px;
-}
+  }
 
-.card h2 {
+  .card h2 {
     border-bottom: 2px solid #c4d8ec;
     padding-bottom: 10px;
     margin-bottom: 20px;
     color: #2a5d89;
-}
+  }
 
-table {
+  table {
     width: 100%;
     border-collapse: collapse;
-}
+  }
 
-td {
+  td, th {
     padding: 10px;
     vertical-align: top;
-}
+    text-align: left;
+  }
 
-    </style>
+  .status-verified {
+    color: green;
+    font-weight: bold;
+  }
+
+  .status-pending {
+    color: orange;
+    font-weight: bold;
+  }
+
+  .status-none {
+    color: gray;
+    font-style: italic;
+  }
+</style>
 
 <div class="container">
+
   <!-- Personal Information -->
   <div class="card">
     <h2>Personal Information</h2>
     <table>
       <tr>
         <td><strong>Name:</strong></td>
-        <td>{{user.username}}</td>
-        <td><strong>Email</strong></td>
-        <td>{{user.email}}</td>
+        <td>{{ user.username }}</td>
+        <td><strong>Email:</strong></td>
+        <td>{{ user.email }}</td>
       </tr>
       <tr>
         <td><strong>Role:</strong></td>
-        <td>{{user.role}}</td>
+        <td>{{ user.role }}</td>
         <td><strong>Phone No:</strong></td>
-        <td>{{user.contact}}</td>
+        <td>{{ user.contact }}</td>
       </tr>
       <tr>
-        <td><strong>Nationality</strong></td>
-        <td>{{user.nationality}}</td>
-        <td><strong>Address</strong></td>
-        <td>{{user.address}}</td>
+        <td><strong>Nationality:</strong></td>
+        <td>{{ user.nationality }}</td>
+        <td><strong>Address:</strong></td>
+        <td>{{ user.address }}</td>
       </tr>
-
     </table>
   </div>
 
-  <!-- Degree Information -->
+  <!-- Donor View -->
+  {% if donor %}
   <div class="card">
-    <h2>Your Result For Compatibility </h2>
+    <h2>Your Compatibility Result</h2>
+    <p><strong>{{ donor.eligibility }}</strong></p>
+  </div>
+
+  <div class="card">
+    <h2>Allocated To Recipient</h2>
+    {% if donor_allocation %}
     <table>
       <tr>
-        <td><strong>{{ donor.eligibility }}</strong></td>
+        <td><strong>Recipient:</strong></td>
+        <td>{{ donor_allocation.recipient.user.username }}</td>
+        <td><strong>Date:</strong></td>
+        <td>{{ donor_allocation.allocation_date }}</td>
+      </tr>
+      <tr>
+        <td><strong>Status:</strong></td>
+        <td colspan="3">
+          {% if donor_allocation.verification_status %}
+          <span class="status-verified">✅ Verified</span>
+          {% else %}
+          <span class="status-pending">⏳ Pending</span>
+          {% endif %}
+        </td>
       </tr>
     </table>
+    {% else %}
+    <p class="status-none">You are not allocated to any recipient yet.</p>
+    {% endif %}
   </div>
+  {% endif %}
 
+  <!-- Recipient View -->
+  {% if recipient %}
   <div class="card">
-    <h2>Allocated To Receiver</h2>
-    <tr>
-      <td><strong></strong></td>
-      <td colspan="3">21101001-100</td>
-    </tr>
+    <h2>Allocated Donors</h2>
+    {% if recipient_allocations %}
+    <table>
+      <tr>
+        <th>Donor</th>
+        <th>Organ</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+      {% for alloc in recipient_allocations %}
+      <tr>
+        <td>{{ alloc.donor.username }}</td>
+        <td>{{ alloc.donor.organ_type }}</td>
+        <td>
+          {% if alloc.verification_status %}
+          <span class="status-verified">✅ Verified</span>
+          {% else %}
+          <span class="status-pending">⏳ Pending</span>
+          {% endif %}
+        </td>
+        <td>{{ alloc.allocation_date }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p class="status-none">No donors have been allocated to you yet.</p>
+    {% endif %}
   </div>
+  {% endif %}
+
 </div>
+
+{% if messages %}
+<ul>
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

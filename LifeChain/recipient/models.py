@@ -1,7 +1,18 @@
 from django.db import models
+from django.db import models
+from django.conf import settings
+from donor.models import donor_Registered
+from registration.models import UserProfile
+from django.utils import timezone
+from datetime import timedelta
+import uuid
+from django.db import models
+from datetime import timedelta
+
 
 # Create your models here.
 class Recipient(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     GENDER_CHOICES = [
         (0, 'Female'),
         (1, 'Male'),
@@ -58,6 +69,20 @@ class Recipient(models.Model):
     
     def __str__(self):
         return f"{self.required_organ} - {self.transplant_eligibility}"
-    
-    
-    
+
+ 
+
+
+def one_day_from_now():
+    return timezone.now() + timedelta(days=1)
+
+class AllocatedDonorToRecipient(models.Model):
+    recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
+    donor = models.ForeignKey(donor_Registered, on_delete=models.CASCADE)
+    verification_status = models.BooleanField(default=False)
+    verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    token_expiry = models.DateTimeField(default=one_day_from_now)
+    allocation_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Allocation of {self.donor} to {self.recipient} on {self.allocation_date}"
