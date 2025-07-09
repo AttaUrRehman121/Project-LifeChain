@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -91,15 +92,19 @@ WSGI_APPLICATION = 'LifeChain.wsgi.application'
 
 
 # connetcion to mysql database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': config('DB_ENGINE'),
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),
+#         'PORT': config('DB_PORT'),
+#     }
+# }
+
 DATABASES = {
-  'default': {
-      'ENGINE': 'mysql.connector.django',
-      'NAME': 'lifechain',
-      'USER': 'root',
-      'PASSWORD' : 'Atta786@',
-      'HOST': 'localhost',
-      'PORT': '3306', 
-  }
+    'default': dj_database_url.parse(config('DATABASE_URL'))
 }
 
 
