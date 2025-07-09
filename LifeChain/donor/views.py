@@ -20,6 +20,7 @@ import logging
 # Create your views here.
 
 # Donor Home Page 
+@login_required
 def donorpage(request):
     return render(request, 'donorPage.html')
 
