@@ -67,3 +67,8 @@ def profile_view(request):
         'recipient': recipient,
         'recipient_allocations': recipient_allocations,
     })
+
+
+
+def page_not_found_view(request, exception):
+    return render(request, '404-errorpage.html', status=404)
