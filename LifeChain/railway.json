@@ -1,0 +1,9 @@
+{
+    "build": {
+        "builder": "nixpacks",
+        "buildCommand": "cd LifeChain && pip install -r requirements.txt"
+    },
+    "start": {
+        "cmd": "python LifeChain/manage.py runserver 0.0.0.0:$PORT"
+    }
+}
