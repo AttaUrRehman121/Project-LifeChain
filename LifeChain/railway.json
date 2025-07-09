@@ -1,9 +1,9 @@
 {
     "build": {
         "builder": "nixpacks",
-        "buildCommand": "cd LifeChain && pip install -r requirements.txt"
+        "buildCommand": "pip install -r requirements.txt"
     },
     "start": {
-        "cmd": "cd LifeChain && gunicorn LifeChain.wsgi:application --bind 0.0.0.0:$PORT"
+        "cmd": "gunicorn LifeChain.wsgi:application --bind 0.0.0.0:$PORT"
     }
 }
