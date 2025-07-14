@@ -1,49 +1,64 @@
-
 <head>
         <meta http-equiv="Cache-Control"
                 content="no-cache, no-store, must-revalidate">
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <header>
         <a href="{% url 'index' %}"
                 class="logo"><span>L</span>ife<span>C</span>hain.</a>
         <nav class="navbar">
                 <ul>
                         <li><a href="{% url 'index' %}" active>Home</a></li>
-                        <li><a href="{% url 'donorpage'%}"> Donor </a></li>
-                        <li><a
-                                        href="{% url 'recipientpage'%}">Recipient</a></li>
-                        <li><a href="{%url 'contact'%}">Contact</a></li>
-                        <!-- <li><a href="#blog">Blog</a></li> -->
-                        <li><a href="{% url 'about'%}">About</a></li>
 
-                        <!-- {% if user.is_authenticated %}
-            <li><button onclick="window.location.href='{% url 'logout' %}'"
-                    id="buttonH">Logout</button></li>
-            {% else %}
-            <li><button onclick="window.location.href='{% url 'login' %}'"
-                    id="buttonH">Login</button></li>
-            <li><button onclick="window.location.href='{% url 'signup' %}'"
-                    id="buttonH">Signup</button></li>
-            {% endif %} -->
+                        <li><a href="{% url 'donorpage' %}">Donor</a></li>
+                        <li><a
+                                        href="{% url 'recipientpage' %}">Recipient</a></li>
+
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="{% url 'about' %}">About</a></li>
+
                         {% if user.is_authenticated %}
                         <li id="buttonH"
-                                onclick="window.location.href='{% url 'profile_view' %}'">Hello,
-                                {{user.username}}</li>
-
-                        <li><button class="logout-btn"
+                                onclick="window.location.href='{% url 'profile_view' %}'">
+                                Hello, {{ user.username }}
+                        </li>
+                        <li>
+                                <button class="logout-btn"
                                         onclick="window.location.href='{% url 'logout' %}'"
-                                        id="buttonH">Logout</button></li>
+                                        id="buttonH">
+                                        Logout
+                                </button>
+                        </li>
                         {% else %}
-                        <li><button
+                        <li>
+                                <button
                                         onclick="window.location.href='{% url 'login' %}'"
-                                        id="buttonH">Login </button></li>
-                        <li><button
+                                        id="buttonH">Login</button>
+                        </li>
+                        <li>
+                                <button
                                         onclick="window.location.href='{% url 'signup' %}'"
-                                        id="buttonH">Signup </button></li>
+                                        id="buttonH">Signup</button>
+                        </li>
                         {% endif %}
                 </ul>
         </nav>
+
+        {% if messages %}
+        <script>
+            {% for message in messages %}
+                Swal.fire({
+                    title: '{{ message.tags|capfirst }}',
+                    text: '{{ message }}',
+                    icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% else %}info{% endif %}',
+                    confirmButtonText: 'OK'
+                });
+            {% endfor %}
+        </script>
+        {% endif %}
+
         <div class="fas fa-bars"></div>
 </header>

@@ -61,7 +61,6 @@
 
 <div class="container">
 
-  <!-- Personal Information -->
   <div class="card">
     <h2>Personal Information</h2>
     <table>
@@ -86,7 +85,6 @@
     </table>
   </div>
 
-  <!-- Donor View -->
   {% if donor %}
   <div class="card">
     <h2>Your Compatibility Result</h2>
@@ -120,7 +118,6 @@
   </div>
   {% endif %}
 
-  <!-- Recipient View -->
   {% if recipient %}
   <div class="card">
     <h2>Allocated Donors</h2>
@@ -155,11 +152,4 @@
 
 </div>
 
-{% if messages %}
-<ul>
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
 {% endblock %}
