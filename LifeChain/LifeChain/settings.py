@@ -36,7 +36,6 @@ ALLOWED_HOSTS = ["*"]  # Allow all hosts for development; change in production
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'jazzmin',
-    # 'admin_volt.apps.AdminVoltConfig', # an other admin panel 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -185,9 +184,7 @@ JAZZMIN_SETTINGS = {
     
     "topmenu_links": [
         {"name": "Home", "url": "/", "permissions": ["auth.view_user"]},
-        
-        
-    ],
+            ],
     
     
     
@@ -206,3 +203,13 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+
+
+#whitenoise settings
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Configure Whitenoise to serve static files
+WHITENOISE_USE_FINDERS = True
+# Add Whitenoise middleware to the MIDDLEWARE setting
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
