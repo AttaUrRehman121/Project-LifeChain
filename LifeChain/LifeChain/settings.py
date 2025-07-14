@@ -112,8 +112,10 @@ DATABASES = {
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://project-lifechain-production.up.railway.app'
+    'https://project-lifechain-production.up.railway.app',
+    "https://lifechain.up.railway.app"
 ]
+
 
 
 # Password validation
