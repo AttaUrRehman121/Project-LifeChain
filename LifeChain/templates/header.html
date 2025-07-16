@@ -1,81 +1,4 @@
-<style>
-        .logo {
-                font-size: 2rem;
-                font-weight: bold;
-                text-decoration: none;
-                color: #333;
-        }
 
-        .navbar ul {
-                list-style: none;
-                display: flex;
-                gap: 1.5rem;
-                margin: 0;
-                padding: 0;
-                align-items: center;
-        }
-
-        .navbar li {
-                display: flex;
-                align-items: center;
-        }
-
-        .navbar a, .navbar button {
-                text-decoration: none;
-                color: #333;
-                background: none;
-                border: none;
-                font-size: 1rem;
-                cursor: pointer;
-                padding: 0.5rem 1rem;
-                transition: background 0.2s;
-        }
-
-        .navbar a:hover, .navbar button:hover {
-                background: #f0f0f0;
-                border-radius: 4px;
-        }
-
-        .logout-btn {
-                background: #e74c3c;
-                color: #fff;
-                border-radius: 4px;
-                padding: 0.5rem 1rem;
-        }
-
-        .logout-btn:hover {
-                background: #c0392b;
-        }
-
-        .fas.fa-bars {
-                display: none;
-                font-size: 2rem;
-                cursor: pointer;
-                margin-left: auto;
-        }
-
-        @media (max-width: 768px) {
-                .navbar ul {
-                        flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
-                        width: 100%;
-                        background: #fff;
-                        display: none;
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                        z-index: 1000;
-                }
-                .navbar ul.active {
-                        display: flex;
-                }
-                .fas.fa-bars {
-                        display: block;
-                }
-                header {
-                        position: relative;
-                }
-        }</style>
 
 <head>
         <meta http-equiv="Cache-Control"
@@ -90,7 +13,7 @@
                 class="logo"><span>L</span>ife<span>C</span>hain.</a>
         <nav class="navbar">
                 <ul>
-                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'index' %}" active>Home</a></li>
 
                         <li><a href="{% url 'donorpage' %}">Donor</a></li>
                         <li><a
