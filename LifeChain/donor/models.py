@@ -9,6 +9,7 @@ from django.db import models
 
 
 class PredictionRecord(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     age = models.FloatField()
     gender = models.IntegerField()  # this will store like This 1 for 'M', 0 for 'F'
     blood_type = models.CharField(max_length=2)  # this will store like This 'A', 'B', 'AB', 'O'
@@ -56,7 +57,6 @@ class donor_Registered(models.Model):
     contact = models.CharField(max_length=15)
     email = models.EmailField()
     age = models.FloatField()
-    
     # Changed gender to store 'Male' and 'Female' as strings
     gender = models.CharField(max_length=6, choices=[('Male', 'Male'), ('Female', 'Female')])
     
@@ -75,6 +75,8 @@ class donor_Registered(models.Model):
     ])
     address = models.TextField()
     eligibility = models.CharField(max_length=50)
+    is_allocated = models.BooleanField(default=False)
+
     
     def __str__(self):
         return self.username

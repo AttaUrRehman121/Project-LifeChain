@@ -15,12 +15,21 @@ from .models import AllocatedDonorToRecipient, Recipient
 from donor.models import donor_Registered
 from django.core.mail import send_mail
 from django.utils import timezone
+
+from home.views import index
 # Create your views here.
 @login_required
 def recipientpage(request):
-    return render(request, 'recipientPage.html')
+    user = request.user
+    if Recipient.objects.filter(user=user).exists():
+        recipient = Recipient.objects.get(user=user)
+        messages.success(request, "Welcome to Recipient. You can make a prediction or view your previous report.")
+        return render(request, 'recipientPage.html')
+    else:
+        messages.info(request, "You are not registered as a recipient. Please register first.")
+        return redirect(index)
+    
  
-
 # Configure logging
 logging.basicConfig(
     filename='recipient_prediction.log',  
@@ -47,8 +56,17 @@ else:
 
 # Blood type mapping
 blood_type_mapping = {'A': 0, 'B': 1, 'AB': 2, 'O': 3}
-
+@login_required
 def recipientprictiction(request):
+    user = request.user
+   
+    if Recipient.objects.filter(user=user).exists():
+        recipient = Recipient.objects.get(user=user)
+        messages.info(request, "You have already made a prediction. Here is your previous report. One prediction per user is allowed.")
+        return render(request, 'RecipientResultPage.html', {
+            'record': recipient
+        })
+
     if request.method == 'POST':
         try:
             logging.info("Received POST request for recipient prediction.")
@@ -139,83 +157,18 @@ def recipientprictiction(request):
     logging.info("Received GET request for recipient prediction page.")
     return render(request, 'RecipientPrediction.html')
 
- 
-# def recipientprictiction(request):
-#     if request.method == 'POST':
-#         try:
-#             age = float(request.POST.get('age'))
-#             gender = 1 if request.POST.get('gender') == 'male' else 0
-#             blood_type = request.POST.get('blood_type')
-#             rh_factor = 1 if request.POST.get('rh_factor') == 'positive' else 0
-#             height_cm = float(request.POST.get('height_cm'))
-#             weight_kg = float(request.POST.get('weight_kg'))
-#             bmi = float(request.POST.get('bmi'))
-#             wait_list_days = int(request.POST.get('wait_list_days'))
-#             medical_urgency_score = float(request.POST.get('medical_urgency_score'))
-#             hemoglobin = float(request.POST.get('hemoglobin'))
-#             wbc_count = float(request.POST.get('wbc_count'))
-#             platelet_count = float(request.POST.get('platelet_count'))
-#             creatinine = float(request.POST.get('creatinine'))
-#             alt = float(request.POST.get('alt'))
-#             ast = float(request.POST.get('ast'))
-#             diabetes = 1 if request.POST.get('diabetes') == 'yes' else 0
-#             hypertension = 1 if request.POST.get('hypertension') == 'yes' else 0
-#             previous_transplant = 1 if request.POST.get('previous_transplant') == 'yes' else 0
-#             dialysis_status = 1 if request.POST.get('dialysis_status') == 'yes' else 0
-#             required_organ = request.POST.get('required_organ')
-#             antibody_screen = float(request.POST.get('antibody_screen'))
-#             pra_score = float(request.POST.get('pra_score'))
-#             # Provide default values for required fields not coming from the form.
-#             donation_status = 0              # Default value; update as needed
-#             prediction_result = 'not eligible'  # Default value; update as needed
-            
-
-#             # Save the data to the database
-#             record = Recipient(
-#                 age=age,
-#                 gender=gender,
-#                 blood_type=blood_type,
-#                 rh_factor=rh_factor,
-#                 height_cm=height_cm,
-#                 weight_kg=weight_kg,
-#                 bmi=bmi,
-#                 wait_list_days=wait_list_days,
-#                 medical_urgency_score=medical_urgency_score,
-#                 hemoglobin=hemoglobin,
-#                 wbc_count=wbc_count,
-#                 platelet_count=platelet_count,
-#                 creatinine=creatinine,
-#                 alt=alt,
-#                 ast=ast,
-#                 diabetes=diabetes,
-#                 hypertension=hypertension,
-#                 previous_transplant=previous_transplant,
-#                 dialysis_status=dialysis_status,
-#                 required_organ=required_organ,
-#                 antibody_screen=antibody_screen,
-#                 pra_score=pra_score,
-#                 donation_status=donation_status,
-#                 prediction_result=prediction_result
-#             )
-#             record.save()
-
-#             # Render the result with a success message
-#             context = {'record': record, 'message': 'Prediction record saved successfully!'}
-#             return render(request, 'RecipientResultPage.html', context)
-#         except Exception as e:
-#             # Render the form with an error message if something goes wrong
-#             context = {'error_message': f'An error occurred: {str(e)}'}
-#             return render(request, 'RecipientPrediction.html', context)
-#     else:  
-#         return render(request, 'RecipientPrediction.html')
-
-
-
-    #  this function is to display all  available donors in the database which are eligible for donation and they choose to be a donor  
+  
+@login_required
 def eligible_donors(request):
     try:
-        eligible_donors = donor_Registered.objects.filter(eligibility='Eligible')
-
+        if Recipient.objects.filter(user=request.user).exists():
+            recipient = Recipient.objects.get(user=request.user)
+            allocation = AllocatedDonorToRecipient.objects.filter(recipient=recipient, verification_status__in=[False, True]).first()
+            if allocation:
+                messages.info(request, "You have already been allocated with donor '{}'. Check your profile for details.".format(allocation.donor.username))
+            return redirect('profile_view')
+        eligible_donors = donor_Registered.objects.filter(eligibility='Eligible' , is_allocated=False)
+        
         donors_data = [
             {
                 'id': donor.id,
@@ -293,27 +246,34 @@ def allocate_donor(request, donor_id):
 
 def verify_donor_email(request, token):
     try:
+        # Get allocation using the token
         allocation = AllocatedDonorToRecipient.objects.get(verification_token=token)
+        donor = allocation.donor
+        recipient_user = allocation.recipient.user  # UserProfile from Recipient
 
+        # Check token expiration
         if timezone.now() > allocation.token_expiry:
-            recipient_user = allocation.recipient.user
-            donor_name = allocation.donor.username
+            donor_name = donor.username
 
             # Delete expired allocation
             allocation.delete()
 
-            # Notify recipient via email
+            # Mark donor as eligible again
+            donor.is_allocated = False
+            donor.save()
+
+            # Email recipient about expiration
             send_mail(
                 subject='Donation Request Expired',
                 message=f'''Dear {recipient_user.username},
 
-                Unfortunately, the donor "{donor_name}" did not verify their donation within 24 hours. The request has now been cancelled.
+            Unfortunately, the donor "{donor_name}" did not verify their donation within 24 hours. The request has now been cancelled.
 
-                You may try allocating a different donor.
+            You may try allocating a different donor.
 
-                Regards,  
-                LifeChain Team
-                ''',
+            Regards,  
+            LifeChain Team
+            ''',
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[recipient_user.email],
                 fail_silently=False,
@@ -322,18 +282,22 @@ def verify_donor_email(request, token):
             messages.error(request, "Verification link expired. Allocation has been cancelled.")
             return redirect('profile_view')
 
-        # Mark as verified
+        # Donor verified in time
         allocation.verification_status = True
         allocation.save()
+
+        # Mark donor as no longer eligible
+        donor.is_allocated = True
+        donor.save()
 
         messages.success(request, "Thank you for confirming your donation.")
         return redirect('profile_view')
 
     except AllocatedDonorToRecipient.DoesNotExist:
-        messages.error(request, "Invalid or expired verification link.")
+        messages.error(request, "Invalid or already used verification link.")
         return redirect('profile_view')
     
-    
+@login_required
 def RecipientResultpage(request):
     return render(request, 'RecipientResultPage.html')
 

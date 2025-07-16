@@ -1,6 +1,7 @@
 import json
 import os
 import pickle
+from pyexpat.errors import messages
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from django.core.mail import send_mail
@@ -16,13 +17,25 @@ from registration.models import UserProfile
 from.models import donor_Registered, PredictionRecord
 from django.contrib.auth import get_user_model
 import logging
+from django.shortcuts import redirect
+from django.conf import settings
+from django.contrib import messages
+from django.db.models import Q
+from home.views import index
 
 # Create your views here.
 
 # Donor Home Page 
 @login_required
 def donorpage(request):
-    return render(request, 'donorPage.html')
+    user = request.user
+    if PredictionRecord.objects.filter(user=user).exists():
+        Donor = PredictionRecord.objects.get(user=user)
+        messages.success(request, "Welcome to Donor Side. You can make a prediction or view your previous report.")
+        return render(request, 'donorPage.html')
+    else:
+        messages.error(request, "You have not have permission to visit Donor Side. Make sure you register as Donor")
+        return redirect(index)
 
 
 
@@ -33,13 +46,12 @@ logger = logging.getLogger(__name__)
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 model_file_path = os.path.join(base_dir, 'MLmodel', 'donor_decision_tree.pkl')
-# model_file_path = os.path.join(base_dir, 'MLmodel', 'donor_random_for
+
 model = joblib.load(model_file_path)
 
-# print('Donor model features are:', model.feature_names_in_)
-# print('Donor model classes are:', model.classes_)
-blood_type_mapping = {'A': 0, 'B': 1, 'AB': 2, 'O': 3}
 
+blood_type_mapping = {'A': 0, 'B': 1, 'AB': 2, 'O': 3}
+@login_required
 @csrf_protect
 def donorpridict(request):
     if request.method == 'POST':
@@ -115,68 +127,11 @@ def donorpridict(request):
     return render(request, 'DonorPredict.html')
 
 
-# @csrf_protect
-# def donorpridict(request):
-#     if request.method == 'POST':
-#         try:
-#             # Extract and transform form data
-#             data = {
-#                 'age': float(request.POST.get('age')),
-#                 'gender': 1 if request.POST.get('gender') == 'M' else 0,
-#                 'blood_type': request.POST.get('blood_type'),
-#                 'rh_factor': 1 if request.POST.get('rh_factor') == 'positive' else 0,
-#                 'height_cm': float(request.POST.get('height_cm')),
-#                 'weight_kg': float(request.POST.get('weight_kg')),
-#                 'bmi': float(request.POST.get('bmi')),
-#                 'systolic_bp': float(request.POST.get('systolic_bp')),
-#                 'diastolic_bp': float(request.POST.get('diastolic_bp')),
-#                 'heart_rate': float(request.POST.get('heart_rate')),
-#                 'temperature_celsius': float(request.POST.get('temperature_celsius')),
-#                 'respiratory_rate': float(request.POST.get('respiratory_rate')),
-#                 'hemoglobin': float(request.POST.get('hemoglobin')),
-#                 'wbc_count': float(request.POST.get('wbc_count')),
-#                 'platelet_count': float(request.POST.get('platelet_count')),
-#                 'creatinine': float(request.POST.get('creatinine')),
-#                 'alt': float(request.POST.get('alt')),
-#                 'ast': float(request.POST.get('ast')),
-#                 'total_bilirubin': float(request.POST.get('total_bilirubin')),
-#                 'albumin': float(request.POST.get('albumin')),
-#                 'hiv_status': 1 if request.POST.get('hiv_status', 'negative') == 'positive' else 0,
-#                 'hbv_status': 1 if request.POST.get('hbv_status', 'negative') == 'positive' else 0,
-#                 'hcv_status': 1 if request.POST.get('hcv_status', 'negative') == 'positive' else 0,
-#                 'cmv_status': 1 if request.POST.get('cmv_status', 'negative') == 'positive' else 0,
-#                 'ebv_status': 1 if request.POST.get('ebv_status', 'negative') == 'positive' else 0,
-#                 'diabetes': 1 if request.POST.get('diabetes', 'no') == 'yes' else 0,
-#                 'hypertension': 1 if request.POST.get('hypertension', 'no') == 'yes' else 0,
-#                 'cardiac_disease': 1 if request.POST.get('cardiac_disease', 'no') == 'yes' else 0,
-#                 'cancer_history': 1 if request.POST.get('cancer_history', 'no') == 'yes' else 0,
-#                 'organ_type': request.POST.get('organ_type'),
-#                 'organ_condition_score': float(request.POST.get('organ_condition_score')),
-#             }
-
-#             # Set default values for fields not provided by the form
-#             data['donation_status'] = 0  # Default donation_status
-#             data['prediction_result'] = ''  # Leave prediction result empty since we're not calling the model
-
-#             result = model.predict(pd.DataFrame([data]))
-#             data['prediction_result'] = 'eligible' if result == 1 else 'not eligible'
-#             # Create and save the record
-#             record = PredictionRecord(**data)
-#             record.save()
-            
-#             # Render the DonorResult page with the saved record and a success message
-#             return render(request, 'DonorResult.html', {'record': record, 'message': 'Success!'})
-#         except Exception as e:
-#             # Render the input form with the error message if something goes wrong
-#             return render(request, 'DonorPredict.html', {'error_message': f'Error: {str(e)}'})
-#     # Render the prediction form on GET request
-#     return render(request, 'DonorPredict.html')
-
-
 
 # Set up logging
 logger = logging.getLogger(__name__)
 User = get_user_model()
+@login_required
 @csrf_exempt
 def donor_Applicants(request):
     if request.method == 'POST':
@@ -274,38 +229,37 @@ def donor_Applicants(request):
 
 
 # Fetching All Eligible Donors 
-def fetch_eligible_donors(request):
-    try:
-        # Fetch all eligible donors from the database
-        eligible_donors = donor_Registered.objects.filter(eligibility='Eligible')
+# @login_required
+# def fetch_eligible_donors(request):
+#     try:
         
-        # Serialize the data into a list of dictionaries
-        donors_data = [
-            {
-                'id': donor.id,
-                'username': donor.username,
-                'contact': donor.contact,
-                'email': donor.email,
-                'age': donor.age,
-                'gender': donor.gender,
-                'blood_type': donor.blood_type,
-                'rh_factor': donor.rh_factor,
-                'organ_type': donor.organ_type,
-                'address': donor.address,
-                'eligibility': donor.eligibility,
-            }
-            for donor in eligible_donors
-        ]
+#         eligible_donors = donor_Registered.objects.filter(eligibility='Eligible', is_allocated=False)
+#         donors_data = [
+#             {
+#                 'id': donor.id,
+#                 'username': donor.username,
+#                 'contact': donor.contact,
+#                 'email': donor.email,
+#                 'age': donor.age,
+#                 'gender': donor.gender,
+#                 'blood_type': donor.blood_type,
+#                 'rh_factor': donor.rh_factor,
+#                 'organ_type': donor.organ_type,
+#                 'address': donor.address,
+#                 'eligibility': donor.eligibility,
+#             }
+#             for donor in eligible_donors
+#         ]
 
-        # Return the data as JSON response
-        return JsonResponse(donors_data, safe=False)
-    except Exception as e:
-        # Log the error and return an error response
-        logger.error(f"Error fetching eligible donors: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+#         # Return the data as JSON response
+#         return JsonResponse(donors_data, safe=False)
+#     except Exception as e:
+#         # Log the error and return an error response
+#         logger.error(f"Error fetching eligible donors: {str(e)}")
+#         return JsonResponse({'error': str(e)}, status=500)
     
 
-
+@login_required
 def DonorResultpage(request):
     return render(request, 'DonorResult.html')
 

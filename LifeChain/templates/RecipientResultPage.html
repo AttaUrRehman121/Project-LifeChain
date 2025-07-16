@@ -279,7 +279,7 @@ function downloadPDF() {
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'No'
             }).then(() => {
-                if ("{{ record.transplant_eligibility }}" === "Eligible") {
+                if ("{{ record.transplant_eligibility }}" === "Eligible" || cancelButtonText === 'Yes') {
                     Swal.fire({
                         title: 'PDF downloaded!',
                         text: 'Redirecting to available donors...',
@@ -291,7 +291,7 @@ function downloadPDF() {
                     setTimeout(() => {
                         window.location.href = "eligibleDonors/";
                     }, 3000);
-                } else {
+                } else if ("{{ record.transplant_eligibility }}" === "Not Eligible" || cancelButtonText === 'No') {
                     Swal.fire({
                         title: 'Not Eligible',
                         text: 'You are not eligible to view the available donors.',
@@ -307,4 +307,5 @@ function downloadPDF() {
         });
 }
 </script>
+
 {% endblock %}

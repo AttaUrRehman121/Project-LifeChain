@@ -269,6 +269,17 @@
       });
     }
   });
-
+{% if messages %}
+        <script>
+            {% for message in messages %}
+                Swal.fire({
+                    title: '{{ message.tags|capfirst }}',
+                    text: '{{ message }}',
+                    icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "warning" %}warning{% else %}info{% endif %}',
+                    confirmButtonText: 'OK'
+                });
+            {% endfor %}
+        </script>
+        {% endif %}
 </script>
 {% endblock %}

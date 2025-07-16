@@ -74,7 +74,7 @@ class Recipient(models.Model):
 
 
 def one_day_from_now():
-    return timezone.now() + timedelta(days=1)
+    return timezone.now() + timedelta(minutes=1)
 
 class AllocatedDonorToRecipient(models.Model):
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
