@@ -13,6 +13,7 @@ body {
   align-items: center;
   min-height: 120vh;
   overflow-y: auto;
+  flex-wrap: wrap;
 }
 
 .background {

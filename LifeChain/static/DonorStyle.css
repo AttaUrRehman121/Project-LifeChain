@@ -121,7 +121,7 @@ label {
 .form-control {
     border: 1px solid #ced4da; /* Soft gray border */
     border-radius: 5px; /* Rounded input fields */
-    padding: 10px;
+    
     font-size: 16px;
 }
 

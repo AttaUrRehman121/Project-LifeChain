@@ -18,8 +18,36 @@
       required>
 
     <label for="password">Password</label>
-    <input type="password" placeholder="Password" id="password" name="password"
-      required>
+    <div style="position: relative;">
+      <input type="password" placeholder="Password" id="password"
+        name="password" required style="padding-right: 35px;">
+      <span onclick="togglePassword()"
+        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" height="20"
+          width="20" fill="#888">
+          <path id="eyePath"
+            d="M10 15q-2.875 0-5.063-1.675Q2.75 11.65 1.5 10q1.25-1.65 3.437-3.325Q7.125 5 10 5q2.875 0 5.062 1.675Q17.25 8.35 18.5 10q-1.25 1.65-3.438 3.325Q12.875 15 10 15Zm0-5q.825 0 1.413-.587Q12 8.825 12 8q0-.825-.587-1.413Q10.825 6 10 6q-.825 0-1.413.587Q8 7.175 8 8q0 .825.587 1.413Q9.175 10 10 10Z" />
+        </svg>
+      </span>
+    </div>
+
+    <script>
+  function togglePassword() {
+    const pwd = document.getElementById('password');
+    const eyePath = document.getElementById('eyePath');
+
+    const showPath = "M10 15q-2.875 0-5.063-1.675Q2.75 11.65 1.5 10q1.25-1.65 3.437-3.325Q7.125 5 10 5q2.875 0 5.062 1.675Q17.25 8.35 18.5 10q-1.25 1.65-3.438 3.325Q12.875 15 10 15Zm0-5q.825 0 1.413-.587Q12 8.825 12 8q0-.825-.587-1.413Q10.825 6 10 6q-.825 0-1.413.587Q8 7.175 8 8q0 .825.587 1.413Q9.175 10 10 10Z";
+    const hidePath = "M10 15q-2.875 0-5.063-1.675Q2.75 11.65 1.5 10q1.25-1.65 3.437-3.325Q7.125 5 10 5q2.875 0 5.062 1.675Q17.25 8.35 18.5 10q-1.25 1.65-3.438 3.325Q12.875 15 10 15Zm0-5q.825 0 1.413-.587Q12 8.825 12 8q0-.825-.587-1.413Q10.825 6 10 6q-.825 0-1.413.587Q8 7.175 8 8q0 .825.587 1.413Q9.175 10 10 10Zm7.3 5.3-13.6-13.6 1.05-1.05 13.6 13.6Z";
+
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      eyePath.setAttribute('d', hidePath);
+    } else {
+      pwd.type = 'password';
+      eyePath.setAttribute('d', showPath);
+    }
+  }
+</script>
 
     <button id="login-btn" type="submit">Log In</button>
 

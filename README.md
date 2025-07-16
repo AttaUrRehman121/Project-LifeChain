@@ -21,7 +21,7 @@ LifeChain is an innovative system that enhances **organ donation and transplanta
 ## 📥 Installation & Setup
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/yourusername/lifechain.git
+git clone https://github.com/AttaUrRehman121/Project-LifeChain.git
 cd lifechain
 ```
 ### 2️⃣ Install Dependencies
@@ -36,6 +36,13 @@ python manage.py runserver  # Django
 Open your browser and go to:
 ```
 http://127.0.0.1:8000  # Django
+
+```
+
+Open your browser and go to:
+```
+https://lifechain.up.railway.app/  
+
 ```
 
 ## 📊 Machine Learning Model Workflow
@@ -49,14 +56,7 @@ http://127.0.0.1:8000  # Django
 - **Confusion Matrix**: Analyzes classification errors.
 - **F1 Score**: Ensures balanced precision and recall.
 
-## 📜 API Endpoints (Example)
-| Method | Endpoint | Description |
-|--------|---------|-------------|
-| `POST` | `/register` | User registration |
-| `POST` | `/login` | User authentication |
-| `GET` | `/donors` | Retrieve donor list |
-| `GET` | `/recipients` | Retrieve recipient list |
-| `POST` | `/match` | Run ML model to find matches |
+
 
 ## 🤝 Contributors
 - **[Atta Ur Rehman]** – Machine Learning & Backend – Blockchain & Security
