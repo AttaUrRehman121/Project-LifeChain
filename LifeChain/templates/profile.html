@@ -57,6 +57,54 @@
     color: gray;
     font-style: italic;
   }
+  @media (max-width: 768px) {
+    .container {
+      width: 100%;
+      padding: 5px;
+    }
+    .card {
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    table, thead, tbody, th, td, tr {
+      display: block;
+      width: 100%;
+    }
+    table tr {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    th, td {
+      padding: 8px 5px;
+      text-align: left;
+      border: none;
+    }
+    th {
+      background: none;
+      font-weight: bold;
+    }
+    td:before {
+      content: attr(data-label);
+      font-weight: bold;
+      display: block;
+      color: #2a5d89;
+      margin-bottom: 2px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    body {
+      padding: 5px;
+    }
+    .card h2 {
+      font-size: 1.1em;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+    .card {
+      padding: 6px;
+    }
+  }
 </style>
 
 <div class="container">
