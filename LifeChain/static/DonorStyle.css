@@ -191,11 +191,48 @@ select#role {
     background-color: rgba(255, 255, 255, 0.1);
   }
   
-  /* Optional: Add custom arrow using background */
-  select {
+    select {
     background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDExIDYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMUw1LjUgNUwxMCAxIiBzdHJva2U9IiNFMUUxRTEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==');
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 10px 6px;
   }
   
+
+@media (max-width: 900px) {
+    .bd-example {
+        max-width: 95vw;
+        width: 95vw;
+        padding: 16px;
+    }
+    form#donor-form {
+        width: 100% !important;
+        padding: 2rem !important;
+    }
+    div {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .bd-example {
+        padding: 8px;
+        border-radius: 12px;
+    }
+    form#donor-form {
+        padding: 1rem !important;
+        border-radius: 10px !important;
+    }
+    h4.text-center {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    label, .form-label {
+        font-size: 1rem;
+    }
+    .form-control, select#role {
+        font-size: 1rem;
+        padding: 6px;
+    }
+}
