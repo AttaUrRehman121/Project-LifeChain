@@ -95,9 +95,9 @@ span {
     margin: 0 auto;
 }
 
-.home .row .images img {
-    height: 65vh;
-}
+/* .home .row .images img {
+    height: 5vh;
+} */
 
 .home .content h1 span {
     color: var(--blue);
