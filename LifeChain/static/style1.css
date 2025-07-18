@@ -10,7 +10,7 @@
     height: auto;
     background: var(--blue);
     color: var(--white);
-    font-size: 1.9rem;
+    font-size: 2rem;
     text-transform: capitalize;
     border-radius: .5rem;
     cursor: pointer;
@@ -58,6 +58,7 @@ header a:hover {
 header .logo {
     font-size: 3rem;
     margin-bottom: 15px;
+    font-weight: 700;
 }
 
 header .logo span {
@@ -100,3 +101,5 @@ header .fa-times {
     width: 100%;
     box-shadow: .1rem .3rem rgba(0, 0, 0, .3);
 }
+
+

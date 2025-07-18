@@ -4,29 +4,29 @@
     --white: #fff;
     --danger: #dc3545;
 }
-/* General container styling */
+
 .container {
     margin: auto;
     margin-top: 20px;
     padding: 20px;
     max-width: 800px;
-    background-color: var(--white); /* Black background */
+    background-color: var(--white); 
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    color: var(--white); /* White text for contrast */
-    text-align: center; /* Center align content */
+    color: var(--white); 
+    text-align: center; 
 }
 
-/* Section heading */
+
 h1.text-center {
     font-size: 2rem;
-    color: var(--blue); /* Blue color for the heading */
+    color: var(--blue); 
     margin-bottom: 20px;
     text-align: center;
 }
 
-/* Profile details */
+
 .profile-details {
     display: flex;
     justify-content: space-between;
@@ -35,14 +35,14 @@ h1.text-center {
 }
 
 .profile-details .col {
-    width: 48%; /* Adjust column width */
+    width: 48%; 
     font-size: 1rem;
     color: var(--white);
 }
 
 .profile-details .col label {
     font-weight: bold;
-    color: var(--blue); /* Blue labels */
+    color: var(--blue);
     display: block;
 }
 
@@ -51,9 +51,9 @@ h1.text-center {
     color: var(--white);
 }
 
-/* Buttons */
+
 .edit-form .btn-primary {
-    background-color: var(--blue); /* Blue button */
+    background-color: var(--blue); 
     color: var(--white);
     font-weight: bold;
     border: none;
@@ -64,11 +64,11 @@ h1.text-center {
 }
 
 .edit-form .btn-primary:hover {
-    background-color: #016bb5; /* Darker blue on hover */
+    background-color: #016bb5; 
 }
 
 .edit-form .btn-danger {
-    background-color: var(--danger); /* Red button for delete */
+    background-color: var(--danger); 
     color: var(--white);
     font-weight: bold;
     border: none;
@@ -82,28 +82,21 @@ h1.text-center {
 }
 
 /* Footer alignment for Delete Account */
-.delete-account-section {
-    margin-top: 20px;
-    color: var(--danger);
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .profile-details {
         flex-direction: column;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .profile-details .col {
         width: 100%;
         margin-bottom: 10px;
+        box-sizing: border-box;
     }
 }
-
-
-
 @media (max-width: 575.98px) {
     .container {
         padding: 10px;
@@ -120,12 +113,15 @@ h1.text-center {
     .profile-details {
         flex-direction: column;
         gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .profile-details .col {
         width: 100%;
         font-size: 0.95rem;
         margin-bottom: 10px;
+        box-sizing: border-box;
     }
 
     .edit-form .btn-primary,
@@ -147,6 +143,7 @@ h1.text-center {
     .container {
         padding: 15px;
         max-width: 95%;
+        margin: 10px
     }
 
     h1.text-center {
