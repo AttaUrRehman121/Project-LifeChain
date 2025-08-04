@@ -3,6 +3,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+
+from utils.eth_wallet import create_eth_wallet
 from .models import UserProfile
 from django.db import IntegrityError
 from django.contrib import messages
@@ -44,6 +46,10 @@ def signup(request):
             return render(request, 'signup.html')
 
         try:
+            # 🔐 Generate wallet
+            wallet_address, private_key = create_eth_wallet()
+
+            # ✅ Save user with wallet info
             user = UserProfile.objects.create_user(
                 username=username,
                 email=email,
@@ -51,7 +57,9 @@ def signup(request):
                 nationality=nationality,
                 role=role,
                 contact=contact,
-                address=address
+                address=address,
+                wallet_address=wallet_address,
+                private_key=private_key
             )
             messages.success(request, "Account created successfully. Please log in.")
             return redirect('login')

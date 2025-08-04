@@ -8,5 +8,7 @@ urlpatterns = [
   path('recipientresultpage/',RecipientResultpage, name= "RecipientResultpage"),
   path('recipientprictiction/eligibleDonors/', eligible_donors, name='eligibleDdonors'),
   path('allocate_donor/<int:donor_id>/', allocate_donor, name='allocate_donor'),
-  path('verify_donor/<uuid:token>/', verify_donor_email, name='verify_donor_email')
+  path('verify_donor/<slug:token>/', verify_donor_email, name='verify_donor_email')
+
+
 ]

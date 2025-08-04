@@ -77,7 +77,7 @@ class donor_Registered(models.Model):
     eligibility = models.CharField(max_length=50)
     is_allocated = models.BooleanField(default=False)
 
-    
+    wallet_address = models.CharField(max_length=42, blank=True, null=True)
     def __str__(self):
         return self.username
 

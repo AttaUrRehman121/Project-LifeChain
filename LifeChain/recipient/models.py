@@ -12,7 +12,7 @@ from datetime import timedelta
 
 # Create your models here.
 class Recipient(models.Model):
-    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     GENDER_CHOICES = [
         (0, 'Female'),
         (1, 'Male'),
@@ -66,7 +66,7 @@ class Recipient(models.Model):
     antibody_screen = models.FloatField()
     pra_score = models.FloatField()
     transplant_eligibility = models.CharField(max_length=50, default='not eligible')
-    
+    wallet_address = models.CharField(max_length=42, blank=True, null=True)
     def __str__(self):
         return f"{self.required_organ} - {self.transplant_eligibility}"
 
@@ -74,15 +74,18 @@ class Recipient(models.Model):
 
 
 def one_day_from_now():
-    return timezone.now() + timedelta(minutes=1)
+    return timezone.now() + timedelta(minutes=10)
 
 class AllocatedDonorToRecipient(models.Model):
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
     donor = models.ForeignKey(donor_Registered, on_delete=models.CASCADE)
     verification_status = models.BooleanField(default=False)
     verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    token = models.CharField(max_length=66, unique=True)
+    transaction_hash = models.CharField(max_length=66)
     token_expiry = models.DateTimeField(default=one_day_from_now)
     allocation_date = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f"Allocation of {self.donor} to {self.recipient} on {self.allocation_date}"

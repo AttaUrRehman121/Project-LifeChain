@@ -267,44 +267,48 @@ function downloadPDF() {
     };
 
     html2pdf()
-        .from(element)
-        .set(options)
-        .save()
-        .then(() => {
-            Swal.fire({
-                title: 'PDF downloaded!',
-                text: 'Do you want to see the available donors?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
-            }).then(() => {
-                if ("{{ record.transplant_eligibility }}" === "Eligible" || cancelButtonText === 'Yes') {
-                    Swal.fire({
-                        title: 'PDF downloaded!',
-                        text: 'Redirecting to available donors...',
-                        icon: 'success',
-                        timer: 5000,
-                        loader: true,
-                        showConfirmButton: false
-                    });
-                    setTimeout(() => {
-                        window.location.href = "eligibleDonors/";
-                    }, 3000);
-                } else if ("{{ record.transplant_eligibility }}" === "Not Eligible" || cancelButtonText === 'No') {
-                    Swal.fire({
-                        title: 'Not Eligible',
-                        text: 'You are not eligible to view the available donors.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-        }); 
-        })
-        .catch((error) => {
-            console.error('PDF generation failed:', error);
-            Swal.fire('Error', 'Failed to generate PDF', 'error');
+    .from(element)
+    .set(options)
+    .save()
+    .then(() => {
+        Swal.fire({
+            title: 'PDF downloaded!',
+            text: 'Do you want to see the available donors?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed && "{{ record.transplant_eligibility }}" === "Eligible") {
+                Swal.fire({
+                    title: 'Redirecting to available donors...',
+                    icon: 'success',
+                    timer: 5000,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                setTimeout(() => {
+                    window.location.href = "eligibleDonors/";
+                }, 3000);
+            } else if (result.isDismissed || "{{ record.transplant_eligibility }}" === "Not Eligible") {
+                Swal.fire({
+                    title: 'Not Eligible',
+                    text: 'You are not eligible to view the available donors.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = "/"; // Redirect to home page after "No"
+                });
+            }
         });
+    })
+    .catch((error) => {
+        console.error('PDF generation failed:', error);
+        Swal.fire('Error', 'Failed to generate PDF', 'error');
+    });
+
 }
 </script>
 

@@ -23,18 +23,17 @@ from django.contrib import messages
 from django.db.models import Q
 from home.views import index
 
-# Create your views here.
+
 
 # Donor Home Page 
 @login_required
 def donorpage(request):
     user = request.user
-    if PredictionRecord.objects.filter(user=user).exists():
-        Donor = PredictionRecord.objects.get(user=user)
+    if UserProfile.objects.filter(username=user, role='donor').exists():
         messages.success(request, "Welcome to Donor Side. You can make a prediction or view your previous report.")
         return render(request, 'donorPage.html')
     else:
-        messages.error(request, "You have not have permission to visit Donor Side. Make sure you register as Donor")
+        messages.error(request, "You do not have permission to visit Donor Side. Make sure you register as Donor.")
         return redirect(index)
 
 
@@ -115,6 +114,7 @@ def donorpridict(request):
             data['donation_status'] = prediction_result
             # Save to database
             record = PredictionRecord(**data)
+            record.user = request.user
             record.save()
             logger.info("Prediction record saved successfully.")
             

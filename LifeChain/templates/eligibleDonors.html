@@ -141,6 +141,7 @@
 </div>
 
 <script>
+  // Get CSRF token from the hidden input
   const csrftoken = document.getElementById("csrf-token").value;
 
   document.querySelectorAll('.allocate-btn').forEach(btn => {
@@ -161,37 +162,48 @@
       fetch(`/recipient/allocate_donor/${donorId}/`, {
           method: 'POST',
           headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,  // ✅ fixed
           },
         })
         .then(response => {
           if (response.redirected) {
-            window.location.href = response.url; // Login redirect
+            window.location.href = response.url; // Redirect if needed
             return;
           }
           if (response.ok) {
+            // Hide all other donor cards
             document.querySelectorAll('.donor-card').forEach(card => {
               if (card.id !== `donor-${donorId}`) {
                 card.style.display = 'none';
               }
             });
-            document.getElementById('processing').style.display = 'block';
 
+            // Show some processing indication
+            const processing = document.getElementById('processing');
+            if (processing) {
+              processing.style.display = 'block';
+            }
+
+            // Success Alert and Redirect
             setTimeout(() => {
-              Swal.fire('Email Sent!', 'Waiting for donor response.', 'success').then(() => {
+              Swal.fire('Email Sent!', 'Waiting for donor response.', 'success')
+              .then(() => {
                 window.location.href = "{% url 'profile_view' %}";
               });
             }, 1500);
           } else {
+            // If response has JSON error
             return response.json().then(data => {
               Swal.fire('Error', data.error || 'Failed to allocate donor.', 'error');
             });
           }
         })
         .catch(() => {
-          Swal.fire('Error', 'Network error.', 'error');
+          Swal.fire('Network Error', 'Unable to allocate donor due to network issues.', 'error');
         });
     });
   });
 </script>
+
 {% endblock content %}

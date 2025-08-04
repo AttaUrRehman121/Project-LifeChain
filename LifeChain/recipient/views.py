@@ -1,5 +1,7 @@
-from datetime import timezone
+from datetime import timedelta, timezone
+import json
 import os
+from urllib import request
 from django.contrib import messages
 from venv import logger
 from django.conf import settings
@@ -10,7 +12,11 @@ import numpy as np
 import logging
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 import pandas as pd
+from web3 import Web3
+from django.utils.timezone import now
+from .models import UserProfile
 from .models import AllocatedDonorToRecipient, Recipient
 from donor.models import donor_Registered
 from django.core.mail import send_mail
@@ -21,15 +27,13 @@ from home.views import index
 @login_required
 def recipientpage(request):
     user = request.user
-    if Recipient.objects.filter(user=user).exists():
-        recipient = Recipient.objects.get(user=user)
+    if UserProfile.objects.filter(username=user, role='recipient').exists():
         messages.success(request, "Welcome to Recipient. You can make a prediction or view your previous report.")
         return render(request, 'recipientPage.html')
     else:
         messages.info(request, "You are not registered as a recipient. Please register first.")
-        return redirect(index)
-    
- 
+        return redirect(reverse('index'))
+
 # Configure logging
 logging.basicConfig(
     filename='recipient_prediction.log',  
@@ -116,7 +120,7 @@ def recipientprictiction(request):
             #
             # Save the data to the database
             record = Recipient(
-                user = request.user,  
+                user=request.user,
                 age=age,
                 gender=gender,
                 blood_type=blood_type,
@@ -141,6 +145,7 @@ def recipientprictiction(request):
                 pra_score=pra_score,
                 transplant_eligibility=transplant_eligibility  # Store prediction
             )
+            
             record.save()
             logging.info("Prediction record saved successfully to the database.")
 
@@ -161,14 +166,33 @@ def recipientprictiction(request):
 @login_required
 def eligible_donors(request):
     try:
-        if Recipient.objects.filter(user=request.user).exists():
-            recipient = Recipient.objects.get(user=request.user)
-            allocation = AllocatedDonorToRecipient.objects.filter(recipient=recipient, verification_status__in=[False, True]).first()
-            if allocation:
-                messages.info(request, "You have already been allocated with donor '{}'. Check your profile for details.".format(allocation.donor.username))
+        # Check if user is a recipient
+        if not Recipient.objects.filter(user=request.user).exists():
+            messages.error(request, "You are not registered as a recipient.")
             return redirect('profile_view')
-        eligible_donors = donor_Registered.objects.filter(eligibility='Eligible' , is_allocated=False)
-        
+
+        recipient = Recipient.objects.get(user=request.user)
+
+        # Check for existing valid allocation (not expired)
+        allocation = AllocatedDonorToRecipient.objects.filter(
+            recipient=recipient,
+            verification_status__in=[False, True],
+            token_expiry__gt=now()
+        ).first()
+
+        if allocation:
+            messages.info(
+                request,
+                f"You have already been allocated with donor '{allocation.donor.username}'. Check your profile for details."
+            )
+            return redirect('profile_view')
+
+        # No valid allocation, show available eligible donors
+        eligible_donors = donor_Registered.objects.filter(
+            eligibility='Eligible',
+            is_allocated=False
+        )
+
         donors_data = [
             {
                 'id': donor.id,
@@ -187,7 +211,7 @@ def eligible_donors(request):
         ]
 
         return render(request, 'eligibleDonors.html', {'donors': donors_data})
-        
+
     except Exception as e:
         logger.error(f"Error fetching eligible donors: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
@@ -196,107 +220,217 @@ def eligible_donors(request):
 
     
 
+# @login_required
+# def allocate_donor(request, donor_id):
+#     print("Allocate donor triggered", donor_id)
+#     donor = get_object_or_404(donor_Registered, id=donor_id)
+#     user = request.user
+#     recipient = get_object_or_404(Recipient, user=user)
+
+#     # Avoid duplicate allocation
+#     if AllocatedDonorToRecipient.objects.filter(donor=donor, recipient=recipient).exists():
+#         return JsonResponse({'error': 'Already allocated'}, status=400)
+
+#     # Create allocation with token and expiry
+#     allocation = AllocatedDonorToRecipient.objects.create(
+#         recipient=recipient,
+#         donor=donor
+#     )
+
+#     # Generate verification URL
+#     verify_url = request.build_absolute_uri(
+#         reverse('verify_donor_email', args=[allocation.verification_token])
+#     )
+
+#     # Send verification email to donor
+#     send_mail(
+#         subject='Organ Donation Request',
+#         message=f'''Dear {donor.username},
+
+#             You have been matched with a recipient for organ donation.
+
+#             Recipient: {recipient.user.username}
+#             Organ Requested: {donor.organ_type}
+#             Blood Type: {donor.blood_type}
+
+#             Please confirm your agreement to donate by clicking the link below within 24 hours:
+#             {verify_url}
+
+#             If you do not respond within 1 day, this request will be canceled.
+
+#             Thank you,
+#             LifeChain Team
+#             ''',
+#         from_email=settings.DEFAULT_FROM_EMAIL,
+#         recipient_list=[donor.email],
+#         fail_silently=False,
+#     )
+
+#     return JsonResponse({'status': 'success'})
+
+# def verify_donor_email(request, token):
+#     try:
+#         # Get allocation using the token
+#         allocation = AllocatedDonorToRecipient.objects.get(verification_token=token)
+#         donor = allocation.donor
+#         recipient_user = allocation.recipient.user  # UserProfile from Recipient
+
+#         # Check token expiration
+#         if timezone.now() > allocation.token_expiry:
+#             donor_name = donor.username
+
+#             # Delete expired allocation
+#             allocation.delete()
+
+#             # Mark donor as eligible again
+#             donor.is_allocated = False
+#             donor.save()
+
+#             # Email recipient about expiration
+#             send_mail(
+#                 subject='Donation Request Expired',
+#                 message=f'''Dear {recipient_user.username},
+
+#             Unfortunately, the donor "{donor_name}" did not verify their donation within 24 hours. The request has now been cancelled.
+
+#             You may try allocating a different donor.
+
+#             Regards,  
+#             LifeChain Team
+#             ''',
+#                 from_email=settings.DEFAULT_FROM_EMAIL,
+#                 recipient_list=[recipient_user.email],
+#                 fail_silently=False,
+#             )
+
+#             messages.error(request, "Verification link expired. Allocation has been cancelled.")
+#             return redirect('profile_view')
+
+#         # Donor verified in time
+#         allocation.verification_status = True
+#         allocation.save()
+
+#         # Mark donor as no longer eligible
+#         donor.is_allocated = True
+#         donor.save()
+
+#         messages.success(request, "Thank you for confirming your donation.")
+#         return redirect('profile_view')
+
+#     except AllocatedDonorToRecipient.DoesNotExist:
+#         messages.error(request, "Invalid or already used verification link.")
+#         return redirect('profile_view')
+# Setup Web3
+w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
+w3.eth.default_account = w3.eth.accounts[0]
+
+with open("DonorContractABI.json") as f:
+    abi = json.load(f)
+
+contract_address = Web3.to_checksum_address('0x0afd2bd700d8f901a68a314ef35e509defd7bb96')
+
+# now use it safely
+contract = w3.eth.contract(address=contract_address, abi=abi)
+    
+    
+
 @login_required
+@csrf_exempt  
 def allocate_donor(request, donor_id):
-    print("Allocate donor triggered", donor_id)
-    donor = get_object_or_404(donor_Registered, id=donor_id)
-    user = request.user
-    recipient = get_object_or_404(Recipient, user=user)
+    try:
+        print("Allocate donor triggered", donor_id)
+        donor = get_object_or_404(donor_Registered, id=donor_id)
+        recipient = get_object_or_404(Recipient, user=request.user)
 
-    # Avoid duplicate allocation
-    if AllocatedDonorToRecipient.objects.filter(donor=donor, recipient=recipient).exists():
-        return JsonResponse({'error': 'Already allocated'}, status=400)
+        # Make sure both donor and recipient have wallet addresses
+        if not donor.user.wallet_address or not recipient.user.wallet_address:
+            return JsonResponse({'error': 'Missing wallet address for donor or recipient'}, status=400)
 
-    # Create allocation with token and expiry
-    allocation = AllocatedDonorToRecipient.objects.create(
-        recipient=recipient,
-        donor=donor
-    )
+        # Smart contract transaction
+        tx_hash = contract.functions.allocateDonorToRecipient(
+            Web3.to_checksum_address(donor.user.wallet_address),
+            Web3.to_checksum_address(recipient.user.wallet_address)
+        ).transact()
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-    # Generate verification URL
-    verify_url = request.build_absolute_uri(
-        reverse('verify_donor_email', args=[allocation.verification_token])
-    )
+        # Extract token from event logs
+        logs = contract.events.DonorAllocated().process_receipt(tx_receipt)
+        token = logs[0]['args']['token'].hex()
 
-    # Send verification email to donor
-    send_mail(
-        subject='Organ Donation Request',
-        message=f'''Dear {donor.username},
+        # Store in DB
+        allocation = AllocatedDonorToRecipient.objects.create(
+            donor=donor,
+            recipient=recipient,
+            token=token,
+            transaction_hash=tx_hash.hex(),
+        )
 
-            You have been matched with a recipient for organ donation.
+        verify_url = request.build_absolute_uri(reverse('verify_donor_email', args=[token]))
 
-            Recipient: {recipient.user.username}
-            Organ Requested: {donor.organ_type}
-            Blood Type: {donor.blood_type}
+        # Email to donor
+        send_mail(
+            subject='Organ Donation Request',
+            message=f'''Dear {donor.user.username},
 
-            Please confirm your agreement to donate by clicking the link below within 24 hours:
-            {verify_url}
+You have been matched with a recipient.
 
-            If you do not respond within 1 day, this request will be canceled.
+Recipient: {recipient.user.username}
+Please verify your consent by clicking this link within 24 hours:
+{verify_url}
 
-            Thank you,
-            LifeChain Team
-            ''',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[donor.email],
-        fail_silently=False,
-    )
+Regards,
+LifeChain Team
+''',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[donor.user.email],
+            fail_silently=False,
+        )
 
-    return JsonResponse({'status': 'success'})
+        return JsonResponse({'status': 'success', 'token': token})
 
+    except Exception as e:
+        logger.error(f"Allocation failed: {str(e)}")
+        return JsonResponse({'error': 'Allocation failed. Try again later.'}, status=500)
+
+    
+@login_required
 def verify_donor_email(request, token):
     try:
-        # Get allocation using the token
-        allocation = AllocatedDonorToRecipient.objects.get(verification_token=token)
-        donor = allocation.donor
-        recipient_user = allocation.recipient.user  # UserProfile from Recipient
+        token_bytes = bytes.fromhex(token.replace("0x", ""))
 
-        # Check token expiration
-        if timezone.now() > allocation.token_expiry:
-            donor_name = donor.username
+        donor_address, recipient_address, is_verified, token_expiry = contract.functions.getAllocation(token_bytes).call()
 
-            # Delete expired allocation
-            allocation.delete()
-
-            # Mark donor as eligible again
-            donor.is_allocated = False
-            donor.save()
-
-            # Email recipient about expiration
-            send_mail(
-                subject='Donation Request Expired',
-                message=f'''Dear {recipient_user.username},
-
-            Unfortunately, the donor "{donor_name}" did not verify their donation within 24 hours. The request has now been cancelled.
-
-            You may try allocating a different donor.
-
-            Regards,  
-            LifeChain Team
-            ''',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[recipient_user.email],
-                fail_silently=False,
-            )
-
-            messages.error(request, "Verification link expired. Allocation has been cancelled.")
+        # Check if already verified
+        if is_verified:
+            messages.error(request, "This link has already been used.")
             return redirect('profile_view')
 
-        # Donor verified in time
+        # Check expiry
+        if timezone.now().timestamp() > token_expiry:
+            messages.error(request, "Verification link has expired.")
+            return redirect('profile_view')
+
+        # Smart contract call to verify
+        tx_hash = contract.functions.verifyDonation(token_bytes).transact({
+            'from': Web3.to_checksum_address(request.user.wallet_address)  # ✅ Fixed here
+        })
+        w3.eth.wait_for_transaction_receipt(tx_hash)
+
+        # Update DB model
+        allocation = get_object_or_404(AllocatedDonorToRecipient, token=token)
         allocation.verification_status = True
+        allocation.transaction_hash = tx_hash.hex()
         allocation.save()
 
-        # Mark donor as no longer eligible
-        donor.is_allocated = True
-        donor.save()
-
-        messages.success(request, "Thank you for confirming your donation.")
+        messages.success(request, "Thank you for verifying your donation.")
         return redirect('profile_view')
 
-    except AllocatedDonorToRecipient.DoesNotExist:
-        messages.error(request, "Invalid or already used verification link.")
+    except Exception as e:
+        print("Verification error:", e)
+        messages.error(request, "Invalid or expired verification link.")
         return redirect('profile_view')
-    
+
+
 @login_required
 def RecipientResultpage(request):
     return render(request, 'RecipientResultPage.html')

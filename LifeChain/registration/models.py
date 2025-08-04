@@ -39,6 +39,11 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    
+    
+     # Wallet fields
+    wallet_address = models.CharField(max_length=100, blank=True, null=True)
+    private_key = models.TextField(blank=True, null=True)
 
     objects = UserProfileManager()
 
