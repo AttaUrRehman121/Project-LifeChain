@@ -74,18 +74,17 @@ class Recipient(models.Model):
 
 
 def one_day_from_now():
-    return timezone.now() + timedelta(minutes=10)
+    return timezone.now() + timedelta(days=7)
 
 class AllocatedDonorToRecipient(models.Model):
     recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
     donor = models.ForeignKey(donor_Registered, on_delete=models.CASCADE)
     verification_status = models.BooleanField(default=False)
     verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
-    token = models.CharField(max_length=66, unique=True)
-    transaction_hash = models.CharField(max_length=66)
+    token = models.CharField(max_length=66, unique=True)  # 0x-prefixed hex string of 64 characters
+    transaction_hash = models.CharField(max_length=66, blank=True, null=True)
     token_expiry = models.DateTimeField(default=one_day_from_now)
     allocation_date = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return f"Allocation of {self.donor} to {self.recipient} on {self.allocation_date}"

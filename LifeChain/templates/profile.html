@@ -148,6 +148,23 @@
           {% endif %}
         </td>
       </tr>
+      {% if donor_allocation.transaction_hash %}
+      <tr>
+        <td><strong>Transaction Hash:</strong></td>
+        <td colspan="3">
+          <code
+            style="background: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-size: 0.9em;">
+            {{ donor_allocation.transaction_hash }}
+          </code>
+        </td>
+      </tr>
+      {% endif %}
+      {% if donor_allocation.recipient.user.contact %}
+      <tr>
+        <td><strong>Recipient Contact:</strong></td>
+        <td colspan="3">{{ donor_allocation.recipient.user.contact }}</td>
+      </tr>
+      {% endif %}
     </table>
     {% else %}
     <p class="status-none">You are not allocated to any recipient yet.</p>
@@ -165,6 +182,8 @@
         <th>Organ</th>
         <th>Status</th>
         <th>Date</th>
+        <th>Transaction Hash</th>
+        <th>Contact</th>
       </tr>
       {% for alloc in recipient_allocations %}
       <tr>
@@ -177,7 +196,33 @@
           <span class="status-pending">⏳ Pending</span>
           {% endif %}
         </td>
-        <td>{{ alloc.allocation_date }}</td>
+        <td>{{ alloc.allocation_date|date:"M d, Y, H:i" }}</td>
+        <td style="max-width: 180px; word-break: break-all;">
+          {% if alloc.transaction_hash %}
+          <div style="display: flex; align-items: center;">
+            <code
+              style="background: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-size: 0.85em; word-break: break-all;">
+              {{ alloc.transaction_hash }}
+            </code>
+            <button
+              onclick="navigator.clipboard.writeText('{{ alloc.transaction_hash }}')"
+              title="Copy"
+              style="margin-left: 6px; border: none; background: none; cursor: pointer;">
+              <img src="{% static 'images/copy-icon.png' %}" alt="Copy"
+                style="width: 16px; height: 16px; vertical-align: middle;">
+            </button>
+          </div>
+          {% else %}
+          <span class="status-none">-</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if alloc.donor.user.contact %}
+          {{ alloc.donor.user.contact }}
+          {% else %}
+          <span class="status-none">-</span>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </table>

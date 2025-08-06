@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from decouple import config
 import dj_database_url
+from dotenv import load_dotenv
+import os
+
+
+
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -213,3 +219,13 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 WHITENOISE_USE_FINDERS = True
 # Add Whitenoise middleware to the MIDDLEWARE setting
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+
+
+
+
+
+# blockchain settingsBLOCKCHAIN_PROVIDER = os.getenv('BLOCKCHAIN_PROVIDER')
+CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
+BACKEND_WALLET_ADDRESS = os.getenv('BACKEND_WALLET_ADDRESS')
+BACKEND_PRIVATE_KEY = os.getenv('BACKEND_PRIVATE_KEY')

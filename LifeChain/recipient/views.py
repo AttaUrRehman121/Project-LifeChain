@@ -21,7 +21,7 @@ from .models import AllocatedDonorToRecipient, Recipient
 from donor.models import donor_Registered
 from django.core.mail import send_mail
 from django.utils import timezone
-
+from .blockchain import contract, w3, backend_wallet_address, backend_private_key
 from home.views import index
 # Create your views here.
 @login_required
@@ -188,10 +188,16 @@ def eligible_donors(request):
             return redirect('profile_view')
 
         # No valid allocation, show available eligible donors
+        # Exclude donors who are already allocated to any recipient (with a non-expired allocation)
+        allocated_donor_ids = AllocatedDonorToRecipient.objects.filter(
+            verification_status__in=[False, True],
+            token_expiry__gt=now()
+        ).values_list('donor_id', flat=True)
+
         eligible_donors = donor_Registered.objects.filter(
             eligibility='Eligible',
             is_allocated=False
-        )
+        ).exclude(id__in=allocated_donor_ids)
 
         donors_data = [
             {
@@ -321,61 +327,74 @@ def eligible_donors(request):
 #         messages.error(request, "Invalid or already used verification link.")
 #         return redirect('profile_view')
 # Setup Web3
-w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
-w3.eth.default_account = w3.eth.accounts[0]
+from web3 import Web3
+BACKEND_ADDRESS = Web3.to_checksum_address(settings.BACKEND_WALLET_ADDRESS)
+PRIVATE_KEY = settings.BACKEND_PRIVATE_KEY
 
-with open("DonorContractABI.json") as f:
-    abi = json.load(f)
-
-contract_address = Web3.to_checksum_address('0x0afd2bd700d8f901a68a314ef35e509defd7bb96')
-
-# now use it safely
-contract = w3.eth.contract(address=contract_address, abi=abi)
-    
-    
-
+# Connect to Ganache
+web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 @login_required
-@csrf_exempt  
+@csrf_exempt
 def allocate_donor(request, donor_id):
     try:
         print("Allocate donor triggered", donor_id)
         donor = get_object_or_404(donor_Registered, id=donor_id)
         recipient = get_object_or_404(Recipient, user=request.user)
 
-        # Make sure both donor and recipient have wallet addresses
         if not donor.user.wallet_address or not recipient.user.wallet_address:
-            return JsonResponse({'error': 'Missing wallet address for donor or recipient'}, status=400)
+            return JsonResponse({'error': 'Missing wallet address.'}, status=400)
 
-        # Smart contract transaction
-        tx_hash = contract.functions.allocateDonorToRecipient(
-            Web3.to_checksum_address(donor.user.wallet_address),
-            Web3.to_checksum_address(recipient.user.wallet_address)
-        ).transact()
-        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        nonce = w3.eth.get_transaction_count(backend_wallet_address)
+        txn = contract.functions.allocateDonorToRecipient(
+            donor.user.wallet_address,
+            recipient.user.wallet_address
+        ).build_transaction({
+            'from': backend_wallet_address,
+            'nonce': nonce,
+            'gas': 3000000,
+            'gasPrice': w3.to_wei('1', 'gwei'),
+        })
 
-        # Extract token from event logs
-        logs = contract.events.DonorAllocated().process_receipt(tx_receipt)
-        token = logs[0]['args']['token'].hex()
+        signed_tx = w3.eth.account.sign_transaction(txn, private_key=PRIVATE_KEY)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-        # Store in DB
+        # Process event logs
+        event_logs = contract.events.DonorAllocated().process_receipt(receipt)
+        
+        if not event_logs:
+            logger.error("DonorAllocated event not found in logs.")
+            return JsonResponse({'error': 'Event not found in logs.'}, status=500)
+
+        event = event_logs[0]
+        token = event['args']['token'].hex()
+        donor_address = event['args']['donor']
+        recipient_address = event['args']['recipient']
+        expiry_timestamp = event['args']['expiry']
+
+        print("✅ Event decoded:")
+        print("Token:", token)
+        print("Donor:", donor_address)
+        print("Recipient:", recipient_address)
+        print("Expiry:", expiry_timestamp)
+
+        # Create allocation in database
         allocation = AllocatedDonorToRecipient.objects.create(
             donor=donor,
             recipient=recipient,
             token=token,
+            token_expiry=timezone.datetime.fromtimestamp(expiry_timestamp, tz=timezone.utc),
             transaction_hash=tx_hash.hex(),
         )
 
+        # Generate verification URL and send email
         verify_url = request.build_absolute_uri(reverse('verify_donor_email', args=[token]))
-
-        # Email to donor
         send_mail(
             subject='Organ Donation Request',
             message=f'''Dear {donor.user.username},
 
 You have been matched with a recipient.
-
-Recipient: {recipient.user.username}
-Please verify your consent by clicking this link within 24 hours:
+Please verify your consent by clicking this link within 7 days:
 {verify_url}
 
 Regards,
@@ -386,38 +405,46 @@ LifeChain Team
             fail_silently=False,
         )
 
-        return JsonResponse({'status': 'success', 'token': token})
+        return JsonResponse({'message': 'Donor allocated successfully', 'token': token})
 
     except Exception as e:
-        logger.error(f"Allocation failed: {str(e)}")
-        return JsonResponse({'error': 'Allocation failed. Try again later.'}, status=500)
+        logger.exception("Allocation error:")
+        return JsonResponse({'error': str(e)}, status=500)
 
-    
+
+
 @login_required
 def verify_donor_email(request, token):
     try:
-        token_bytes = bytes.fromhex(token.replace("0x", ""))
+        allocation = get_object_or_404(AllocatedDonorToRecipient, token=token)
 
+        if request.user != allocation.donor.user:
+            messages.error(request, "You are not authorized to verify this donation.")
+            return redirect('profile_view')
+
+        token_bytes = bytes.fromhex(token.replace("0x", ""))
         donor_address, recipient_address, is_verified, token_expiry = contract.functions.getAllocation(token_bytes).call()
 
-        # Check if already verified
         if is_verified:
             messages.error(request, "This link has already been used.")
             return redirect('profile_view')
 
-        # Check expiry
         if timezone.now().timestamp() > token_expiry:
             messages.error(request, "Verification link has expired.")
             return redirect('profile_view')
 
-        # Smart contract call to verify
-        tx_hash = contract.functions.verifyDonation(token_bytes).transact({
-            'from': Web3.to_checksum_address(request.user.wallet_address)  # ✅ Fixed here
+        nonce = w3.eth.get_transaction_count(backend_wallet_address)
+        txn = contract.functions.verifyDonation(token_bytes).build_transaction({
+            'from': backend_wallet_address,
+            'nonce': nonce,
+            'gas': 3000000,
+            'gasPrice': w3.to_wei('1', 'gwei'),
         })
+
+        signed_txn = w3.eth.account.sign_transaction(txn, private_key=backend_private_key)
+        tx_hash = w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         w3.eth.wait_for_transaction_receipt(tx_hash)
 
-        # Update DB model
-        allocation = get_object_or_404(AllocatedDonorToRecipient, token=token)
         allocation.verification_status = True
         allocation.transaction_hash = tx_hash.hex()
         allocation.save()
@@ -426,10 +453,9 @@ def verify_donor_email(request, token):
         return redirect('profile_view')
 
     except Exception as e:
-        print("Verification error:", e)
+        logger.exception("Blockchain verification error:")
         messages.error(request, "Invalid or expired verification link.")
         return redirect('profile_view')
-
 
 @login_required
 def RecipientResultpage(request):
