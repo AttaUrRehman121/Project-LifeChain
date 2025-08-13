@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from home.views import custom_404
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -10,5 +10,5 @@ urlpatterns = [
     path('recipient/', include('recipient.urls')),
 ]
 
-# Catch-all pattern for invalid URLs (must be last)
-urlpatterns.append(path('<path:path>', custom_404, name='catch_all'))
+
+handler404 = 'home.views.page_not_found_view'

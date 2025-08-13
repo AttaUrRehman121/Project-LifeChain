@@ -2,6 +2,7 @@
 Django==4.2.17
 asgiref==3.8.1
 gunicorn==23.0.0
+whitenoise==6.9.0
 
 # Database and ORM
 dj-database-url==3.0.1

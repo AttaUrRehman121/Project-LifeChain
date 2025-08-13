@@ -46,6 +46,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*.railway.app,lifechain.up.rail
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,10 +59,12 @@ INSTALLED_APPS = [
     'bootstrap5', 
     'registration',
     'home',
+      
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -120,9 +123,9 @@ DATABASES = {
 }
 
 
+ALLOWED_HOSTS = ['*']
 
-
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.railway.app,https://lifechain.up.railway.app').split(',')
+# CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.railway.app,https://lifechain.up.railway.app').split(',')
 
 
 
@@ -169,10 +172,6 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = BASE_DIR / "media"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Static files serving in production
-if not DEBUG:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 
 
@@ -232,7 +231,9 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 
 
-# Static files configuration (Whitenoise removed)
+# Configure Whitenoise to serve static files
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_ROOT = BASE_DIR / "staticfiles"
 
 
 
@@ -266,6 +267,3 @@ LOGGING = {
         },
     },
 }
-
-# Error handling configuration
-# Note: Custom error handlers are configured in LifeChain/urls.py

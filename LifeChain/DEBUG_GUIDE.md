@@ -4,7 +4,6 @@
 
 - ✅ Project deployed successfully on Railway
 - ✅ Redirect loop fixed (HTTPS redirect disabled)
-- ✅ Whitenoise removed (was causing static file issues)
 - ❌ Internal Server Error occurring
 
 ## Debugging Steps
@@ -13,14 +12,10 @@
 
 Go to your Railway dashboard and check the logs for the specific error message.
 
-### 2. **Test Simple Endpoints (in order of complexity)**
+### 2. **Test Simple Endpoint**
 
-1. **Health Check**: `https://lifechain.up.railway.app/health/`
-   - Should show "OK" (no dependencies)
-2. **Test View**: `https://lifechain.up.railway.app/test/`
-   - Should show "Django is working! This is a test view."
-3. **Main Page**: `https://lifechain.up.railway.app/`
-   - Should show the index page
+Try accessing: `https://lifechain.up.railway.app/test/`
+This should show "Django is working! This is a test view."
 
 ### 3. **Check Environment Variables**
 
@@ -56,22 +51,14 @@ Ensure these are set in Railway:
 - Check for typos in variable names
 - Verify variable values are correct
 
-### 5. **Recent Changes Made**
+### 5. **Temporary Debug Settings Applied**
 
-#### **Whitenoise Removed**
-
-- Removed from `INSTALLED_APPS`
-- Removed from `MIDDLEWARE`
-- Removed from `requirements.txt`
-- Using Django's default static file handling
-
-#### **Enhanced Debugging**
+I've temporarily enabled:
 
 - `DEBUG = True` to show detailed error messages
-- Added comprehensive logging configuration
-- Added error handling to all views
-- Added health check endpoint (`/health/`)
-- Added test endpoint (`/test/`)
+- Added logging configuration
+- Added error handling to the index view
+- Added a test view for debugging
 
 ### 6. **Next Steps**
 
@@ -79,26 +66,21 @@ Ensure these are set in Railway:
 
    ```bash
    git add .
-   git commit -m "Remove Whitenoise and add comprehensive debugging"
+   git commit -m "Add debugging and fix internal server error"
    git push origin main
    ```
 
-2. **Test endpoints in order**:
+2. **Check Railway logs** for the specific error
 
-   - `/health/` (should work)
-   - `/test/` (should work)
-   - `/` (main page)
+3. **Test the test endpoint**: `/test/`
 
-3. **Check Railway logs** for specific error messages
-
-4. **If still getting errors**, the logs will now show exactly what's failing
+4. **If still getting errors**, check the logs for the specific error message
 
 ### 7. **Expected Behavior After Fix**
 
-- `/health/` → "OK"
-- `/test/` → "Django is working!"
-- `/` → Index page (should work now)
-- `/admin/` → Django admin
+- `/` should work (index page)
+- `/test/` should show "Django is working!"
+- `/admin/` should show Django admin
 - Other pages should work normally
 
 ### 8. **If Issues Persist**
@@ -109,19 +91,10 @@ Check these specific areas:
 2. **Static Files**: Verify `collectstatic` ran successfully
 3. **Templates**: Check if all template files are present
 4. **Dependencies**: Ensure all packages are installed correctly
-5. **Models**: Check for any model import issues
-
-### 9. **Static Files Handling**
-
-Since Whitenoise is removed:
-
-- Django will handle static files through its default mechanism
-- Railway will serve static files through its proxy
-- No additional middleware needed for static files
 
 ## Support
 
 - Check Railway logs first
-- Test endpoints in order: `/health/` → `/test/` → `/`
 - Look for specific error messages
+- Test the `/test/` endpoint
 - Verify environment variables are set correctly
