@@ -1,9 +1,6 @@
-from urllib import request
 from django.db import models
 from django.conf import settings
 from registration.models import UserProfile
-
-from django.db import models
     
 
 

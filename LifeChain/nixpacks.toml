@@ -1,0 +1,18 @@
+[phases.setup]
+nixPkgs = ["python310", "python310Packages.pip", "python310Packages.virtualenv"]
+
+[phases.install]
+cmds = [
+    "python -m venv /opt/venv",
+    ". /opt/venv/bin/activate && pip install --upgrade pip",
+    ". /opt/venv/bin/activate && pip install -r requirements.txt"
+]
+
+[phases.build]
+cmds = [
+    ". /opt/venv/bin/activate && python manage.py collectstatic --noinput",
+    ". /opt/venv/bin/activate && python manage.py migrate --noinput"
+]
+
+[start]
+cmd = ". /opt/venv/bin/activate && gunicorn LifeChain.wsgi:application --bind 0.0.0.0:$PORT"

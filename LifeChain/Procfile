@@ -1,1 +1,1 @@
-web: gunicorn LifeChain.wsgi
+web: gunicorn LifeChain.wsgi:application --bind 0.0.0.0:$PORT

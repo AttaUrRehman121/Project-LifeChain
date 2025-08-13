@@ -1,7 +1,6 @@
 import json
 import os
 import pickle
-from pyexpat.errors import messages
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from django.core.mail import send_mail

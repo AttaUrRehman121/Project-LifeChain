@@ -1,13 +1,10 @@
 from django.db import models
-from django.db import models
 from django.conf import settings
 from donor.models import donor_Registered
 from registration.models import UserProfile
 from django.utils import timezone
 from datetime import timedelta
 import uuid
-from django.db import models
-from datetime import timedelta
 
 
 # Create your models here.

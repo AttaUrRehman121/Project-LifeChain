@@ -3,7 +3,7 @@ import json
 import os
 from urllib import request
 from django.contrib import messages
-from venv import logger
+import logging
 from django.conf import settings
 from django.http import JsonResponse
 from django.urls import reverse
