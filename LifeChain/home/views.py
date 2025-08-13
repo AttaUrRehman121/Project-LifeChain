@@ -8,17 +8,22 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.http import HttpResponse
 from donor.models import donor_Registered
 from recipient.models import AllocatedDonorToRecipient, Recipient
 from registration.models import UserProfile
 from django.contrib.auth.decorators import login_required
 
-
-
-
 # Create your views here.
 def index(request):
-    return render(request, 'index.html')
+    try:
+        return render(request, 'index.html')
+    except Exception as e:
+        return HttpResponse(f"Error rendering index: {str(e)}", status=500)
+
+def test_view(request):
+    """Simple test view to check if Django is working"""
+    return HttpResponse("Django is working! This is a test view.")
 
 @csrf_exempt
 def contact(request):
@@ -40,8 +45,6 @@ def contact(request):
     
 def about(request):
     return render(request, 'about.html')
-
-
 
 @login_required
 def profile_view(request):
@@ -66,8 +69,6 @@ def profile_view(request):
         'recipient': recipient,
         'recipient_allocations': recipient_allocations,
     })
-
-
 
 def page_not_found_view(request, exception):
     return render(request, '404-errorpage.html', status=404)

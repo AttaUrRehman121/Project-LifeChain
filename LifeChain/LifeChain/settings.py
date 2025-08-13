@@ -38,7 +38,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-)lhw!940f6j$i8do5w3(7c!l@d%r16ks0+$w(&htzdv690+ppv')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)  # Set to True temporarily for debugging
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*.railway.app,lifechain.up.railway.app').split(',')
 
@@ -64,8 +64,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -245,3 +245,25 @@ BLOCKCHAIN_PROVIDER = config('BLOCKCHAIN_PROVIDER', default='')
 CONTRACT_ADDRESS = config('CONTRACT_ADDRESS', default='')
 BACKEND_WALLET_ADDRESS = config('BACKEND_WALLET_ADDRESS', default='')
 BACKEND_PRIVATE_KEY = config('BACKEND_PRIVATE_KEY', default='')
+
+# Logging configuration for debugging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
