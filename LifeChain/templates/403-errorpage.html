@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'error-pages.css' %}" />
+
+<div class="error-container">
+    <div class="error-content">
+        <div class="error-icon">
+            <i class="fas fa-ban"></i>
+        </div>
+        <h1><span>4</span>0<span>3</span></h1>
+        <h2>Access Forbidden</h2>
+        <p>Sorry! You don't have permission to access this page.</p>
+        <div class="error-actions">
+            <a href="{% url 'index' %}" class="btn btn-primary">
+                <i class="fas fa-home"></i> Go Home
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-secondary">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="{% url 'signup' %}" class="btn btn-outline">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </a>
+        </div>
+        <div class="error-help">
+            <p><strong>Why this happened:</strong></p>
+            <ul>
+                <li>You need to be logged in</li>
+                <li>You don't have the required permissions</li>
+                <li>This page is restricted to certain users</li>
+                <li>Your account may need verification</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

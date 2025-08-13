@@ -9,11 +9,11 @@
 <div class="error-container">
     <div class="error-content">
         <div class="error-icon">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-exclamation-circle"></i>
         </div>
-        <h1><span>4</span>0<span>4</span></h1>
-        <h2>Page Not Found</h2>
-        <p>Oops! The page you are looking for cannot be found.</p>
+        <h1><span>4</span>0<span>0</span></h1>
+        <h2>Bad Request</h2>
+        <p>The request you sent could not be processed. Please check your input and try again.</p>
         <div class="error-actions">
             <a href="{% url 'index' %}" class="btn btn-primary">
                 <i class="fas fa-home"></i> Go Home
@@ -21,17 +21,17 @@
             <button onclick="history.back()" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Go Back
             </button>
-            <a href="{% url 'contact' %}" class="btn btn-outline">
-                <i class="fas fa-envelope"></i> Contact Support
-            </a>
+            <button onclick="window.location.reload()" class="btn btn-outline">
+                <i class="fas fa-redo"></i> Try Again
+            </button>
         </div>
         <div class="error-help">
             <p><strong>What you can do:</strong></p>
             <ul>
-                <li>Check the URL for typos</li>
+                <li>Check your input data</li>
                 <li>Go back to the previous page</li>
-                <li>Visit our homepage</li>
-                <li>Contact support for help</li>
+                <li>Try refreshing the page</li>
+                <li>Contact support if the problem persists</li>
             </ul>
         </div>
     </div>

@@ -46,7 +46,6 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*.railway.app,lifechain.up.rail
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,12 +58,10 @@ INSTALLED_APPS = [
     'bootstrap5', 
     'registration',
     'home',
-      
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -173,6 +170,10 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR / "media"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Static files serving in production
+if not DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 
 
 
@@ -231,9 +232,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 
 
-# Configure Whitenoise to serve static files
-WHITENOISE_USE_FINDERS = True
-WHITENOISE_ROOT = BASE_DIR / "staticfiles"
+# Static files configuration (Whitenoise removed)
 
 
 
@@ -267,3 +266,11 @@ LOGGING = {
         },
     },
 }
+
+# Error handling and custom error pages
+if not DEBUG:
+    # Custom error handlers
+    HANDLER404 = 'home.views.custom_404'
+    HANDLER500 = 'home.views.custom_500'
+    HANDLER403 = 'home.views.custom_403'
+    HANDLER400 = 'home.views.custom_400'
