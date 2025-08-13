@@ -13,18 +13,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from decouple import config
 import dj_database_url
-from dotenv import load_dotenv
-import os
-
 # Install PyMySQL as MySQLdb replacement (only if available)
 try:
     import pymysql
     pymysql.install_as_MySQLdb()
 except ImportError:
     pass
-
-
-load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -181,16 +175,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security settings for production
-if not DEBUG:
-    # Don't redirect to HTTPS on Railway - they handle it at proxy level
-    # SECURE_SSL_REDIRECT = True  # Commented out for Railway
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
+
 
 
 
