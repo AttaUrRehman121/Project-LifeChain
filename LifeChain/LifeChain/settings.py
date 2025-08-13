@@ -40,7 +40,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-)lhw!940f6j$i8do5w3(7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*.railway.app,lifechain.up.railway.app').split(',')
 
 
 # Application definition
@@ -125,7 +125,7 @@ DATABASES = {
 
 
 
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.railway.app').split(',')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.railway.app,https://lifechain.up.railway.app').split(',')
 
 
 
@@ -183,7 +183,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security settings for production
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    # Don't redirect to HTTPS on Railway - they handle it at proxy level
+    # SECURE_SSL_REDIRECT = True  # Commented out for Railway
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
