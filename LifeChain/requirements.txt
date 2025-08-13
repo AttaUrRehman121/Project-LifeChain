@@ -61,6 +61,7 @@ pyphen==0.17.2
 PySocks==1.7.1
 python-dateutil==2.9.0.post0
 python-decouple==3.8
+python-dotenv==1.1.1
 pytz==2025.1
 pyunormalize==16.0.0
 pywin32==311

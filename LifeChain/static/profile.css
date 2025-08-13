@@ -1,156 +1,153 @@
 :root {
-    --blue: #0188df;
+  --blue: #0188df;
 
-    --white: #fff;
-    --danger: #dc3545;
+  --white: #fff;
+  --danger: #dc3545;
 }
 
 .container {
-    margin: auto;
-    margin-top: 20px;
-    padding: 20px;
-    max-width: 800px;
-    background-color: var(--white); 
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    color: var(--white); 
-    text-align: center; 
+  margin: auto;
+  margin-top: 20px;
+  padding: 20px;
+  max-width: 800px;
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  color: var(--white);
+  text-align: center;
 }
-
 
 h1.text-center {
-    font-size: 2rem;
-    color: var(--blue); 
-    margin-bottom: 20px;
-    text-align: center;
+  font-size: 2rem;
+  color: var(--blue);
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-
 .profile-details {
-    display: flex;
-    justify-content: space-between;
-    text-align: left;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  margin-bottom: 20px;
 }
 
 .profile-details .col {
-    width: 48%; 
-    font-size: 1rem;
-    color: var(--white);
+  width: 48%;
+  font-size: 1rem;
+  color: var(--white);
 }
 
 .profile-details .col label {
-    font-weight: bold;
-    color: var(--blue);
-    display: block;
+  font-weight: bold;
+  color: var(--blue);
+  display: block;
 }
 
 .profile-details .col span {
-    font-size: 0.9rem;
-    color: var(--white);
+  font-size: 0.9rem;
+  color: var(--white);
 }
 
-
 .edit-form .btn-primary {
-    background-color: var(--blue); 
-    color: var(--white);
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-top: 10px;
+  background-color: var(--blue);
+  color: var(--white);
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .edit-form .btn-primary:hover {
-    background-color: #016bb5; 
+  background-color: #016bb5;
 }
 
 .edit-form .btn-danger {
-    background-color: var(--danger); 
-    color: var(--white);
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
+  background-color: var(--danger);
+  color: var(--white);
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 
 .edit-form .btn-danger:hover {
-    background-color: #b02a37; /* Darker red on hover */
+  background-color: #b02a37; /* Darker red on hover */
 }
 
 /* Footer alignment for Delete Account */
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .profile-details {
-        flex-direction: column;
-        width: 100%;
-        box-sizing: border-box;
-    }
+  .profile-details {
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-    .profile-details .col {
-        width: 100%;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-    }
+  .profile-details .col {
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
 }
 @media (max-width: 575.98px) {
-    .container {
-        padding: 10px;
-        max-width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-    }
+  .container {
+    padding: 10px;
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
 
-    h1.text-center {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-    }
+  h1.text-center {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
 
-    .profile-details {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-        box-sizing: border-box;
-    }
+  .profile-details {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-    .profile-details .col {
-        width: 100%;
-        font-size: 0.95rem;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-    }
+  .profile-details .col {
+    width: 100%;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
 
-    .edit-form .btn-primary,
-    .edit-form .btn-danger {
-        width: 100%;
-        padding: 12px 0;
-        font-size: 1rem;
-        margin-top: 8px;
-    }
+  .edit-form .btn-primary,
+  .edit-form .btn-danger {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1rem;
+    margin-top: 8px;
+  }
 
-    .delete-account-section {
-        font-size: 0.95rem;
-        margin-top: 15px;
-    }
+  .delete-account-section {
+    font-size: 0.95rem;
+    margin-top: 15px;
+  }
 }
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767.98px) {
-    .container {
-        padding: 15px;
-        max-width: 95%;
-        margin: 10px
-    }
+  .container {
+    padding: 15px;
+    max-width: 95%;
+    margin: 10px;
+  }
 
-    h1.text-center {
-        font-size: 1.7rem;
-    }
+  h1.text-center {
+    font-size: 1.7rem;
+  }
 
-    .profile-details .col {
-        font-size: 1rem;
-    }
+  .profile-details .col {
+    font-size: 1rem;
+  }
 }

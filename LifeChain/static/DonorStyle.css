@@ -1,106 +1,100 @@
-General Styles
-
-.form h4
-{
-    text-align: center;
+General Styles .form h4 {
+  text-align: center;
 }
 
 /* Form Container */
 .bd-example {
-    max-width: 1200px;
-    /* display: flex
+  max-width: 1200px;
+  /* display: flex
 ; */
-    justify-content: center;
-    align-items: center;
-    background: #ffffff;
-    box-shadow: 2px 2px 8px rgb(6, 133, 191);
-    border-radius: 24px;
-    padding: 26px;
-    width: 725px;
-    margin: 40px auto;
-    top: 10%;
-    transform: translateY(0%);
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: 2px 2px 8px rgb(6, 133, 191);
+  border-radius: 24px;
+  padding: 26px;
+  width: 725px;
+  margin: 40px auto;
+  top: 10%;
+  transform: translateY(0%);
 }
 div {
-    width: 67rem;
-    margin: 5px 5px 5px 5px;
+  width: 67rem;
+  margin: 5px 5px 5px 5px;
 }
 
 label {
-    
-    font-size: 1.6rem;
-    font-weight: 500;
-    color: #0188df;
-    margin-bottom: 18px;
-    ;
-};
-    
-    /* Information Icon */
-    .info-icon {
-        display: inline-block;
-        margin-left: 8px;
-        color: #007bff;
-        cursor: pointer;
-        font-size: 1.2rem;
-    }
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #0188df;
+  margin-bottom: 18px;
+}
 
-    .info-icon:hover {
-        color: #0056b3;
-    }
+/* Information Icon */
+.info-icon {
+  display: inline-block;
+  margin-left: 8px;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
 
-    /* Tooltip Box */
-    .tooltip-box {
-        display: none;
-        position: absolute;
-        background-color: #ffffff;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-        padding: 10px;
-        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        max-width: 500px;
-    }
+.info-icon:hover {
+  color: #0056b3;
+}
 
-    .info-icon:hover + .tooltip-box {
-        display: block;
-    }
-    /* Tooltip Styling */
-    .ri-information-line {
-        font-size: 1.2rem;
-        color: #007bff;
-        cursor: pointer;
-    }
+/* Tooltip Box */
+.tooltip-box {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-width: 500px;
+}
 
-    .ri-information-line:hover {
-        color: #0056b3;
-    }
+.info-icon:hover + .tooltip-box {
+  display: block;
+}
+/* Tooltip Styling */
+.ri-information-line {
+  font-size: 1.2rem;
+  color: #007bff;
+  cursor: pointer;
+}
 
-    [data-bs-toggle="tooltip"] {
-        position: relative;
-    }
+.ri-information-line:hover {
+  color: #0056b3;
+}
 
-    [data-bs-toggle="tooltip"]::after {
-        content: attr(title);
-        font-size: 15px;
-        display: none;
-        position: absolute;
-        background-color: #ffffff;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-        padding: 10px;
-        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        max-width: 600px;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
-    }
+[data-bs-toggle="tooltip"] {
+  position: relative;
+}
 
-    [data-bs-toggle="tooltip"]:hover::after {
-        display: block;
-    }
+[data-bs-toggle="tooltip"]::after {
+  content: attr(title);
+  font-size: 15px;
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-width: 600px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
 
+[data-bs-toggle="tooltip"]:hover::after {
+  display: block;
+}
 
 /* .form-label {
     font-weight: bold;
@@ -113,126 +107,125 @@ label {
 
 /* Form Labels */
 .form-label {
-    font-weight: bold;
-    color: #333333; /* Darker text for readability */
+  font-weight: bold;
+  color: #333333; /* Darker text for readability */
 }
 
 /* Input Fields */
 .form-control {
-    border: 1px solid #ced4da; /* Soft gray border */
-    border-radius: 5px; /* Rounded input fields */
-    
-    font-size: 16px;
+  border: 1px solid #ced4da; /* Soft gray border */
+  border-radius: 5px; /* Rounded input fields */
+
+  font-size: 16px;
 }
 
 /* Checkbox Styling */
 .form-check-label {
-    color: #495057; /* Muted gray color */
-    font-size: 14px;
+  color: #495057; /* Muted gray color */
+  font-size: 14px;
 }
 
 .form-check-input {
-    accent-color: #007bff; /* Matches the button's color */
+  accent-color: #007bff; /* Matches the button's color */
 }
 
 /* Button Styling */
 .btn-primary {
-    background-color: #007bff; /* Blue primary color */
-    border-color: #007bff;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+  background-color: #007bff; /* Blue primary color */
+  border-color: #007bff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    border-color: #0056b3;
+  background-color: #0056b3; /* Darker blue on hover */
+  border-color: #0056b3;
 }
 
 /* Help Text */
 .form-text {
-    color: #6c757d; /* Subtle gray for text */
-    font-size: 12px;
+  color: #6c757d; /* Subtle gray for text */
+  font-size: 12px;
 }
 
-
-
 select#role {
-    display: block;
-    height: 40px;
-    width: 100%; /* Full width to match input fields */
-    background-color: rgba(255, 255, 255, 0.07);
-    border-radius: 3px;
-    padding: 0 10px;
-    margin-top: 5px;
-    font-size: 14px;
-    font-weight: 300;
-    color: #e5e5e5; /* Placeholder color */
-    border: none;
-    outline: none;
-    transition: border 0.3s, background 0.3s;
-    appearance: none; /* Remove default arrow styles */
-    cursor: pointer;
-  }
-  
-  /* Add focus effect for the dropdown */
-  select:focus {
-    border: 1px solid #23a2f6;
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Style the dropdown arrow */
-  select::-ms-expand {
-    display: none; /* Hide the default arrow on IE */
-  }
-  
-  select:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-    select {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDExIDYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMUw1LjUgNUwxMCAxIiBzdHJva2U9IiNFMUUxRTEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 10px 6px;
-  }
-  
+  display: block;
+  height: 40px;
+  width: 100%; /* Full width to match input fields */
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  padding: 0 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 300;
+  color: #e5e5e5; /* Placeholder color */
+  border: none;
+  outline: none;
+  transition: border 0.3s, background 0.3s;
+  appearance: none; /* Remove default arrow styles */
+  cursor: pointer;
+}
+
+/* Add focus effect for the dropdown */
+select:focus {
+  border: 1px solid #23a2f6;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style the dropdown arrow */
+select::-ms-expand {
+  display: none; /* Hide the default arrow on IE */
+}
+
+select:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+select {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDExIDYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMUw1LjUgNUwxMCAxIiBzdHJva2U9IiNFMUUxRTEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 6px;
+}
 
 @media (max-width: 900px) {
-    .bd-example {
-        max-width: 95vw;
-        width: 95vw;
-        padding: 16px;
-    }
-    form#donor-form {
-        width: 100% !important;
-        padding: 2rem !important;
-    }
-    div {
-        width: 100%;
-        margin: 5px 0;
-    }
+  .bd-example {
+    max-width: 95vw;
+    width: 95vw;
+    padding: 16px;
+  }
+  form#donor-form {
+    width: 100% !important;
+    padding: 2rem !important;
+  }
+  div {
+    width: 100%;
+    margin: 5px 0;
+  }
 }
 
 @media (max-width: 600px) {
-    .bd-example {
-        padding: 8px;
-        border-radius: 12px;
-    }
-    form#donor-form {
-        padding: 1rem !important;
-        border-radius: 10px !important;
-    }
-    h4.text-center {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
-    label, .form-label {
-        font-size: 1rem;
-    }
-    .form-control, select#role {
-        font-size: 1rem;
-        padding: 6px;
-    }
+  .bd-example {
+    padding: 8px;
+    border-radius: 12px;
+  }
+  form#donor-form {
+    padding: 1rem !important;
+    border-radius: 10px !important;
+  }
+  h4.text-center {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  label,
+  .form-label {
+    font-size: 1rem;
+  }
+  .form-control,
+  select#role {
+    font-size: 1rem;
+    padding: 6px;
+  }
 }
