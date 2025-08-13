@@ -267,10 +267,5 @@ LOGGING = {
     },
 }
 
-# Error handling and custom error pages
-if not DEBUG:
-    # Custom error handlers
-    HANDLER404 = 'home.views.custom_404'
-    HANDLER500 = 'home.views.custom_500'
-    HANDLER403 = 'home.views.custom_403'
-    HANDLER400 = 'home.views.custom_400'
+# Error handling configuration
+# Note: Custom error handlers are configured in LifeChain/urls.py

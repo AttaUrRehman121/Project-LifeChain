@@ -2,7 +2,7 @@
 from django.urls import path, include
 from django.views.defaults import page_not_found
 from .views import (
-    contact, about, index, profile_view, test_view, health_check,
+    contact, about, index, profile_view, test_view, health_check, simple_test,
     custom_404, custom_500, custom_403, custom_400
 )
 from registration.views import signup
@@ -11,6 +11,7 @@ from registration.views import signup
 urlpatterns = [
     path('', index, name='index'),
     path('health/', health_check, name='health'),
+    path('simple/', simple_test, name='simple_test'),
     path('test/', test_view, name='test'),
     path('registration/', signup, name='signup'),
     path('contact/', contact, name='contact'),

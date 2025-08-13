@@ -1,52 +1,33 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import login as auth_login, authenticate
-from .models import Contact
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.http import HttpResponse, Http404
-from functools import wraps
+from django.http import HttpResponse
 import logging
-from donor.models import donor_Registered
-from recipient.models import AllocatedDonorToRecipient, Recipient
-from registration.models import UserProfile
-from django.contrib.auth.decorators import login_required
+# from .models import Contact  # Temporarily commented out
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def handle_errors(view_func):
-    """Decorator to handle any unexpected errors"""
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
-        try:
-            return view_func(request, *args, **kwargs)
-        except Exception as e:
-            logger.error(f"Unexpected error in {view_func.__name__}: {str(e)}", exc_info=True)
-            return custom_500(request)
-    return wrapper
-
 # Create your views here.
-@handle_errors
 def health_check(request):
     """Simple health check that doesn't depend on anything"""
     return HttpResponse("OK", content_type="text/plain")
 
-@handle_errors
+def simple_test(request):
+    """Very simple test that doesn't depend on anything"""
+    return HttpResponse("Simple test working!")
+
 def index(request):
     try:
         logger.info("Index view called successfully")
-        return render(request, 'index.html')
+        # Temporarily disable template rendering to isolate the issue
+        # return render(request, 'index.html')
+        return HttpResponse("Index page working! (Template rendering temporarily disabled)")
     except Exception as e:
         logger.error(f"Error in index view: {str(e)}", exc_info=True)
-        return custom_500(request)
+        return HttpResponse("Error rendering index page. Please try again.", status=500)
 
-@handle_errors
 def test_view(request):
     """Simple test view to check if Django is working"""
     try:
@@ -54,67 +35,76 @@ def test_view(request):
         return HttpResponse("Django is working! This is a test view.")
     except Exception as e:
         logger.error(f"Error in test view: {str(e)}", exc_info=True)
-        return custom_500(request)
+        return HttpResponse("Error in test view. Please try again.", status=500)
 
 @csrf_exempt
-@handle_errors
 def contact(request):
     try:
         if request.method == 'POST':
-            name = request.POST.get('name')
-            email = request.POST.get('email')
-            phone_number = request.POST.get('phone_number')
-            message = request.POST.get('message')
+            # Temporarily disabled database operations
+            # name = request.POST.get('name')
+            # email = request.POST.get('email')
+            # phone_number = request.POST.get('phone_number')
+            # message = request.POST.get('message')
 
-            # Save the contact data into the database
-            contact = Contact(name=name, email=email, phone_number=phone_number, message=message)
-            contact.save()
+            # # Save the contact data into the database
+            # contact = Contact(name=name, email=email, phone_number=phone_number, message=message)
+            # contact.save()
 
-            # After saving the contact, show a success message
-            messages.success(request, 'Your message has been sent successfully!')
-            return redirect('contact')  # Redirect back to the contact page
+            # # After saving the contact, show a success message
+            # messages.success(request, 'Your message has been sent successfully!')
+            # return redirect('contact')  # Redirect back to the contact page
 
-        return render(request, 'contactUs.html')
+            return HttpResponse("Contact form submitted successfully! (Database temporarily disabled)")
+
+        # return render(request, 'contactUs.html')
+        return HttpResponse("Contact page working! (Template rendering temporarily disabled)")
     except Exception as e:
         logger.error(f"Error in contact view: {str(e)}", exc_info=True)
-        return custom_500(request)
+        return HttpResponse("Error in contact view. Please try again.", status=500)
     
-@handle_errors
 def about(request):
     try:
-        return render(request, 'about.html')
+        # Temporarily disable template rendering to isolate the issue
+        # return render(request, 'about.html')
+        return HttpResponse("About page working! (Template rendering temporarily disabled)")
     except Exception as e:
         logger.error(f"Error in about view: {str(e)}", exc_info=True)
-        return custom_500(request)
+        return HttpResponse("Error in about view. Please try again.", status=500)
 
-@login_required
-@handle_errors
 def profile_view(request):
     try:
-        user = request.user
+        # Temporarily disabled database operations
+        # # Import models here to avoid circular imports
+        # from donor.models import donor_Registered
+        # from recipient.models import AllocatedDonorToRecipient, Recipient
+        
+        # user = request.user
 
-        # Donor section
-        donor = donor_Registered.objects.filter(user=user).first()
-        donor_allocation = None
-        if donor:
-            donor_allocation = AllocatedDonorToRecipient.objects.filter(donor=donor).last()
+        # # Donor section
+        # donor = donor_Registered.objects.filter(user=user).first()
+        # donor_allocation = None
+        # if donor:
+        #     donor_allocation = AllocatedDonorToRecipient.objects.filter(donor=donor).last()
 
-        # Recipient section
-        recipient = Recipient.objects.filter(user=user).first()
-        recipient_allocations = []
-        if recipient:
-            recipient_allocations = AllocatedDonorToRecipient.objects.filter(recipient=recipient)
+        # # Recipient section
+        # recipient = Recipient.objects.filter(user=user).first()
+        # recipient_allocations = []
+        # if recipient:
+        #     recipient_allocations = AllocatedDonorToRecipient.objects.filter(recipient=recipient)
 
-        return render(request, 'profile.html', {
-            'user': user,
-            'donor': donor,
-            'donor_allocation': donor_allocation,
-            'recipient': recipient,
-            'recipient_allocations': recipient_allocations,
-        })
+        # return render(request, 'profile.html', {
+        #     'user': user,
+        #     'donor': donor,
+        #     'donor_allocation': donor_allocation,
+        #     'recipient': recipient,
+        #     'recipient_allocations': recipient_allocations,
+        # })
+        
+        return HttpResponse("Profile view working! (Database temporarily disabled)")
     except Exception as e:
         logger.error(f"Error in profile view: {str(e)}", exc_info=True)
-        return custom_500(request)
+        return HttpResponse("Error in profile view. Please try again.", status=500)
 
 # Custom Error Handlers
 def custom_404(request, exception=None):
