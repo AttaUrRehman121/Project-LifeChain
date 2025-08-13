@@ -16,8 +16,12 @@ import dj_database_url
 from dotenv import load_dotenv
 import os
 
-import pymysql
-pymysql.install_as_MySQLdb()
+# Install PyMySQL as MySQLdb replacement (only if available)
+try:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    pass
 
 
 load_dotenv()
@@ -31,12 +35,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)lhw!940f6j$i8do5w3(7c!l@d%r16ks0+$w(&htzdv690+ppv'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-)lhw!940f6j$i8do5w3(7c!l@d%r16ks0+$w(&htzdv690+ppv')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*"]  # Allow all hosts for development; change in production
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
 
 # Application definition
@@ -113,16 +117,15 @@ WSGI_APPLICATION = 'LifeChain.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse(config('DATABASE_URL'))
+    'default': dj_database_url.parse(
+        config('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'))
+    )
 }
 
 
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://project-lifechain-production.up.railway.app',
-    "https://lifechain.up.railway.app"
-]
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.railway.app').split(',')
 
 
 
@@ -178,6 +181,16 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+
 
 
 AUTH_USER_MODEL = 'registration.UserProfile'
@@ -211,23 +224,23 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 
 
 
 # Configure Whitenoise to serve static files
 WHITENOISE_USE_FINDERS = True
-# Add Whitenoise middleware to the MIDDLEWARE setting
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+WHITENOISE_ROOT = BASE_DIR / "staticfiles"
 
 
 
 
 
 
-# blockchain settingsBLOCKCHAIN_PROVIDER = os.getenv('BLOCKCHAIN_PROVIDER')
-CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
-BACKEND_WALLET_ADDRESS = os.getenv('BACKEND_WALLET_ADDRESS')
-BACKEND_PRIVATE_KEY = os.getenv('BACKEND_PRIVATE_KEY')
+# Blockchain settings (optional)
+BLOCKCHAIN_PROVIDER = config('BLOCKCHAIN_PROVIDER', default='')
+CONTRACT_ADDRESS = config('CONTRACT_ADDRESS', default='')
+BACKEND_WALLET_ADDRESS = config('BACKEND_WALLET_ADDRESS', default='')
+BACKEND_PRIVATE_KEY = config('BACKEND_PRIVATE_KEY', default='')

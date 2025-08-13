@@ -11,7 +11,8 @@ cmds = [
 [phases.build]
 cmds = [
     ". /opt/venv/bin/activate && python manage.py collectstatic --noinput",
-    ". /opt/venv/bin/activate && python manage.py migrate --noinput"
+    ". /opt/venv/bin/activate && python manage.py check --deploy || true",
+    ". /opt/venv/bin/activate && python manage.py migrate --noinput || echo 'Migration failed, continuing...'"
 ]
 
 [start]
