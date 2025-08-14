@@ -119,7 +119,10 @@ DATABASES = {
 
 ALLOWED_HOSTS = ['*']
 
-# CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.railway.app,https://lifechain.up.railway.app').split(',')
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+    'https://lifechain.up.railway.app',
+]
 
 
 

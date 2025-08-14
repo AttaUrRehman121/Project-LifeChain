@@ -2,310 +2,715 @@
 {% load static %}
 {% load bootstrap5 %}
 
+{% block title %}Donor Compatibility Form{% endblock title %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a
+                href="{% url 'donorpage' %}">Donor</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Compatibility
+            Form</li>
+    </ol>
+</nav>
+{% endblock breadcrumb %}
+
 {% block content %}
-
-<style>
-        #Title
-        {
-            color: #FF0000;
-            font-size: 30px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
-        ;
-        }
-</style>
-
-<link rel="stylesheet" href="{% static 'DonorStyle.css' %}" />
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" />
-<link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-{% csrf_token %}
-<div class="bd-example m-0 border-0 d-flex justify-content-center">
-    <h4 id="Title" class="text-center mb-4">Donor Compatibility Form</h4>
-    <form id="donor-form" class="border border-2 p-5 rounded-3"
-        style="width: 30rem;" action="{% url 'donorpridict' %}"
-        method="post">
-        {% csrf_token %}
-        <!-- Stage 1: Basic Demographics and Physical Attributes -->
-        <div id="stage-1">
-            <h4 class="text-center mb-4">Basic Demographics and Physical
-                Attributes</h4>
-            <div class="mb-3">
-                <label for="age" class="form-label">Age</label>
-                <input type="number" class="form-control" id="age" name="age"
-                    placeholder="e.g., 30" required>
-            </div>
-            <div class="mb-3">
-                <label for="gender" class="form-label">Gender</label>
-                <select class="form-control" id="gender" name="gender" required>
-                    <option value>Select...</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="blood_type" class="form-label">Blood Type</label>
-                <select class="form-control" id="blood_type" name="blood_type"
-                    required>
-                    <option value>Select...</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="AB">AB</option>
-                    <option value="O">O</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="rh_factor" class="form-label">Rh Factor</label>
-                <select class="form-control" id="rh_factor" name="rh_factor"
-                    required>
-                    <option value>Select...</option>
-                    <option value="positive">Positive</option>
-                    <option value="negative">Negative</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="height_cm" class="form-label">Height (cm)</label>
-                <input type="number" class="form-control" id="height_cm"
-                    name="height_cm" placeholder="e.g., 175" required
-                    tabindex="0">
-            </div>
-            <div class="mb-3">
-                <label for="weight_kg" class="form-label">Weight (kg)</label>
-                <input type="number" class="form-control" id="weight_kg"
-                    name="weight_kg" placeholder="e.g., 70" required
-                    tabindex="0">
-            </div>
-            <div class="mb-3">
-                <label for="bmi" class="form-label">BMI</label>
-                <input type="number" step="0.1" class="form-control" id="bmi"
-                    name="bmi" placeholder="e.g., 24.2" required>
-            </div>
-            <div class="mb-3">
-                <label for="systolic_bp" class="form-label">Systolic BP</label>
-                <input type="number" class="form-control" id="systolic_bp"
-                    name="systolic_bp" placeholder="e.g., 120" required>
-            </div>
-            <div class="mb-3">
-                <label for="diastolic_bp" class="form-label">Diastolic
-                    BP</label>
-                <input type="number" class="form-control" id="diastolic_bp"
-                    name="diastolic_bp" placeholder="e.g., 80" required>
-            </div>
-            <div class="mb-3">
-                <label for="heart_rate" class="form-label">Heart Rate</label>
-                <input type="number" class="form-control" id="heart_rate"
-                    name="heart_rate" placeholder="e.g., 75" required>
-            </div>
-            <div class="mb-3">
-                <label for="temperature_celsius" class="form-label">Temperature
-                    (°C)</label>
-                <input type="number" step="0.1" class="form-control"
-                    id="temperature_celsius" name="temperature_celsius"
-                    placeholder="e.g., 37.0" required>
-            </div>
-            <div class="mb-3">
-                <label for="respiratory_rate" class="form-label">Respiratory
-                    Rate</label>
-                <input type="number" class="form-control" id="respiratory_rate"
-                    name="respiratory_rate" placeholder="e.g., 16" required>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary"
-                    onclick="showNextStage();" tabindex="0">Next</button>
-            </div>
+{% if messages %}
+<div class="already-checked-container">
+    <div class="already-checked-content">
+        <div class="already-checked-icon">
+            <i class="fas fa-clipboard-check"></i>
         </div>
-
-        <!-- Stage 2: Medical History and Current Condition -->
-        <div id="stage-2" style="display: none;">
-            <h4 class="text-center mb-4">Medical History and Current
-                Condition</h4>
-            <div class="mb-3">
-                <label for="hemoglobin" class="form-label">Hemoglobin</label>
-                <input type="number" step="0.1" class="form-control"
-                    id="hemoglobin" name="hemoglobin" placeholder="e.g., 13.5"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="wbc_count" class="form-label">WBC Count</label>
-                <input type="number" class="form-control" id="wbc_count"
-                    name="wbc_count" placeholder="e.g., 7000" required>
-            </div>
-            <div class="mb-3">
-                <label for="platelet_count" class="form-label">Platelet
-                    Count</label>
-                <input type="number" class="form-control" id="platelet_count"
-                    name="platelet_count" placeholder="e.g., 250000" required>
-            </div>
-            <div class="mb-3">
-                <label for="creatinine" class="form-label">Creatinine</label>
-                <input type="number" step="0.1" class="form-control"
-                    id="creatinine" name="creatinine" placeholder="e.g., 1.2"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="alt" class="form-label">ALT</label>
-                <input type="number" step="0.1" class="form-control" id="alt"
-                    name="alt" placeholder="e.g., 25" required>
-            </div>
-            <div class="mb-3">
-                <label for="ast" class="form-label">AST</label>
-                <input type="number" step="0.1" class="form-control" id="ast"
-                    name="ast" placeholder="e.g., 30" required>
-            </div>
-            <div class="mb-3">
-                <label for="total_bilirubin" class="form-label">Total
-                    Bilirubin</label>
-                <input type="number" step="0.1" class="form-control"
-                    id="total_bilirubin" name="total_bilirubin"
-                    placeholder="e.g., 1.2" required>
-            </div>
-            <div class="mb-3">
-                <label for="albumin" class="form-label">Albumin</label>
-                <input type="number" step="0.1" class="form-control"
-                    id="albumin" name="albumin" placeholder="e.g., 3.5"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="hiv_status" class="form-label">HIV Status</label>
-                <select class="form-control" id="hiv_status" name="hiv_status"
-                    required>
-                    <option value>Select...</option>
-                    <option value="positive">Positive - Yes</option>
-                    <option value="negative">Negative - No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="hbv_status" class="form-label">HBV Status</label>
-                <select class="form-control" id="hbv_status" name="hbv_status"
-                    required>
-                    <option value>Select...</option>
-                    <option value="positive">Positive - Yes</option>
-                    <option value="negative">Negative - No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="hcv_status" class="form-label">HCV Status</label>
-                <select class="form-control" id="hcv_status" name="hcv_status"
-                    required>
-                    <option value>Select...</option>
-                    <option value="positive">Positive - Yes</option>
-                    <option value="negative">Negative - No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="cmv_status" class="form-label">CMV Status</label>
-                <select class="form-control" id="cmv_status" name="cmv_status"
-                    required>
-                    <option value>Select...</option>
-                    <option value="positive">Positive - Yes</option>
-                    <option value="negative">Negative - No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="ebv_status" class="form-label">EBV Status</label>
-                <select class="form-control" id="ebv_status" name="ebv_status"
-                    required>
-                    <option value>Select...</option>
-                    <option value="positive">Positive - Yes</option>
-                    <option value="negative">Negative - No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="diabetes" class="form-label">Diabetes</label>
-                <select class="form-control" id="diabetes" name="diabetes"
-                    required>
-                    <option value>Select...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="hypertension"
-                    class="form-label">Hypertension</label>
-                <select class="form-control" id="hypertension"
-                    name="hypertension" required>
-                    <option value>Select...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="cardiac_disease" class="form-label">Cardiac
-                    Disease</label>
-                <select class="form-control" id="cardiac_disease"
-                    name="cardiac_disease" required>
-                    <option value>Select...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="cancer_history" class="form-label">Cancer
-                    History</label>
-                <select class="form-control" id="cancer_history"
-                    name="cancer_history" required>
-                    <option value>Select...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="organ_type" class="form-label">Organ Type</label>
-                <select class="form-control" id="organ_type" name="organ_type"
-                    required>
-                    <option value>Select...</option>
-                    <option value="1">Kidney</option>
-                    <option value="liver">Liver</option>
-                    <option value="heart">Heart</option>
-                    <option value="lung">Lung</option>
-                    <option value="pancreas">Pancreas</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="organ_condition_score" class="form-label">Organ
-                    Condition Score</label>
-                <input type="number" step="0.1" class="form-control"
-                    id="organ_condition_score" name="organ_condition_score"
-                    placeholder="e.g., 85.5" required>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <!-- <button type="button" class="btn btn-secondary"
-                    onclick="showPreviousStage();"
-                    tabindex="0">Previous</button> -->
-                <button type="submit" id="Submitt"
-                    class="btn btn-primary">Submit</button>
-            </div>
+        <h2>Compatibility Check Already Completed</h2>
+        <p>You have already made a compatibility assessment. One prediction per
+            user is allowed to ensure accurate results.</p>
+        <div class="already-checked-actions">
+            <a href="{% url 'donorpridict' %}" class="btn btn-primary">
+                <i class="fas fa-eye"></i>
+                View My Results
+            </a>
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-home"></i>
+                Go to Home Page
+            </a>
         </div>
-    </form>
+    </div>
 </div>
-{% comment %} we used sweetalart2 to display messages {% endcomment %}
-{% if message %}
-<script>
-    Swal.fire({
-        icon: "{{message.tag}}",
-        title: "{{ message|escapejs }}",
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        button: okay 
-    });
-</script>
+{% else %}
+<section class="form-section">
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">Donor Compatibility Assessment</h1>
+                <p class="form-subtitle">Complete this comprehensive form to
+                    assess your organ donation compatibility</p>
+            </div>
+
+            <form id="donor-form" class="modern-form"
+                action="{% url 'donorpridict' %}" method="post">
+                {% csrf_token %}
+
+                <!-- Progress Steps -->
+                <div class="progress-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Basic Information</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Medical Details</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Review & Submit</div>
+                    </div>
+                </div>
+
+                <!-- Stage 1: Basic Demographics and Physical Attributes -->
+                <div class="form-stage active" id="stage-1">
+                    <div class="stage-header">
+                        <h3>Basic Demographics and Physical Attributes</h3>
+                        <p>Please provide your basic personal and physical
+                            information</p>
+                    </div>
+
+                    <div class="form-grid grid-2">
+                        <div class="form-group">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-input" id="age"
+                                name="age" placeholder="e.g., 30" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender"
+                                class="form-label">Gender</label>
+                            <select class="form-select" id="gender"
+                                name="gender" required>
+                                <option value>Select...</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blood_type" class="form-label">Blood
+                                Type</label>
+                            <select class="form-select" id="blood_type"
+                                name="blood_type" required>
+                                <option value>Select...</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="AB">AB</option>
+                                <option value="O">O</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rh_factor" class="form-label">Rh
+                                Factor</label>
+                            <select class="form-select" id="rh_factor"
+                                name="rh_factor" required>
+                                <option value>Select...</option>
+                                <option value="positive">Positive (+)</option>
+                                <option value="negative">Negative (-)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height_cm" class="form-label">Height
+                                (cm)</label>
+                            <input type="number" class="form-input"
+                                id="height_cm" name="height_cm"
+                                placeholder="e.g., 175" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight_kg" class="form-label">Weight
+                                (kg)</label>
+                            <input type="number" class="form-input"
+                                id="weight_kg" name="weight_kg"
+                                placeholder="e.g., 70" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bmi" class="form-label">BMI</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="bmi" name="bmi" placeholder="e.g., 24.2"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="systolic_bp" class="form-label">Systolic
+                                BP</label>
+                            <input type="number" class="form-input"
+                                id="systolic_bp" name="systolic_bp"
+                                placeholder="e.g., 120" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diastolic_bp"
+                                class="form-label">Diastolic BP</label>
+                            <input type="number" class="form-input"
+                                id="diastolic_bp" name="diastolic_bp"
+                                placeholder="e.g., 80" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="heart_rate" class="form-label">Heart
+                                Rate</label>
+                            <input type="number" class="form-input"
+                                id="heart_rate" name="heart_rate"
+                                placeholder="e.g., 75" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="temperature_celsius"
+                                class="form-label">Temperature (°C)</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="temperature_celsius"
+                                name="temperature_celsius"
+                                placeholder="e.g., 37.0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="respiratory_rate"
+                                class="form-label">Respiratory Rate</label>
+                            <input type="number" class="form-input"
+                                id="respiratory_rate" name="respiratory_rate"
+                                placeholder="e.g., 16" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="organ_type" class="form-label">Organ
+                                Type</label>
+                            <select class="form-select" id="organ_type"
+                                name="organ_type" required>
+                                <option value>Select...</option>
+                                <option value="1">Kidney</option>
+                                <option value="liver">Liver</option>
+                                <option value="heart">Heart</option>
+                                <option value="lung">Lung</option>
+                                <option value="pancreas">Pancreas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary"
+                            onclick="nextStage()">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stage 2: Medical History and Current Condition -->
+                <div class="form-stage" id="stage-2">
+                    <div class="stage-header">
+                        <h3>Medical History and Current Condition</h3>
+                        <p>Please provide detailed medical information for
+                            accurate assessment</p>
+                    </div>
+
+                    <div class="form-grid grid-2">
+                        <div class="form-group">
+                            <label for="hemoglobin"
+                                class="form-label">Hemoglobin</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="hemoglobin" name="hemoglobin"
+                                placeholder="e.g., 13.5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wbc_count" class="form-label">WBC
+                                Count</label>
+                            <input type="number" class="form-input"
+                                id="wbc_count" name="wbc_count"
+                                placeholder="e.g., 7000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="platelet_count"
+                                class="form-label">Platelet Count</label>
+                            <input type="number" class="form-input"
+                                id="platelet_count" name="platelet_count"
+                                placeholder="e.g., 250000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="creatinine"
+                                class="form-label">Creatinine</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="creatinine" name="creatinine"
+                                placeholder="e.g., 1.2" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alt" class="form-label">ALT</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="alt" name="alt" placeholder="e.g., 25"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ast" class="form-label">AST</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="ast" name="ast" placeholder="e.g., 30"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total_bilirubin"
+                                class="form-label">Total Bilirubin</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="total_bilirubin" name="total_bilirubin"
+                                placeholder="e.g., 1.2" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="albumin"
+                                class="form-label">Albumin</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="albumin" name="albumin"
+                                placeholder="e.g., 3.5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hiv_status" class="form-label">HIV
+                                Status</label>
+                            <select class="form-select" id="hiv_status"
+                                name="hiv_status" required>
+                                <option value>Select...</option>
+                                <option value="positive">Positive - Yes</option>
+                                <option value="negative">Negative - No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hbv_status" class="form-label">HBV
+                                Status</label>
+                            <select class="form-select" id="hbv_status"
+                                name="hbv_status" required>
+                                <option value>Select...</option>
+                                <option value="positive">Positive - Yes</option>
+                                <option value="negative">Negative - No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hcv_status" class="form-label">HCV
+                                Status</label>
+                            <select class="form-select" id="hcv_status"
+                                name="hcv_status" required>
+                                <option value>Select...</option>
+                                <option value="positive">Positive - Yes</option>
+                                <option value="negative">Negative - No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cmv_status" class="form-label">CMV
+                                Status</label>
+                            <select class="form-select" id="cmv_status"
+                                name="cmv_status" required>
+                                <option value>Select...</option>
+                                <option value="positive">Positive - Yes</option>
+                                <option value="negative">Negative - No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ebv_status" class="form-label">EBV
+                                Status</label>
+                            <select class="form-select" id="ebv_status"
+                                name="ebv_status" required>
+                                <option value>Select...</option>
+                                <option value="positive">Positive - Yes</option>
+                                <option value="negative">Negative - No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diabetes"
+                                class="form-label">Diabetes</label>
+                            <select class="form-select" id="diabetes"
+                                name="diabetes" required>
+                                <option value>Select...</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hypertension"
+                                class="form-label">Hypertension</label>
+                            <select class="form-select" id="hypertension"
+                                name="hypertension" required>
+                                <option value>Select...</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardiac_disease"
+                                class="form-label">Cardiac Disease</label>
+                            <select class="form-select" id="cardiac_disease"
+                                name="cardiac_disease" required>
+                                <option value>Select...</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cancer_history"
+                                class="form-label">Cancer History</label>
+                            <select class="form-select" id="cancer_history"
+                                name="cancer_history" required>
+                                <option value>Select...</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="organ_condition_score"
+                                class="form-label">Organ Condition Score</label>
+                            <input type="number" step="0.1" class="form-input"
+                                id="organ_condition_score"
+                                name="organ_condition_score"
+                                placeholder="e.g., 85.5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="previousStage()">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn btn-primary"
+                            onclick="nextStage2()">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stage 3: Review and Submit -->
+                <div class="form-stage" id="stage-3">
+                    <div class="stage-header">
+                        <h3>Review Your Information</h3>
+                        <p>Please review all the information you've entered
+                            before submitting</p>
+                    </div>
+
+                    <div class="review-container">
+                        <div class="review-section">
+                            <h4>Basic Demographics and Physical Attributes</h4>
+                            <div class="review-grid">
+                                <div class="review-item">
+                                    <span class="review-label">Age:</span>
+                                    <span class="review-value"
+                                        id="review-age">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Gender:</span>
+                                    <span class="review-value"
+                                        id="review-gender">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Blood
+                                        Type:</span>
+                                    <span class="review-value"
+                                        id="review-blood-type">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Rh Factor:</span>
+                                    <span class="review-value"
+                                        id="review-rh-factor">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Height:</span>
+                                    <span class="review-value"
+                                        id="review-height">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Weight:</span>
+                                    <span class="review-value"
+                                        id="review-weight">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">BMI:</span>
+                                    <span class="review-value"
+                                        id="review-bmi">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Systolic
+                                        BP:</span>
+                                    <span class="review-value"
+                                        id="review-systolic-bp">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Diastolic
+                                        BP:</span>
+                                    <span class="review-value"
+                                        id="review-diastolic-bp">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Heart
+                                        Rate:</span>
+                                    <span class="review-value"
+                                        id="review-heart-rate">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span
+                                        class="review-label">Temperature:</span>
+                                    <span class="review-value"
+                                        id="review-temperature">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Respiratory
+                                        Rate:</span>
+                                    <span class="review-value"
+                                        id="review-respiratory-rate">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Organ
+                                        Type:</span>
+                                    <span class="review-value"
+                                        id="review-organ-type">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="review-section">
+                            <h4>Medical History and Current Condition</h4>
+                            <div class="review-grid">
+                                <div class="review-item">
+                                    <span
+                                        class="review-label">Hemoglobin:</span>
+                                    <span class="review-value"
+                                        id="review-hemoglobin">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">WBC Count:</span>
+                                    <span class="review-value"
+                                        id="review-wbc-count">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Platelet
+                                        Count:</span>
+                                    <span class="review-value"
+                                        id="review-platelet-count">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span
+                                        class="review-label">Creatinine:</span>
+                                    <span class="review-value"
+                                        id="review-creatinine">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">ALT:</span>
+                                    <span class="review-value"
+                                        id="review-alt">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">AST:</span>
+                                    <span class="review-value"
+                                        id="review-ast">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Total
+                                        Bilirubin:</span>
+                                    <span class="review-value"
+                                        id="review-total-bilirubin">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Albumin:</span>
+                                    <span class="review-value"
+                                        id="review-albumin">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">HIV
+                                        Status:</span>
+                                    <span class="review-value"
+                                        id="review-hiv-status">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">HBV
+                                        Status:</span>
+                                    <span class="review-value"
+                                        id="review-hbv-status">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">HCV
+                                        Status:</span>
+                                    <span class="review-value"
+                                        id="review-hcv-status">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">CMV
+                                        Status:</span>
+                                    <span class="review-value"
+                                        id="review-cmv-status">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">EBV
+                                        Status:</span>
+                                    <span class="review-value"
+                                        id="review-ebv-status">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Diabetes:</span>
+                                    <span class="review-value"
+                                        id="review-diabetes">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span
+                                        class="review-label">Hypertension:</span>
+                                    <span class="review-value"
+                                        id="review-hypertension">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Cardiac
+                                        Disease:</span>
+                                    <span class="review-value"
+                                        id="review-cardiac-disease">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Cancer
+                                        History:</span>
+                                    <span class="review-value"
+                                        id="review-cancer-history">-</span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Organ Condition
+                                        Score:</span>
+                                    <span class="review-value"
+                                        id="review-organ-condition-score">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="previousStage2()">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            Submit Assessment <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 {% endif %}
 
 <script>
-    function showNextStage() {
-        document.getElementById('stage-1').style.display = 'none';
-        document.getElementById('stage-2').style.display = 'block';
+    function nextStage() {
+        document.getElementById('stage-1').classList.remove('active');
+        document.getElementById('stage-2').classList.add('active');
+        
+        // Update progress steps
+        document.querySelector('[data-step="1"]').classList.remove('active');
+        document.querySelector('[data-step="2"]').classList.add('active');
     }
 
-    function showPreviousStage() {
-        document.getElementById('stage-1').style.display = 'block';
-        document.getElementById('stage-2').style.display = 'none';
+    function previousStage() {
+        document.getElementById('stage-2').classList.remove('active');
+        document.getElementById('stage-1').classList.add('active');
+        
+        // Update progress steps
+        document.querySelector('[data-step="2"]').classList.remove('active');
+        document.querySelector('[data-step="1"]').classList.add('active');
     }
 
+    function nextStage2() {
+        document.getElementById('stage-2').classList.remove('active');
+        document.getElementById('stage-3').classList.add('active');
+        
+        // Update progress steps
+        document.querySelector('[data-step="2"]').classList.remove('active');
+        document.querySelector('[data-step="3"]').classList.add('active');
+        
+        // Populate review fields
+        populateReview();
+    }
+
+    function previousStage2() {
+        document.getElementById('stage-3').classList.remove('active');
+        document.getElementById('stage-2').classList.add('active');
+        
+        // Update progress steps
+        document.querySelector('[data-step="3"]').classList.remove('active');
+        document.querySelector('[data-step="2"]').classList.add('active');
+    }
+
+    function populateReview() {
+        // Basic Information
+        document.getElementById('review-age').textContent = document.getElementById('age').value || 'Not provided';
+        document.getElementById('review-gender').textContent = document.getElementById('gender').value || 'Not provided';
+        document.getElementById('review-blood-type').textContent = document.getElementById('blood_type').value || 'Not provided';
+        document.getElementById('review-rh-factor').textContent = document.getElementById('rh_factor').value || 'Not provided';
+        document.getElementById('review-height').textContent = (document.getElementById('height_cm').value || 'Not provided') + ' cm';
+        document.getElementById('review-weight').textContent = (document.getElementById('weight_kg').value || 'Not provided') + ' kg';
+        document.getElementById('review-bmi').textContent = document.getElementById('bmi').value || 'Not provided';
+        document.getElementById('review-systolic-bp').textContent = (document.getElementById('systolic_bp').value || 'Not provided') + ' mmHg';
+        document.getElementById('review-diastolic-bp').textContent = (document.getElementById('diastolic_bp').value || 'Not provided') + ' mmHg';
+        document.getElementById('review-heart-rate').textContent = (document.getElementById('heart_rate').value || 'Not provided') + ' bpm';
+        document.getElementById('review-temperature').textContent = (document.getElementById('temperature_celsius').value || 'Not provided') + '°C';
+        document.getElementById('review-respiratory-rate').textContent = (document.getElementById('respiratory_rate').value || 'Not provided') + ' breaths/min';
+        document.getElementById('review-organ-type').textContent = document.getElementById('organ_type').value || 'Not provided';
+        
+        // Medical Information
+        document.getElementById('review-hemoglobin').textContent = (document.getElementById('hemoglobin').value || 'Not provided') + ' g/dL';
+        document.getElementById('review-wbc-count').textContent = (document.getElementById('wbc_count').value || 'Not provided') + ' K/μL';
+        document.getElementById('review-platelet-count').textContent = (document.getElementById('platelet_count').value || 'Not provided') + ' K/μL';
+        document.getElementById('review-creatinine').textContent = (document.getElementById('creatinine').value || 'Not provided') + ' mg/dL';
+        document.getElementById('review-alt').textContent = (document.getElementById('alt').value || 'Not provided') + ' U/L';
+        document.getElementById('review-ast').textContent = (document.getElementById('ast').value || 'Not provided') + ' U/L';
+        document.getElementById('review-total-bilirubin').textContent = (document.getElementById('total_bilirubin').value || 'Not provided') + ' mg/dL';
+        document.getElementById('review-albumin').textContent = (document.getElementById('albumin').value || 'Not provided') + ' g/dL';
+        document.getElementById('review-hiv-status').textContent = document.getElementById('hiv_status').value || 'Not provided';
+        document.getElementById('review-hbv-status').textContent = document.getElementById('hbv_status').value || 'Not provided';
+        document.getElementById('review-hcv-status').textContent = document.getElementById('hcv_status').value || 'Not provided';
+        document.getElementById('review-cmv-status').textContent = document.getElementById('cmv_status').value || 'Not provided';
+        document.getElementById('review-ebv-status').textContent = document.getElementById('ebv_status').value || 'Not provided';
+        document.getElementById('review-diabetes').textContent = document.getElementById('diabetes').value || 'Not provided';
+        document.getElementById('review-hypertension').textContent = document.getElementById('hypertension').value || 'Not provided';
+        document.getElementById('review-cardiac-disease').textContent = document.getElementById('cardiac_disease').value || 'Not provided';
+        document.getElementById('review-cancer-history').textContent = document.getElementById('cancer_history').value || 'Not provided';
+        document.getElementById('review-organ-condition-score').textContent = document.getElementById('organ_condition_score').value || 'Not provided';
+    }
+
+    // Form validation
+    document.getElementById('donor-form').addEventListener('submit', function(e) {
+        const requiredFields = this.querySelectorAll('input[required], select[required]');
+        let allFilled = true;
+
+        requiredFields.forEach(field => {
+            const val = field.value.trim();
+            if (val === '' || val === 'Select...') {
+                allFilled = false;
+                field.classList.add('error');
+            } else {
+                field.classList.remove('error');
+            }
+        });
+
+        if (!allFilled) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Missing Fields',
+                text: 'Please fill in all required fields before submitting.',
+                icon: 'warning',
+                timer: 2000
+            });
+        }
+    });
 </script>
 {% endblock %}

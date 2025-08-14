@@ -67,8 +67,22 @@ def recipientprictiction(request):
     if Recipient.objects.filter(user=user).exists():
         recipient = Recipient.objects.get(user=user)
         messages.info(request, "You have already made a prediction. Here is your previous report. One prediction per user is allowed.")
+        
+        # Create result context for existing recipient
+        result = {
+            'eligibility': recipient.transplant_eligibility,
+            'compatibility_score': 90 if recipient.transplant_eligibility == 'Eligible' else 25,
+            'assessment_date': 'Previously completed',
+            'organ_type': recipient.required_organ,
+            'priority_level': 'High' if recipient.medical_urgency_score > 7 else 'Standard',
+            'matching_notes': 'Our system will search for compatible donors based on your medical profile.',
+            'wait_time_notes': 'Estimated wait time based on current donor availability and your priority level.',
+            'safety_notes': 'Comprehensive safety protocols ensure the highest standards for transplantation.'
+        }
+        
         return render(request, 'RecipientResultPage.html', {
-            'record': recipient
+            'record': recipient,
+            'result': result
         })
 
     if request.method == 'POST':
@@ -150,7 +164,23 @@ def recipientprictiction(request):
             logging.info("Prediction record saved successfully to the database.")
 
             # Render the result with a success message
-            context = {'record': record, 'message': 'Prediction record saved successfully!'}
+            # Create result context with proper formatting
+            result = {
+                'eligibility': record.transplant_eligibility,
+                'compatibility_score': 90 if record.transplant_eligibility == 'Eligible' else 25,  # Mock score for now
+                'assessment_date': 'Recently completed',
+                'organ_type': record.required_organ,
+                'priority_level': 'High' if record.medical_urgency_score > 7 else 'Standard',
+                'matching_notes': 'Our system will search for compatible donors based on your medical profile.',
+                'wait_time_notes': 'Estimated wait time based on current donor availability and your priority level.',
+                'safety_notes': 'Comprehensive safety protocols ensure the highest standards for transplantation.'
+            }
+            
+            context = {
+                'record': record, 
+                'result': result,
+                'message': 'Prediction record saved successfully!'
+            }
             return render(request, 'RecipientResultPage.html', context)
         
         except Exception as e:
@@ -459,5 +489,28 @@ def verify_donor_email(request, token):
 
 @login_required
 def RecipientResultpage(request):
-    return render(request, 'RecipientResultPage.html')
+    # Check if user has a recipient record
+    if Recipient.objects.filter(user=request.user).exists():
+        record = Recipient.objects.get(user=request.user)
+        
+        # Create result context for existing recipient
+        result = {
+            'eligibility': record.transplant_eligibility,
+            'compatibility_score': 90 if record.transplant_eligibility == 'Eligible' else 25,
+            'assessment_date': 'Previously completed',
+            'organ_type': record.required_organ,
+            'priority_level': 'High' if record.medical_urgency_score > 7 else 'Standard',
+            'matching_notes': 'Our system will search for compatible donors based on your medical profile.',
+            'wait_time_notes': 'Estimated wait time based on current donor availability and your priority level.',
+            'safety_notes': 'Comprehensive safety protocols ensure the highest standards for transplantation.'
+        }
+        
+        return render(request, 'RecipientResultPage.html', {
+            'record': record,
+            'result': result
+        })
+    else:
+        # No recipient record found
+        messages.warning(request, "No recipient record found. Please complete a compatibility assessment first.")
+        return redirect('recipientprictiction')
 

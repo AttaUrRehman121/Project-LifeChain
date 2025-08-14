@@ -1,237 +1,542 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}
+Profile - LifeChain
+{% endblock title %}
+
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+  <div class="container">
+    <nav class="breadcrumb-nav">
+      <div class="breadcrumb-item">
+        <a href="{% url 'index' %}" class="breadcrumb-link">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+      </div>
+      <div class="breadcrumb-item">
+        <span class="breadcrumb-current">User Profile</span>
+      </div>
+    </nav>
+  </div>
+</section>
+{% endblock breadcrumb %}
+
 {% block content %}
+<!-- Profile Hero Section -->
+<section class="profile-hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">User Profile</h1>
+      <p class="hero-subtitle">Manage your account and view your information</p>
+    </div>
+  </div>
+</section>
+
+<!-- Profile Content Section -->
+<section class="profile-section">
+  <div class="container">
+    <!-- Personal Information Card -->
+    <div class="profile-card">
+      <h2>Personal Information</h2>
+      <div class="profile-info">
+        <div class="profile-info-item">
+          <span class="profile-label">Name:</span>
+          <span class="profile-value">{{ user.username }}</span>
+        </div>
+        <div class="profile-info-item">
+          <span class="profile-label">Email:</span>
+          <span class="profile-value">{{ user.email }}</span>
+        </div>
+        <div class="profile-info-item">
+          <span class="profile-label">Role:</span>
+          <span class="profile-value">{{ user.role }}</span>
+        </div>
+        <div class="profile-info-item">
+          <span class="profile-label">Phone No:</span>
+          <span class="profile-value">{{ user.contact }}</span>
+        </div>
+        <div class="profile-info-item">
+          <span class="profile-label">Nationality:</span>
+          <span class="profile-value">{{ user.nationality }}</span>
+        </div>
+        <div class="profile-info-item">
+          <span class="profile-label">Address:</span>
+          <span class="profile-value">{{ user.address }}</span>
+        </div>
+        <div class="profile-info-item">
+          <span class="profile-label">Date Joined:</span>
+          <span class="profile-value">{{ user.date_joined|date:"F j, Y"
+            }}</span>
+        </div>
+        <div class="profile-info-item">
+          <span class="profile-label">Last Login:</span>
+          <span class="profile-value">{{
+            user.last_login|date:"F j, Y, g:i a"|default:"Never" }}</span>
+        </div>
+        {% if user.userprofile %}
+        <div class="profile-info-item">
+          <span class="profile-label">Wallet Address:</span>
+          <span class="profile-value">
+            {% if user.userprofile.wallet_address %}
+            <div class="hash-container">
+              <code class="transaction-hash">{{
+                user.userprofile.wallet_address|truncatechars:30 }}</code>
+              <button class="copy-btn"
+                onclick="navigator.clipboard.writeText('{{ user.userprofile.wallet_address }}')"
+                title="Copy">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            {% else %}
+            <span class="no-data">Not configured</span>
+            {% endif %}
+          </span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if donor %}
+    <!-- Donor Compatibility Result Card -->
+    <div class="profile-card">
+      <h2>Your Compatibility Result</h2>
+      <div class="compatibility-result">
+        <span class="result-badge">{{ donor.eligibility }}</span>
+      </div>
+    </div>
+
+    <!-- Donor Allocation Card -->
+    <div class="profile-card">
+      <h2>Allocated To Recipient</h2>
+      {% if donor_allocation %}
+      <div class="allocation-info">
+        <div class="allocation-item">
+          <span class="allocation-label">Recipient:</span>
+          <span class="allocation-value">{{
+            donor_allocation.recipient.user.username }}</span>
+        </div>
+        <div class="allocation-item">
+          <span class="allocation-label">Date:</span>
+          <span class="allocation-value">{{ donor_allocation.allocation_date
+            }}</span>
+        </div>
+        <div class="allocation-item">
+          <span class="allocation-label">Status:</span>
+          <span class="allocation-value">
+            {% if donor_allocation.verification_status %}
+            <span class="status-badge status-verified">✅ Verified</span>
+            {% else %}
+            <span class="status-badge status-pending">⏳ Pending</span>
+            {% endif %}
+          </span>
+        </div>
+        {% if donor_allocation.transaction_hash %}
+        <div class="allocation-item">
+          <span class="allocation-label">Transaction Hash:</span>
+          <span class="allocation-value">
+            <div class="hash-container">
+              <code class="transaction-hash">{{
+                donor_allocation.transaction_hash }}</code>
+              <button class="copy-btn"
+                onclick="navigator.clipboard.writeText('{{ donor_allocation.transaction_hash }}')"
+                title="Copy">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </span>
+        </div>
+        {% endif %}
+        {% if donor_allocation.recipient.user.contact %}
+        <div class="allocation-item">
+          <span class="allocation-label">Recipient Contact:</span>
+          <span class="allocation-value">{{
+            donor_allocation.recipient.user.contact }}</span>
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+      <p class="no-data">You are not allocated to any recipient yet.</p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if recipient %}
+    <!-- Recipient Allocated Donors Card -->
+    <div class="profile-card">
+      <h2>Allocated Donors</h2>
+      {% if recipient_allocations %}
+      <div class="table-responsive">
+        <table class="profile-table">
+          <thead>
+            <tr>
+              <th>Donor</th>
+              <th>Organ</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Transaction Hash</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for alloc in recipient_allocations %}
+            <tr>
+              <td data-label="Donor">{{ alloc.donor.username }}</td>
+              <td data-label="Organ">{{ alloc.donor.organ_type }}</td>
+              <td data-label="Status">
+                {% if alloc.verification_status %}
+                <span class="status-badge status-verified">✅ Verified</span>
+                {% else %}
+                <span class="status-badge status-pending">⏳ Pending</span>
+                {% endif %}
+              </td>
+              <td data-label="Date">{{ alloc.allocation_date|date:"M d, Y, H:i"
+                }}</td>
+              <td data-label="Transaction Hash">
+                {% if alloc.transaction_hash %}
+                <div class="hash-container">
+                  <code class="transaction-hash">{{ alloc.transaction_hash
+                    }}</code>
+                  <button class="copy-btn"
+                    onclick="navigator.clipboard.writeText('{{ alloc.transaction_hash }}')"
+                    title="Copy">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+                {% else %}
+                <span class="no-data">-</span>
+                {% endif %}
+              </td>
+              <td data-label="Contact">
+                {% if alloc.donor.user.contact %}
+                {{ alloc.donor.user.contact }}
+                {% else %}
+                <span class="no-data">-</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="no-data">No donors have been allocated to you yet.</p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
 <style>
+/* Profile Page Specific Styles */
+.profile-hero {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: var(--text-inverse);
+  padding: var(--spacing-xl) 0;
+  text-align: center;
+  margin-top: 80px;
+}
+
+.profile-hero .hero-title {
+  color: var(--text-inverse);
+  margin-bottom: var(--spacing-sm);
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.profile-hero .hero-subtitle {
+  color: var(--text-inverse);
+  opacity: 0.9;
+  font-size: 1.125rem;
+}
+
+.profile-section {
+  padding: var(--spacing-lg) 0;
+  background-color: var(--bg-secondary);
+  min-height: 60vh;
+}
+
+.profile-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  box-shadow: 0 2px 4px var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.profile-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--shadow-md);
+}
+
+.profile-card h2 {
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-primary);
+  padding-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.profile-info {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.profile-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.profile-info-item:last-child {
+  border-bottom: none;
+}
+
+.profile-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 120px;
+}
+
+.profile-value {
+  color: var(--text-secondary);
+  text-align: right;
+  flex: 1;
+  margin-left: var(--spacing-md);
+}
+
+/* Compatibility Result */
+.compatibility-result {
+  text-align: center;
+  padding: var(--spacing-md) 0;
+}
+
+.result-badge {
+  background: linear-gradient(135deg, var(--success) 0%, var(--primary-color) 100%);
+  color: var(--text-inverse);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: inline-block;
+  box-shadow: 0 2px 8px var(--shadow-md);
+}
+
+/* Allocation Info */
+.allocation-info {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.allocation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.allocation-item:last-child {
+  border-bottom: none;
+}
+
+.allocation-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 140px;
+}
+
+.allocation-value {
+  color: var(--text-secondary);
+  text-align: right;
+  flex: 1;
+  margin-left: var(--spacing-md);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-verified {
+  background-color: var(--success);
+  color: var(--text-inverse);
+}
+
+.status-pending {
+  background-color: var(--warning);
+  color: var(--text-inverse);
+}
+
+/* Transaction Hash */
+.hash-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  max-width: 100%;
+}
+
+.transaction-hash {
+  background-color: var(--bg-secondary);
+  color: var(--primary-color);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+  word-break: break-all;
+  flex: 1;
+  border: 1px solid var(--border-primary);
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  color: var(--primary-color);
+  background-color: var(--bg-secondary);
+}
+
+/* Profile Table */
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--spacing-sm);
+}
+
+.profile-table th,
+.profile-table td {
+  padding: var(--spacing-sm);
+  text-align: left;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.profile-table th {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-table td {
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.profile-table tbody tr:hover {
+  background-color: var(--bg-secondary);
+}
+
+/* No Data Message */
+.no-data {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: var(--spacing-md);
+  font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-hero .hero-title {
+    font-size: 2rem;
+  }
   
-
-  .card {
-    background-color: white;
-    border: 1px solid #c0d8e9;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    margin-bottom: 30px;
+  .profile-card {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
   }
-
-  .card h2 {
-    border-bottom: 2px solid #c4d8ec;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    color: #2a5d89;
+  
+  .profile-info-item,
+  .allocation-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
   }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  
+  .profile-label,
+  .allocation-label {
+    min-width: auto;
+    margin-bottom: var(--spacing-xs);
   }
-
-  td, th {
-    padding: 10px;
-    vertical-align: top;
+  
+  .profile-value,
+  .allocation-value {
     text-align: left;
+    margin-left: 0;
+    width: 100%;
   }
+  
+  .profile-table {
+    font-size: 0.875rem;
+  }
+  
+  .profile-table th,
+  .profile-table td {
+    padding: var(--spacing-xs);
+  }
+  
+  .hash-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+  
+  .transaction-hash {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+}
 
-  .status-verified {
-    color: green;
-    font-weight: bold;
+@media (max-width: 480px) {
+  .profile-hero {
+    padding: var(--spacing-lg) 0;
   }
-
-  .status-pending {
-    color: orange;
-    font-weight: bold;
+  
+  .profile-hero .hero-title {
+    font-size: 1.75rem;
   }
-
-  .status-none {
-    color: gray;
-    font-style: italic;
+  
+  .profile-card {
+    padding: var(--spacing-sm);
   }
-  @media (max-width: 768px) {
-    .container {
-      width: 100%;
-      padding: 5px;
-    }
-    .card {
-      padding: 10px;
-      margin-bottom: 20px;
-    }
-    table, thead, tbody, th, td, tr {
-      display: block;
-      width: 100%;
-    }
-    table tr {
-      margin-bottom: 15px;
-      border-bottom: 1px solid #eee;
-    }
-    th, td {
-      padding: 8px 5px;
-      text-align: left;
-      border: none;
-    }
-    th {
-      background: none;
-      font-weight: bold;
-    }
-    td:before {
-      content: attr(data-label);
-      font-weight: bold;
-      display: block;
-      color: #2a5d89;
-      margin-bottom: 2px;
-    }
+  
+  .profile-card h2 {
+    font-size: 1.25rem;
   }
-
-  @media (max-width: 480px) {
-    body {
-      padding: 5px;
-    }
-    .card h2 {
-      font-size: 1.1em;
-      padding-bottom: 6px;
-      margin-bottom: 12px;
-    }
-    .card {
-      padding: 6px;
-    }
+  
+  .result-badge {
+    font-size: 1rem;
+    padding: var(--spacing-sm) var(--spacing-md);
   }
+  
+  .profile-table {
+    font-size: 0.8rem;
+  }
+  
+  .profile-table th,
+  .profile-table td {
+    padding: var(--spacing-xs);
+  }
+}
 </style>
-
-<div class="container">
-
-  <div class="card">
-    <h2>Personal Information</h2>
-    <table>
-      <tr>
-        <td><strong>Name:</strong></td>
-        <td>{{ user.username }}</td>
-        <td><strong>Email:</strong></td>
-        <td>{{ user.email }}</td>
-      </tr>
-      <tr>
-        <td><strong>Role:</strong></td>
-        <td>{{ user.role }}</td>
-        <td><strong>Phone No:</strong></td>
-        <td>{{ user.contact }}</td>
-      </tr>
-      <tr>
-        <td><strong>Nationality:</strong></td>
-        <td>{{ user.nationality }}</td>
-        <td><strong>Address:</strong></td>
-        <td>{{ user.address }}</td>
-      </tr>
-    </table>
-  </div>
-
-  {% if donor %}
-  <div class="card">
-    <h2>Your Compatibility Result</h2>
-    <p><strong>{{ donor.eligibility }}</strong></p>
-  </div>
-
-  <div class="card">
-    <h2>Allocated To Recipient</h2>
-    {% if donor_allocation %}
-    <table>
-      <tr>
-        <td><strong>Recipient:</strong></td>
-        <td>{{ donor_allocation.recipient.user.username }}</td>
-        <td><strong>Date:</strong></td>
-        <td>{{ donor_allocation.allocation_date }}</td>
-      </tr>
-      <tr>
-        <td><strong>Status:</strong></td>
-        <td colspan="3">
-          {% if donor_allocation.verification_status %}
-          <span class="status-verified">✅ Verified</span>
-          {% else %}
-          <span class="status-pending">⏳ Pending</span>
-          {% endif %}
-        </td>
-      </tr>
-      {% if donor_allocation.transaction_hash %}
-      <tr>
-        <td><strong>Transaction Hash:</strong></td>
-        <td colspan="3">
-          <code
-            style="background: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-size: 0.9em;">
-            {{ donor_allocation.transaction_hash }}
-          </code>
-        </td>
-      </tr>
-      {% endif %}
-      {% if donor_allocation.recipient.user.contact %}
-      <tr>
-        <td><strong>Recipient Contact:</strong></td>
-        <td colspan="3">{{ donor_allocation.recipient.user.contact }}</td>
-      </tr>
-      {% endif %}
-    </table>
-    {% else %}
-    <p class="status-none">You are not allocated to any recipient yet.</p>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  {% if recipient %}
-  <div class="card">
-    <h2>Allocated Donors</h2>
-    {% if recipient_allocations %}
-    <table>
-      <tr>
-        <th>Donor</th>
-        <th>Organ</th>
-        <th>Status</th>
-        <th>Date</th>
-        <th>Transaction Hash</th>
-        <th>Contact</th>
-      </tr>
-      {% for alloc in recipient_allocations %}
-      <tr>
-        <td>{{ alloc.donor.username }}</td>
-        <td>{{ alloc.donor.organ_type }}</td>
-        <td>
-          {% if alloc.verification_status %}
-          <span class="status-verified">✅ Verified</span>
-          {% else %}
-          <span class="status-pending">⏳ Pending</span>
-          {% endif %}
-        </td>
-        <td>{{ alloc.allocation_date|date:"M d, Y, H:i" }}</td>
-        <td style="max-width: 180px; word-break: break-all;">
-          {% if alloc.transaction_hash %}
-          <div style="display: flex; align-items: center;">
-            <code
-              style="background: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-size: 0.85em; word-break: break-all;">
-              {{ alloc.transaction_hash }}
-            </code>
-            <button
-              onclick="navigator.clipboard.writeText('{{ alloc.transaction_hash }}')"
-              title="Copy"
-              style="margin-left: 6px; border: none; background: none; cursor: pointer;">
-              <img src="{% static 'images/copy-icon.png' %}" alt="Copy"
-                style="width: 16px; height: 16px; vertical-align: middle;">
-            </button>
-          </div>
-          {% else %}
-          <span class="status-none">-</span>
-          {% endif %}
-        </td>
-        <td>
-          {% if alloc.donor.user.contact %}
-          {{ alloc.donor.user.contact }}
-          {% else %}
-          <span class="status-none">-</span>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% else %}
-    <p class="status-none">No donors have been allocated to you yet.</p>
-    {% endif %}
-  </div>
-  {% endif %}
-
-</div>
-
-{% endblock %}
+{% endblock content %}

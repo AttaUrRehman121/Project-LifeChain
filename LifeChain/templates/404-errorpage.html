@@ -1,17 +1,80 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
+{% block title %}
+Page Not Found - LifeChain
+{% endblock title %}
+
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-nav">
+            <div class="breadcrumb-item">
+                <a href="{% url 'index' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Page Not Found</span>
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock breadcrumb %}
+
 {% block content %}
+<!-- 404 Error Section -->
+<section class="section"
+    style="min-height: 60vh; display: flex; align-items: center;">
+    <div class="container">
+        <div class="text-center">
+            <div class="error-404 mb-5">
+                <h1 class="display-1 text-primary mb-0">4<span
+                        class="text-secondary">0</span>4</h1>
+            </div>
 
-<link rel="stylesheet" href="{% static '404.css' %}" />
+            <h2 class="mb-4">Oops! Page Not Found</h2>
+            <p class="mb-5"
+                style="font-size: 1.125rem; color: var(--text-secondary);">
+                The page you are looking for cannot be found. It might have been
+                moved, deleted,
+                or you entered the wrong URL.
+            </p>
 
-<div class="error-container">
-    <h1><span>4</span>0<span>4</span></h1>
-    <p>Oops! The page you are looking for cannot be found.
+            <div class="d-flex justify-center gap-3 flex-wrap">
+                <a href="{% url 'index' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-home"></i>
+                    Go Home
+                </a>
+                <a href="{% url 'contact' %}"
+                    class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-envelope"></i>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
-    </p>
-    <a href="{% url 'index' %}" class="btn">Homepage</a>
-</div>
+<style>
+.error-404 h1 {
+    font-size: 8rem;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 2px 2px 4px var(--shadow-md);
+}
 
+@media (max-width: 768px) {
+    .error-404 h1 {
+        font-size: 6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-404 h1 {
+        font-size: 4rem;
+    }
+}
+</style>
 {% endblock content %}

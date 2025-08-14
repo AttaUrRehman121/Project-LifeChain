@@ -1,70 +1,190 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}
-  LifeChain
+Find a Donor - LifeChain
 {% endblock title %}
 
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-nav">
+            <div class="breadcrumb-item">
+                <a href="{% url 'index' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Find a Donor</span>
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock breadcrumb %}
+
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'style.css' %}" />
-
-
-
-<section id="home" class="home">
-    <div class="row">
-        <div class="images">
-            <img src="{% static 'home.png' %}" alt="">
-        </div> 
-        
-        <div class="content">
-            <h1><span>Be</span> A <span>Hero</span> and <span> Save</span> Life.</h1>
-            <p>Your Selfless Act Can Spark Endless Hope.</p>
-            <!-- <a href="#"><button onclick="window.location.href='{% url 'donorpridict' %}'" class="button">Be a Donor</button></a> -->
-            <a href="#"><button id="RecipinetPrictionButton" onclick="window.location.href='{% url 'recipientprictiction' %}'" class="button">Compatibility</button></a>
-        </div>
-    </div>
-</section>
-<section id="about" class="about">
-    <h1 class="heading">Hope for a New Beginning</h1>
-    <div class="box-container">
-        <div class="box">
-            <div class="images">
-                <img src="{% static 'about-1.png' %}" alt="">
-            </div>
-            <div class="content">
-                <h3>Your Journey Towards Wellness</h3>
-                <p> Kidney disease can be life-altering, but it doesn't have to define your future. Through the generosity of donors and the support of our platform, recipients are given a second chance at life. We are here to guide you every step of the way, from finding a compatible donor to receiving post-transplant care.</p>
-            </div>
-        </div>
-        <div class="box">
-            <div class="images">
-                <img src="{% static 'about-2.png' %}" alt="">
-            </div>
-            <div class="content">
-                <h3>Finding Hope Through Kidney Donation</h3>
-                <p>Our mission is to save lives by raising awareness about the importance of kidney donation. We aim to connect generous donors with those in critical need, providing them with a second chance at life. Through compassion, education, and support, we strive to inspire a community dedicated to making a difference and fostering hope for a healthier and brighter future.</p>
-
-            </div>
-        </div>
-        
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="text-primary">Find</span> A <span
+                    class="text-primary">Donor</span> and
+                <span class="text-primary">Save</span> Life
+            </h1>
+            <p class="hero-subtitle">
+                Your Journey Towards Wellness Starts Here
+            </p>
+            <div class="hero-buttons">
+                <a href="{% url 'recipientprictiction' %}"
+                    class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i>
+                    Check Compatibility
+                </a>
+                <a href="{% url 'about' %}"
+                    class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-info-circle"></i>
+                    Learn More
+                </a>
             </div>
         </div>
     </div>
-    {% if messages %}
-        <script>
-            {% for message in messages %}
-                Swal.fire({
-                    title: '{{ message.tags|capfirst }}',
-                    text: '{{ message }}',
-                    icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "warning" %}warning{% else %}info{% endif %}',
-                    confirmButtonText: 'OK'
-                });
-            {% endfor %}
-        </script>
-        {% endif %}
 </section>
 
- 
+<!-- About Recipients Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Hope for a New Beginning</h2>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card feature-card">
+                <div class="text-center mb-4">
+                    <img src="{% static 'about-1.png' %}"
+                        alt="Your Journey Towards Wellness"
+                        class="img-fluid rounded shadow"
+                        style="max-width: 100%; height: auto;">
+                </div>
+                <h3 class="feature-title">Your Journey Towards Wellness</h3>
+                <p class="feature-description">
+                    Kidney disease can be life-altering, but it doesn't have to
+                    define your future.
+                    Through the generosity of donors and the support of our
+                    platform, recipients are
+                    given a second chance at life. We are here to guide you
+                    every step of the way,
+                    from finding a compatible donor to receiving post-transplant
+                    care.
+                </p>
+            </div>
+
+            <div class="card feature-card">
+                <div class="text-center mb-4">
+                    <img src="{% static 'about-2.png' %}"
+                        alt="Finding Hope Through Kidney Donation"
+                        class="img-fluid rounded shadow"
+                        style="max-width: 100%; height: auto;">
+                </div>
+                <h3 class="feature-title">Finding Hope Through Kidney
+                    Donation</h3>
+                <p class="feature-description">
+                    Our mission is to save lives by raising awareness about the
+                    importance of kidney donation.
+                    We aim to connect generous donors with those in critical
+                    need, providing them with a second
+                    chance at life. Through compassion, education, and support,
+                    we strive to inspire a community
+                    dedicated to making a difference and fostering hope for a
+                    healthier and brighter future.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Support Services Section -->
+<section class="section" style="background-color: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-title">
+            <h2>How We Support You</h2>
+        </div>
+
+        <div class="grid grid-3">
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="feature-title">Donor Matching</h3>
+                <p class="feature-description">
+                    Our advanced compatibility system helps find the best
+                    possible
+                    donor match for your specific needs and medical
+                    requirements.
+                </p>
+            </div>
+
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3 class="feature-title">Medical Support</h3>
+                <p class="feature-description">
+                    Access to expert medical professionals who guide you through
+                    every step of the transplantation process.
+                </p>
+            </div>
+
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h3 class="feature-title">Ongoing Care</h3>
+                <p class="feature-description">
+                    Comprehensive post-transplant support and monitoring to
+                    ensure
+                    your continued health and well-being.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2>Ready to Start Your Journey?</h2>
+            <p class="mb-4">Begin your search for a compatible donor today.</p>
+            <div class="d-flex justify-center gap-3">
+                <a href="{% url 'recipientprictiction' %}"
+                    class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i>
+                    Check Compatibility
+                </a>
+                <a href="{% url 'contact' %}"
+                    class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-envelope"></i>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if messages %}
+<script>
+    {% for message in messages %}
+        Swal.fire({
+            title: '{{ message.tags|capfirst }}',
+            text: '{{ message }}',
+            icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "warning" %}warning{% else %}info{% endif %}',
+            confirmButtonText: 'OK',
+            background: 'var(--bg-primary)',
+            color: 'var(--text-primary)'
+        });
+    {% endfor %}
+</script>
+{% endif %}
 {% endblock content %}

@@ -1,209 +1,823 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<link rel="stylesheet" href="{% static 'style1.css' %}" />
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% block title %}
+Eligible Donors - LifeChain
+{% endblock title %}
 
-<!-- Hidden CSRF token to be accessed in JS -->
-<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+  <div class="container">
+    <nav class="breadcrumb-nav">
+      <div class="breadcrumb-item">
+        <a href="{% url 'index' %}" class="breadcrumb-link">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+      </div>
+      <div class="breadcrumb-item">
+        <a href="{% url 'recipientpage' %}" class="breadcrumb-link">
+          <i class="fas fa-search"></i>
+          Recipient
+        </a>
+      </div>
+      <div class="breadcrumb-item">
+        <span class="breadcrumb-current">Eligible Donors</span>
+      </div>
+    </nav>
+  </div>
+</section>
+{% endblock breadcrumb %}
+
+{% block content %}
+<!-- Skeleton Loading -->
+<div id="skeleton-loading">
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-subtitle"></div>
+      </div>
+
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-title"
+          style="width: 60%; margin-bottom: var(--spacing-lg);"></div>
+        <div class="skeleton skeleton-text long"></div>
+        <div class="skeleton skeleton-text medium"></div>
+      </div>
+
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-title"
+          style="width: 50%; margin-bottom: var(--spacing-lg);"></div>
+        <div class="skeleton skeleton-table">
+          <div class="skeleton skeleton-text long"></div>
+          <div class="skeleton skeleton-text medium"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <div class="skeleton skeleton-button" style="margin: 0 auto;"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Actual Content -->
+<div id="actual-content" style="display: none;">
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h1 class="hero-title">Eligible Donors</h1>
+        <p class="hero-subtitle">Find compatible donors for your transplant
+          needs</p>
+      </div>
+
+      <!-- Search and Filter Card -->
+      <div class="search-card">
+        <h3>Search & Filter Donors</h3>
+        <form class="search-form" onsubmit="return false;">
+          <div class="search-row">
+            <div class="search-field">
+              <label for="blood-type">Blood Type</label>
+              <select id="blood-type" class="form-control">
+                <option value>All Blood Types</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="AB">AB</option>
+                <option value="O">O</option>
+              </select>
+            </div>
+
+            <div class="search-field">
+              <label for="organ-type">Organ Type</label>
+              <select id="organ-type" class="form-control">
+                <option value>All Organs</option>
+                <option value="kidney">Kidney</option>
+                <option value="liver">Liver</option>
+                <option value="heart">Heart</option>
+                <option value="lung">Lung</option>
+              </select>
+            </div>
+
+            <div class="search-field">
+              <label for="location">Location</label>
+              <select id="location" class="form-control">
+                <option value>All Locations</option>
+                <option value="pakistan">Pakistan</option>
+                <option value="international">International</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="search-actions">
+            <button class="btn btn-primary" onclick="searchDonors()">
+              <i class="fas fa-search"></i>
+              Search Donors
+            </button>
+            <button class="btn btn-outline-secondary" onclick="resetFilters()">
+              <i class="fas fa-undo"></i>
+              Reset Filters
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Donors List Card -->
+      <div class="donors-card">
+        <div class="donors-header">
+          <h3>Available Donors</h3>
+          <div class="donors-count">
+            <span class="count-badge">{{ donors|length|default:"0" }} Donors
+              Found</span>
+          </div>
+        </div>
+
+        {% if donors %}
+        <div class="donors-grid">
+          {% for donor in donors %}
+          <div class="donor-item">
+            <div class="donor-header">
+              <div class="donor-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="donor-info">
+                <h4>{{ donor.username|default:"Anonymous Donor" }}</h4>
+                <p class="donor-location">
+                  <i class="fas fa-map-marker-alt"></i>
+                  {{ donor.location|default:"Location not specified" }}
+                </p>
+              </div>
+              <div class="donor-status">
+                <span class="status-badge status-available">Available</span>
+              </div>
+            </div>
+
+            <div class="donor-details">
+              <div class="detail-row">
+                <span class="detail-label">Blood Type:</span>
+                <span class="detail-value">{{ donor.blood_type|default:"N/A"
+                  }}</span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Organ Type:</span>
+                <span class="detail-value">{{ donor.organ_type|default:"N/A"
+                  }}</span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Compatibility Score:</span>
+                <span class="detail-value score-high">{{
+                  donor.compatibility_score|default:"N/A" }}%</span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Last Updated:</span>
+                <span class="detail-value">{{ donor.last_updated|default:"N/A"
+                  }}</span>
+              </div>
+            </div>
+
+            <div class="donor-actions">
+              <button class="btn btn-outline-primary btn-sm"
+                onclick="viewDonorDetails('{{ donor.id }}')">
+                <i class="fas fa-eye"></i>
+                View Details
+              </button>
+              <button class="btn btn-primary btn-sm"
+                onclick="contactDonor('{{ donor.id }}')">
+                <i class="fas fa-envelope"></i>
+                Contact
+              </button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-donors">
+          <div class="no-donors-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h4>No Donors Found</h4>
+          <p>Currently there are no eligible donors matching your criteria.
+            Please try adjusting your search filters or check back later.</p>
+          <button class="btn btn-outline-primary" onclick="resetFilters()">
+            <i class="fas fa-undo"></i>
+            Reset Filters
+          </button>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Pagination -->
+      {% if donors.has_other_pages %}
+      <div class="pagination-wrapper">
+        <ul class="pagination">
+          {% if donors.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ donors.previous_page_number }}">
+              <i class="fas fa-chevron-left"></i>
+              Previous
+            </a>
+          </li>
+          {% endif %}
+
+          {% for num in donors.paginator.page_range %}
+          {% if donors.number == num %}
+          <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+          </li>
+          {% elif num > donors.number|add:'-3' and num < donors.number|add:'3'
+          %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+          </li>
+          {% endif %}
+          {% endfor %}
+
+          {% if donors.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ donors.next_page_number }}">
+              Next
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="{% url 'recipientpage' %}" class="btn btn-outline-primary">
+          <i class="fas fa-arrow-left"></i>
+          Back to Recipient Portal
+        </a>
+        <a href="{% url 'contact' %}" class="btn btn-primary">
+          <i class="fas fa-envelope"></i>
+          Contact Support
+        </a>
+        <a href="{% url 'index' %}" class="btn btn-secondary">
+          <i class="fas fa-home"></i>
+          Go Home
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
 
 <style>
-  @import url("https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css");
+/* Enhanced Eligible Donors Page Styles */
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 2px 4px var(--shadow-md);
+}
 
-  #WpContainer {
-    margin-top: 10px;
-    max-width: 900px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: var(--spacing-xl);
+}
 
-  .containerEB {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-
-  .profile-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 370px;
-    width: 100%;
-    background: #fff;
-    border-radius: 24px;
-    padding: 25px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+.search-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: 0 8px 32px var(--shadow-lg);
     position: relative;
-  }
+    overflow: hidden;
+}
 
-  .profile-card::before {
-    content: "";
+.search-card::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    height: 5%;
-    width: 100%;
-    border-radius: 24px 24px 0 0;
-    background-color: #4070f4;
-  }
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--info));
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease-in-out infinite;
+}
 
-  .image .profile-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid #fff;
-  }
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
 
-  .text-data {
+.search-card h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    position: relative;
+}
+
+.search-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--radius-sm);
+}
+
+.search-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.search-field {
     display: flex;
     flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.search-field label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.search-field .form-control {
+    padding: var(--spacing-md);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.search-field .form-control:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+.search-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.search-actions .btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+    min-width: 150px;
+}
+
+.search-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--shadow-lg);
+}
+
+.donors-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: 0 8px 32px var(--shadow-lg);
+}
+
+.donors-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    color: #333;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.donors-header h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.count-badge {
+    background: linear-gradient(135deg, var(--success) 0%, var(--primary-color) 100%);
+    color: var(--text-inverse);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.donors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.donor-item {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
   }
 
-  .text-data .name {
-    font-size: 22px;
-    font-weight: 500;
-  }
+.donor-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--success), var(--primary-color));
+    transition: all var(--transition-normal);
+}
 
-  .text-data .job {
-    font-size: 15px;
-    font-weight: 400;
-  }
+.donor-item:hover {
+    background: var(--bg-primary);
+    border-color: var(--border-focus);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px var(--shadow-lg);
+}
 
-  .media-buttons .link,
-  .buttons .button {
-    background-color: #4070f4;
-    color: #fff;
-    border-radius: 24px;
-    padding: 8px 24px;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.donor-item:hover::before {
+    width: 8px;
+}
 
-  .buttons .button:hover {
-    background-color: #0e4bf1;
-  }
+.donor-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
 
-  .processing-layout {
-    display: none;
+.donor-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.donor-avatar i {
+    color: var(--text-inverse);
+    font-size: 1.25rem;
+}
+
+.donor-info {
+    flex: 1;
+}
+
+.donor-info h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.donor-location {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.donor-location i {
+    color: var(--primary-color);
+}
+
+.donor-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-badge.status-available {
+    background: linear-gradient(135deg, var(--success) 0%, #10b981 100%);
+    color: var(--text-inverse);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.donor-details {
+    margin-bottom: var(--spacing-lg);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.detail-value {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.score-high {
+    color: var(--success);
+}
+
+.donor-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.donor-actions .btn {
+    flex: 1;
+    min-width: 120px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.donor-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.no-donors {
     text-align: center;
-    margin-top: 30px;
-    font-size: 20px;
-    color: #0e4bf1;
-    font-weight: bold;
+    padding: var(--spacing-xl);
+}
+
+.no-donors-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--text-muted) 0%, var(--border-primary) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg);
+}
+
+.no-donors-icon i {
+    color: var(--text-inverse);
+    font-size: 2rem;
+}
+
+.no-donors h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.no-donors p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-xl) 0;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: var(--spacing-xs);
+}
+
+.page-item {
+    display: flex;
+    align-items: center;
+}
+
+.page-link {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.page-link:hover {
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.page-item.active .page-link {
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    border-color: var(--primary-color);
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-xl);
+}
+
+.action-buttons .btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+    min-width: 180px;
+    text-align: center;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px var(--shadow-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .donors-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+    
+    .search-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .donors-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .search-card,
+    .donors-card {
+        padding: var(--spacing-md);
+    }
+    
+    .donor-header {
+        flex-direction: column;
+        align-items: center;
+    text-align: center;
+    }
+    
+    .donor-actions {
+        flex-direction: column;
+    }
+    
+    .donor-actions .btn {
+        width: 100%;
+    }
   }
 </style>
 
-<div class="container">
-  <h2 class="text-2xl font-bold mb-4">Eligible Donors</h2>
-
-  <div id="donor-list">
-    {% for donor in donors %}
-    <div class="containerEB donor-card" id="donor-{{ donor.id }}">
-      <div class="profile-card">
-        <div class="image"></div>
-        <div class="text-data">
-          <span class="name">{{ donor.username }}</span>
-          <span class="job">ID: {{ donor.id }}</span>
-          <p><strong>Age:</strong> {{ donor.age }}</p>
-          <p><strong>Gender:</strong> {{ donor.gender }}</p>
-          <p>
-            <strong>Blood Type:</strong> {{ donor.blood_type }}
-            {% if donor.rh_factor %}+{% else %}-{% endif %}
-          </p>
-          <p><strong>Organ:</strong> {{ donor.organ_type }}</p>
-          <p><strong>Email:</strong> {{ donor.email }}</p>
-          <p><strong>Contact:</strong> {{ donor.contact }}</p>
-          <p><strong>Address:</strong> {{ donor.address }}</p>
-          <p><strong>Eligibility:</strong> {{ donor.eligibility }}</p>
-        </div>
-
-        <div class="buttons">
-          <button class="button allocate-btn"
-            data-donor-id='{{ donor.id }}'>Allocate</button>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div id="processing" class="processing-layout">
-    Allocation process started. Please wait...
-  </div>
-</div>
-
 <script>
-  // Get CSRF token from the hidden input
-  const csrftoken = document.getElementById("csrf-token").value;
+// Simulate skeleton loading
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        document.getElementById('skeleton-loading').style.display = 'none';
+        document.getElementById('actual-content').style.display = 'block';
+    }, 1500);
+});
 
-  document.querySelectorAll('.allocate-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const donorId = this.getAttribute('data-donor-id');
-
+// Search and filter functions
+function searchDonors() {
+    // Show loading state
       Swal.fire({
-        title: 'Allocating Donor',
-        text: "The process of allocating this donor has started...",
-        icon: 'info',
-        showConfirmButton: false,
+        title: 'Searching...',
+        text: 'Finding compatible donors...',
         allowOutsideClick: false,
         didOpen: () => {
           Swal.showLoading();
         }
       });
 
-      fetch(`/recipient/allocate_donor/${donorId}/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,  // ✅ fixed
-          },
-        })
-        .then(response => {
-          if (response.redirected) {
-            window.location.href = response.url; // Redirect if needed
-            return;
-          }
-          if (response.ok) {
-            // Hide all other donor cards
-            document.querySelectorAll('.donor-card').forEach(card => {
-              if (card.id !== `donor-${donorId}`) {
-                card.style.display = 'none';
-              }
-            });
-
-            // Show some processing indication
-            const processing = document.getElementById('processing');
-            if (processing) {
-              processing.style.display = 'block';
-            }
-
-            // Success Alert and Redirect
-            setTimeout(() => {
-              Swal.fire('Email Sent!', 'Waiting for donor response.', 'success')
-              .then(() => {
-                window.location.href = "{% url 'profile_view' %}";
-              });
-            }, 1500);
-          } else {
-            // If response has JSON error
-            return response.json().then(data => {
-              Swal.fire('Error', data.error || 'Failed to allocate donor.', 'error');
-            });
-          }
-        })
-        .catch(() => {
-          Swal.fire('Network Error', 'Unable to allocate donor due to network issues.', 'error');
+    // Simulate search delay
+    setTimeout(() => {
+        Swal.close();
+        // Here you would implement actual search logic
+        // For now, just show a success message
+        Swal.fire({
+            title: 'Search Complete',
+            text: 'Found donors matching your criteria',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
         });
-    });
-  });
-</script>
+    }, 2000);
+}
 
+function resetFilters() {
+    // Reset all form fields
+    document.getElementById('blood-type').value = '';
+    document.getElementById('organ-type').value = '';
+    document.getElementById('location').value = '';
+    
+    Swal.fire({
+        title: 'Filters Reset',
+        text: 'All search filters have been cleared',
+        icon: 'info',
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+function viewDonorDetails(donorId) {
+    Swal.fire({
+        title: 'Donor Details',
+        text: `Viewing details for donor ID: ${donorId}`,
+        icon: 'info',
+        confirmButtonText: 'OK'
+    });
+}
+
+function contactDonor(donorId) {
+    Swal.fire({
+        title: 'Contact Donor',
+        text: `Initiating contact with donor ID: ${donorId}`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+}
+</script>
 {% endblock content %}

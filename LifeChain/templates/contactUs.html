@@ -1,49 +1,179 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
-{% block content %}
-<link rel="stylesheet" href="{% static 'style.css' %}" />
+{% block title %}
+Contact Us - LifeChain
+{% endblock title %}
 
-<section id="contact" class="contact">
-    <h1 class="heading">contact us</h1>
-    <h3 class="title">you can talk to us any times,</h3>
-    <div class="row">
-        <div class="images">
-            <img src="{% static 'form.png' %}" alt>
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-nav">
+            <div class="breadcrumb-item">
+                <a href="{% url 'index' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Contact Us</span>
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock breadcrumb %}
+
+{% block content %}
+<!-- Contact Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Contact Us</h1>
+            <p class="hero-subtitle">You can talk to us any time, we're here to
+                help!</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="section">
+    <div class="container">
+        <div class="grid grid-2 align-center">
+            <div class="text-center">
+                <img src="{% static 'form.png' %}" alt="Contact Us"
+                    class="img-fluid rounded shadow-lg"
+                    style="max-width: 100%; height: auto;">
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title mb-4">Get in Touch</h3>
+
+                    <form action="{% url 'contact' %}" method="POST"
+                        id="contactForm">
+                        {% csrf_token %}
+
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Full
+                                Name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-control"
+                                placeholder="Enter your full name"
+                                required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email
+                                Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control"
+                                placeholder="Enter your email address"
+                                required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="phone" class="form-label">Phone
+                                Number</label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone_number"
+                                class="form-control"
+                                placeholder="Enter your phone number"
+                                required>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="message"
+                                class="form-label">Message</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                class="form-control"
+                                rows="5"
+                                placeholder="Tell us how we can help you..."
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information Section -->
+<section class="section" style="background-color: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Other Ways to Reach Us</h2>
         </div>
 
-        <div class="form-container">
-            <form action="{% url 'contact' %}" method="POST">
-                {% csrf_token %}
-                <input name="name" type="text" placeholder="Full Name" required>
-                <input name="email" type="email" placeholder="Enter your email"
-                    required>
-                <input name="phone_number" type="number"
-                    placeholder="Phone Number" required>
-                <textarea name="message" cols="30" rows="10"
-                    placeholder="Your Message" required></textarea>
-                <button class="btn btn-primary" type="submit"
-                    value="send">Send</button>
-            </form>
+        <div class="grid grid-3">
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3 class="feature-title">Email</h3>
+                <p class="feature-description">
+                    Send us an email at info@lifechain.com and we'll get back to
+                    you within 24 hours.
+                </p>
+            </div>
+
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <h3 class="feature-title">Phone</h3>
+                <p class="feature-description">
+                    Call us at +92 300 1234567 during business hours (9 AM - 6
+                    PM).
+                </p>
+            </div>
+
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3 class="feature-title">Location</h3>
+                <p class="feature-description">
+                    Visit our office in Pakistan for in-person consultations and
+                    support.
+                </p>
+            </div>
         </div>
     </div>
 </section>
 
 <script>
-    // Reset the form after submission 
-
-    document.querySelector('form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Thank you for contacting us",
-            showConfirmButton: false,
-            timer: 1000
-          });
-        // Perform form submission logic here (e.g., AJAX request)
-        this.reset(); // Clear the form
+document.getElementById('contactForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    // Show success message
+    Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Thank you for contacting us!",
+        text: "We'll get back to you as soon as possible.",
+        showConfirmButton: false,
+        timer: 2000,
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)'
     });
-    </script>
+    
+    // Reset the form
+    this.reset();
+});
+</script>
 {% endblock content %}

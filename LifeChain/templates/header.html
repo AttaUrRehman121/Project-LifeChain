@@ -1,76 +1,125 @@
 
 
-<header>
-        <a href="{% url 'index' %}"
-                class="logo"><span>L</span>ife<span>C</span>hain.</a>
-        <nav class="navbar">
-                <ul>
-                        <li><a href="{% url 'index' %}" active>Home</a></li>
-                        <li><a href="{% url 'donorpage' %}">Donor</a></li>
-                        <li><a
-                                        href="{% url 'recipientpage' %}">Recipient</a></li>
-                        <li><a href="{% url 'contact' %}">Contact</a></li>
-                        <li><a href="{% url 'about' %}">About</a></li>
-                        {% if user.is_authenticated %}
-                        <li id="buttonH"
-                                onclick="window.location.href='{% url 'profile_view' %}'">
-                                Hello, {{ user.username }}
-                        </li>
-                        <li>
-                                <button class="logout-btn"
-                                        onclick="window.location.href='{% url 'logout' %}'"
-                                        id="buttonH">
-                                        Logout
+<header class="header">
+        <div class="container">
+                <div class="header-content">
+                        <!-- Logo -->
+                        <a href="{% url 'index' %}" class="logo">
+                                <span class="logo-highlight">L</span>ife<span
+                                        class="logo-highlight">C</span>hain
+                        </a>
+
+                        <!-- Navigation -->
+                        <nav class="navbar">
+                                <ul class="nav-list">
+                                        <li class="nav-item">
+                                                <a href="{% url 'index' %}"
+                                                        class="nav-link">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a href="{% url 'donorpage' %}"
+                                                        class="nav-link">Donor</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a
+                                                        href="{% url 'recipientpage' %}"
+                                                        class="nav-link">Recipient</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a href="{% url 'contact' %}"
+                                                        class="nav-link">Contact</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a href="{% url 'about' %}"
+                                                        class="nav-link">About</a>
+                                        </li>
+                                </ul>
+                        </nav>
+
+                        <!-- Right Section -->
+                        <div class="header-right">
+                                <!-- Theme Toggle -->
+                                <button class="theme-toggle" id="themeToggle"
+                                        title="Toggle Theme">
+                                        <i class="fas fa-sun light-icon"></i>
+                                        <i class="fas fa-moon dark-icon"></i>
                                 </button>
-                        </li>
-                        {% else %}
-                        <li>
-                                <button
-                                        onclick="window.location.href='{% url 'login' %}'"
-                                        id="buttonH">Login</button>
-                        </li>
-                        <li>
-                                <button
-                                        onclick="window.location.href='{% url 'signup' %}'"
-                                        id="buttonH">Signup</button>
-                        </li>
-                        {% endif %}
-                </ul>
-        </nav>
 
-        {% if messages %}
-        <script>
-                {% for message in messages %}
-                        Swal.fire({
-                                title: '{{ message.tags|capfirst }}',
-                                text: '{{ message }}',
-                                icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% else %}info{% endif %}',
-                                confirmButtonText: 'OK'
-                        });
-                {% endfor %}
-        </script>
-        {% endif %}
+                                <!-- Auth Buttons -->
+                                {% if user.is_authenticated %}
+                                <div class="user-section">
+                                        <button class="user-btn"
+                                                onclick="window.location.href='{% url 'profile_view' %}'">
+                                                <i class="fas fa-user"></i>
+                                                <span>{{ user.username }}</span>
+                                        </button>
+                                        <button class="logout-btn"
+                                                onclick="window.location.href='{% url 'logout' %}'">
+                                                <i
+                                                        class="fas fa-sign-out-alt"></i>
+                                                Logout
+                                        </button>
+                                </div>
+                                {% else %}
+                                <div class="auth-buttons">
+                                        <button class="btn btn-outline-primary"
+                                                onclick="window.location.href='{% url 'login' %}'">
+                                                <i
+                                                        class="fas fa-sign-in-alt"></i>
+                                                Login
+                                        </button>
+                                        <button class="btn btn-primary"
+                                                onclick="window.location.href='{% url 'signup' %}'">
+                                                <i class="fas fa-user-plus"></i>
+                                                Signup
+                                        </button>
+                                </div>
+                                {% endif %}
 
-        <div class="fas fa-bars" id="menu-toggle"></div>
+                                <!-- Mobile Menu Toggle -->
+                                <button class="mobile-menu-toggle"
+                                        id="mobileMenuToggle">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                </button>
+                        </div>
+                </div>
+        </div>
 </header>
-<script>
-        document.addEventListener('DOMContentLoaded', function() {
-                const menuToggle = document.getElementById('menu-toggle');
-                const navbarUl = document.querySelector('.navbar ul');
-                menuToggle.addEventListener('click', function() {
-                        navbarUl.classList.toggle('active');
-                });
 
-                // Optional: Close menu when clicking outside or on a link (mobile)
-                document.addEventListener('click', function(e) {
-                        if (window.innerWidth <= 768) {
-                                if (!navbarUl.contains(e.target) && !menuToggle.contains(e.target)) {
-                                        navbarUl.classList.remove('active');
-                                }
-                                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
-                                        navbarUl.classList.remove('active');
-                                }
-                        }
-                });
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navbar = document.querySelector('.navbar');
+    const header = document.querySelector('.header');
+
+    mobileMenuToggle.addEventListener('click', function() {
+        navbar.classList.toggle('active');
+        mobileMenuToggle.classList.toggle('active');
+        header.classList.toggle('menu-open');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
+            if (!navbar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                navbar.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                header.classList.remove('menu-open');
+            }
+        }
+    });
+
+    // Close menu when clicking on nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                navbar.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                header.classList.remove('menu-open');
+            }
         });
+    });
+});
 </script>

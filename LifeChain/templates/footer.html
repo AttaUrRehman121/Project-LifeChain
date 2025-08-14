@@ -1,24 +1,64 @@
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Company Info -->
+            <div class="footer-section">
+                <h3 class="footer-logo">
+                    <span class="logo-highlight">L</span>ife<span
+                        class="logo-highlight">C</span>hain
+                </h3>
+                <p class="footer-quote">
+                    You have a chance to save lives! If you don't take it, you
+                    may regret it!
+                </p>
+            </div>
 
-<section class="footer">
-    <div class="box">
-        <h2 class="logo"><span>L</span>ife<span>C</span>hain.</h2>
+            <!-- Social Links -->
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
 
-        <a class="qoute">You have a chance to save lives! If you don't take it,
-            you may regret
-            it!</a>
-    </div>
-    <div class="box">
-        <h2 class="logo"><span>s</span>hare</h2>
-        <i class="fa-brands fa-facebook logo"></i>
-        <i class="fa-brands fa-instagram logo"></i>
-        <i class="fa-brands fa-linkedin logo"></i>
-        <i class="fa-brands fa-instagram logo"></i>
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="{% url 'donorpage' %}">Donor</a></li>
+                    <li><a href="{% url 'recipientpage' %}">Recipient</a></li>
+                </ul>
+            </div>
 
+            <!-- Contact Info -->
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> info@lifechain.com</p>
+                    <p><i class="fas fa-phone"></i> +92 300 1234567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Pakistan</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2024 <span class="highlight">LifeChain Team</span>. All
+                rights reserved.</p>
+        </div>
     </div>
-    <div class="box">
-        <h2 class="logo"><span>L</span>inks</h2>
-        <a class="qoute" href="{%url 'index'%}">home</a>
-    </div>
-    <h1 class="credit">Developed by <span> LifeChain Team </span> all rights
-        reserved!</h1>
-</section>
+</footer>

@@ -1,80 +1,136 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}
+About Us - LifeChain
+{% endblock title %}
+
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-nav">
+            <div class="breadcrumb-item">
+                <a href="{% url 'index' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">About Us</span>
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock breadcrumb %}
+
 {% block content %}
-<link rel="stylesheet" href="{% static 'style.css' %}" />
+<!-- About Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">About Us</h1>
+            <p class="hero-subtitle">Our Mission: Saving Lives Through Organ
+                Donation</p>
+        </div>
+    </div>
+</section>
 
-<style>
-    #heading
-    {
-        color: rgb(24, 116, 173);
-        font-weight: 500;
-        font-size: 40px;
-    }
-    img {
-        vertical-align: middle;
-        size: a4;
-        width: 650px;
-        height: 400px;
-        border: 3px solid #000000;
-        margin-bottom: 10px;
-    }
+<!-- About Content Section -->
+<section class="section">
+    <div class="container">
+        <div class="grid grid-2 align-center">
+            <div class="text-center">
+                <img src="{% static 'images/image.png' %}" alt="Our Team"
+                    class="img-fluid rounded shadow-lg"
+                    style="max-width: 100%; height: auto;">
+            </div>
 
-    .lead
-    {
-        font-size: 20px;
-        margin-left: -3px;
-        text-indent: 3px;
-       
-    }
+            <div class="card">
+                <div class="card-content">
+                    <p class="mb-4">
+                        At <strong class="text-primary">LifeChain</strong>, we
+                        are a dedicated team of
+                        healthcare professionals, advocates, and volunteers
+                        committed to raising awareness
+                        about the importance of organ donation. Our mission is
+                        to save lives by encouraging
+                        people to become organ donors and by supporting families
+                        through the donation process.
+                    </p>
 
-    #tagline
-    {
-        color: rgb(24, 170, 173);
-        font-weight: 500;
-        font-size: 30px;
-        margin-bottom: 15px;
-    }
+                    <p class="mb-4">
+                        Organ donation is one of the most selfless acts one can
+                        perform. It has the power
+                        to transform lives, giving hope to those in need of a
+                        second chance. Every year,
+                        thousands of lives are saved or significantly improved
+                        through organ transplants.
+                        However, the demand for organs far exceeds the supply,
+                        and we are here to bridge that gap.
+                    </p>
 
-</style>
+                    <p class="mb-4">
+                        Join us in our mission to make a difference. Together,
+                        we can create a world where
+                        no one has to wait for a life-saving organ.
+                    </p>
 
-<section id="about1" class="about">
-    <h1 id="heading" class="head text-center  text-primary">About Us</h1>
-    <!-- Added text-primary -->
-    <h3 id="tagline" class="title text-center mb-5">Our Mission: Saving Lives
-        Through Organ
-        Donation</h3>
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <div class="images text-center">
-                <img src="{% static 'images\image.png' %}" alt="Our Team"
-                    class="img-fluid">
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'donorpage' %}" class="btn btn-primary">
+                            <i class="fas fa-heart"></i>
+                            Become a Donor
+                        </a>
+                        <a href="{% url 'contact' %}"
+                            class="btn btn-outline-primary">
+                            <i class="fas fa-envelope"></i>
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <div class="col-md-6">
-            <div class="form-container p-4 bg-light rounded shadow">
-                <p class="lead">
-                    At <strong class="text-primary">LifeChain</strong>, we are a
-                    dedicated team of
-                    healthcare professionals, advocates, and volunteers
-                    committed to raising awareness about the importance of organ
-                    donation. Our mission is to save lives by encouraging people
-                    to become organ donors and by supporting families through
-                    the donation process.
+<!-- Mission Values Section -->
+<section class="section" style="background-color: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Core Values</h2>
+        </div>
+
+        <div class="grid grid-3">
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3 class="feature-title">Compassion</h3>
+                <p class="feature-description">
+                    We approach every interaction with empathy and
+                    understanding,
+                    recognizing the emotional journey of donors and recipients.
                 </p>
-                <p class="lead">
-                    Organ donation is one of the most selfless acts one can
-                    perform. It has the power to transform lives, giving hope to
-                    those in need of a second chance. Every year, thousands of
-                    lives are saved or significantly improved through organ
-                    transplants. However, the demand for organs far exceeds the
-                    supply, and we are here to bridge that gap.
+            </div>
+
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Trust & Security</h3>
+                <p class="feature-description">
+                    We maintain the highest standards of privacy and security
+                    to protect the sensitive information of our users.
                 </p>
-                <p class="lead">
-                    Join us in our mission to make a difference. Together, we
-                    can create a world where no one has to wait for a
-                    life-saving organ.
+            </div>
+
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="feature-title">Community</h3>
+                <p class="feature-description">
+                    We build and nurture a supportive community that encourages
+                    organ donation and celebrates life-saving acts.
                 </p>
             </div>
         </div>

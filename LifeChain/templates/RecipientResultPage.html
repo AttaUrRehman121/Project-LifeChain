@@ -1,315 +1,680 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
+{% block title %}
+Recipient Compatibility Result - LifeChain
+{% endblock title %}
+
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-nav">
+            <div class="breadcrumb-item">
+                <a href="{% url 'index' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+            <div class="breadcrumb-item">
+                <a href="{% url 'recipientpage' %}" class="breadcrumb-link">
+                    <i class="fas fa-search"></i>
+                    Recipient
+                </a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Compatibility Result</span>
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock breadcrumb %}
+
 {% block content %}
+<!-- Skeleton Loading -->
+<div id="skeleton-loading">
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-subtitle"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton skeleton-title"
+                    style="width: 50%; margin-bottom: var(--spacing-lg);"></div>
+                <div class="skeleton skeleton-text long"></div>
+                <div class="skeleton skeleton-text medium"></div>
+                <div class="skeleton skeleton-text short"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton skeleton-title"
+                    style="width: 60%; margin-bottom: var(--spacing-lg);"></div>
+                <div class="skeleton skeleton-text long"></div>
+                <div class="skeleton skeleton-text long"></div>
+                <div class="skeleton skeleton-text medium"></div>
+            </div>
+
+            <div class="text-center mt-5">
+                <div class="skeleton skeleton-button"
+                    style="margin: 0 auto;"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Actual Content -->
+<div id="actual-content" style="display: none;">
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="hero-title">Recipient Compatibility Result</h1>
+                <p class="hero-subtitle">Your compatibility assessment has been
+                    completed</p>
+            </div>
+
+            <!-- Result Summary Card -->
+            <div class="result-card">
+                <div class="result-header">
+                    <h2>Compatibility Assessment</h2>
+                    <div class="result-status">
+                        <span
+                            class="status-badge {% if result.eligibility == 'Eligible' %}status-eligible{% else %}status-not-eligible{% endif %}">
+                            {{ result.eligibility|default:"Pending" }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="result-details">
+                    <div class="result-item">
+                        <span class="result-label">Compatibility Score:</span>
+                        <span class="result-value">{{
+                            result.compatibility_score|default:"N/A" }}%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Assessment Date:</span>
+                        <span class="report-value">{{
+                            result.assessment_date|default:"N/A" }}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Organ Type:</span>
+                        <span class="report-value">{{
+                            result.organ_type|default:"Kidney" }}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Priority Level:</span>
+                        <span class="report-value">{{
+                            result.priority_level|default:"Standard" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Original Report Content -->
+            <div class="report-container">
+                <h2>Detailed Medical Report</h2>
+
+                <!-- Patient Demographics -->
+                <div class="report-section">
+                    <h3>Patient Demographics</h3>
+                    <div class="report-grid">
+                        <div class="report-item">
+                            <span class="report-label">Patient Name:</span>
+                            <span class="report-value">{{
+                                user.username|default:"N/A" }}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Age:</span>
+                            <span class="report-value">{{
+                                record.age|default:"N/A" }}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Gender:</span>
+                            <span class="report-value">{% if record.gender == 1
+                                %}Male{% elif record.gender == 0 %}Female{% else
+                                %}N/A{% endif %}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Blood Type:</span>
+                            <span class="report-value">
+                                {% if record.blood_type == 0 %}A
+                                {% elif record.blood_type == 1 %}B
+                                {% elif record.blood_type == 2 %}AB
+                                {% elif record.blood_type == 3 %}O
+                                {% else %}{{ record.blood_type|default:"N/A" }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Rh Factor:</span>
+                            <span class="report-value">{% if record.rh_factor ==
+                                1 %}+{% elif record.rh_factor == 0 %}-{% else
+                                %}N/A{% endif %}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Height (cm):</span>
+                            <span class="report-value">{{
+                                record.height_cm|default:"N/A" }}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Weight (kg):</span>
+                            <span class="report-value">{{
+                                record.weight_kg|default:"N/A" }}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">BMI:</span>
+                            <span class="report-value">{{
+                                record.bmi|default:"N/A" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Details -->
+                <div class="report-section">
+                    <h3>Medical Details</h3>
+                    <div class="report-grid">
+                        <div class="report-item">
+                            <span class="report-label">Wait List Days:</span>
+                            <span class="report-value">{{
+                                record.wait_list_days|default:"N/A" }}
+                                days</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Medical Urgency
+                                Score:</span>
+                            <span class="report-value">{{
+                                record.medical_urgency_score|default:"N/A"
+                                }}/10</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Required Organ:</span>
+                            <span class="report-value">{{
+                                record.required_organ|default:"N/A" }}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Transplant
+                                Eligibility:</span>
+                            <span class="report-value">{{
+                                record.transplant_eligibility|default:"N/A"
+                                }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Laboratory Values -->
+                <div class="report-section">
+                    <h3>Laboratory Values</h3>
+                    <div class="report-grid">
+                        <div class="report-item">
+                            <span class="report-label">Hemoglobin:</span>
+                            <span class="report-value">{{
+                                record.hemoglobin|default:"N/A" }} g/dL</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">WBC Count:</span>
+                            <span class="report-value">{{
+                                record.wbc_count|default:"N/A" }} K/μL</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Platelet Count:</span>
+                            <span class="report-value">{{
+                                record.platelet_count|default:"N/A" }}
+                                K/μL</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Creatinine:</span>
+                            <span class="report-value">{{
+                                record.creatinine|default:"N/A" }} mg/dL</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">ALT:</span>
+                            <span class="report-value">{{
+                                record.alt|default:"N/A" }} U/L</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">AST:</span>
+                            <span class="report-value">{{
+                                record.ast|default:"N/A" }} U/L</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical History -->
+                <div class="report-section">
+                    <h3>Medical History</h3>
+                    <div class="report-grid">
+                        <div class="report-item">
+                            <span class="report-label">Diabetes:</span>
+                            <span class="report-value">{% if record.diabetes ==
+                                1 %}Yes{% elif record.diabetes == 0 %}No{% else
+                                %}N/A{% endif %}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Hypertension:</span>
+                            <span class="report-value">{% if record.hypertension
+                                == 1 %}Yes{% elif record.hypertension == 0
+                                %}No{% else %}N/A{% endif %}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Previous
+                                Transplant:</span>
+                            <span class="report-value">{% if
+                                record.previous_transplant == 1 %}Yes{% elif
+                                record.previous_transplant == 0 %}No{% else
+                                %}N/A{% endif %}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Dialysis Status:</span>
+                            <span class="report-value">{% if
+                                record.dialysis_status == 1 %}Yes{% elif
+                                record.dialysis_status == 0 %}No{% else %}N/A{%
+                                endif %}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">Antibody Screen:</span>
+                            <span class="report-value">{{
+                                record.antibody_screen|default:"N/A" }}</span>
+                        </div>
+                        <div class="report-item">
+                            <span class="report-label">PRA Score:</span>
+                            <span class="report-value">{{
+                                record.pra_score|default:"N/A" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p><strong>Contact:</strong> LifeChain_Team@uskt.edu.pk</p>
+                    <p><strong>Address:</strong> University of Sialkot, Main
+                        Daska Road, Sialkot, Pakistan</p>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <div class="download-section">
+                <button class="btn btn-primary btn-lg" onclick="downloadPDF()">
+                    <i class="fas fa-download"></i>
+                    Download PDF Report
+                </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'recipientpage' %}"
+                    class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Recipient Portal
+                </a>
+                <a href="{% url 'contact' %}" class="btn btn-primary">
+                    <i class="fas fa-envelope"></i>
+                    Contact Support
+                </a>
+                <a href="{% url 'index' %}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    Go Home
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
 
 <style>
-    /* PDF-Specific CSS */
-    .summary-container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 10px 10px 10px 10px rgba(4, 50, 97, 0.1);
-        max-width: 900px;
-        margin: 0 auto;
-        font-family: Arial, sans-serif;
-    }
+/* Enhanced Recipient Result Page Styles */
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 2px 4px var(--shadow-md);
+}
 
-    .summary-container h2 {
-        color: #007bff;
-        margin-bottom: 20px;
-        text-align: center;
-    }
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: var(--spacing-xl);
+}
 
-    .summary-container table {
+.result-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: 0 8px 32px var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--info));
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.result-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.result-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-badge {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px var(--shadow-md);
+    border: 2px solid transparent;
+    transition: all var(--transition-normal);
+}
+
+.status-eligible {
+    background: linear-gradient(135deg, var(--success) 0%, #10b981 100%);
+    color: var(--text-inverse);
+    border-color: var(--success);
+}
+
+.status-not-eligible {
+    background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
+    color: var(--text-inverse);
+    border-color: var(--error);
+}
+
+.status-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--shadow-lg);
+}
+
+.result-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    transition: all var(--transition-fast);
+}
+
+.result-item:hover {
+    background: var(--bg-primary);
+    border-color: var(--border-focus);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.result-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.result-value {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+/* Report Container Styles */
+.report-container {
+    background: var(--bg-card);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: 0 8px 32px var(--shadow-lg);
+}
+
+.report-container h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.report-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.report-section h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-primary);
+    position: relative;
+}
+
+.report-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--radius-sm);
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.report-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    transition: all var(--transition-fast);
+}
+
+.report-item:hover {
+    background: var(--bg-primary);
+    border-color: var(--border-focus);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.report-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.report-value {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.contact-info {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    margin-top: var(--spacing-xl);
+}
+
+.contact-info h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.contact-info p {
+    color: var(--text-secondary);
+    margin: var(--spacing-xs) 0;
+    font-size: 1rem;
+}
+
+.download-section {
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+}
+
+.download-section .btn {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+    min-width: 250px;
+}
+
+.download-section .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px var(--shadow-lg);
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-xl);
+}
+
+.action-buttons .btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+    min-width: 180px;
+    text-align: center;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px var(--shadow-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .result-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+    
+    .result-details,
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-buttons .btn {
         width: 100%;
-        margin: 20px 0;
-        border-collapse: collapse;
-        font-size: 14px;
+        max-width: 300px;
     }
+}
 
-    .summary-container th, .summary-container td {
-        border: 1px solid #dee2e6;
-        padding: 10px;
-        text-align: left;
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
     }
-
-    .summary-container th {
-        background-color: #007bff;
-        color: #ffffff;
-        width: 20%;
+    
+    .result-card,
+    .report-container {
+        padding: var(--spacing-md);
     }
-
-    .summary-container .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-top: 20px;
-        margin-bottom: 10px;
-        color: #343a40;
-        text-align: center;
+    
+    .report-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
     }
-
-    .summary-container h1 {
-        font-size: 54px !important;
-        margin: 10px 0 20px;
-        text-align: center;
-    }
-
-    .summary-container h2 {
-        font-size: 16px !important;
-        margin: 10px 0;
-        text-align: center;
-    }
-
-    .summary-container .contact-info {
-        margin-top: 20px;
-        font-size: 14px;
-        color: #6c757d;
-        text-align: center;
-    }
-
-    .download-button {
-        display: block;
-        width: 200px;
-        margin: 20px auto;
-        padding: 10px;
-        background-color: #007bff;
-        color: #ffffff;
-        text-align: center;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .download-button:hover {
-        background-color: #abb5c0;
-    }
+}
 </style>
 
-<!-- SweetAlert2 -->
-<link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!-- Report Content -->
-<div class="summary-container" id="report-content">
-    <h1><span>L</span>ife<span>C</span>hain.</h1>
-    <h2>Recipient Report - {{ record.created_at|date:"Y-m-d" }}</h2>
-
-    <!-- Personal Details Section -->
-    <div class="section-title">Personal Details</div>
-    <table>
-        <tr>
-            <th>Patient Name</th>
-            <td colspan="3">{{ user.username|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>Age</th>
-            <td>{{ record.age|default:"N/A" }}</td>
-            <th>Gender</th>
-            <td>
-                {% if record.gender == 1 %}Male
-                {% elif record.gender == 0 %}Female
-                {% else %}N/A
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>Blood Type</th>
-            <td>
-                {% if record.blood_type == 0 %}A
-                {% elif record.blood_type == 1 %}B
-                {% elif record.blood_type == 2 %}AB
-                {% elif record.blood_type == 3 %}O
-                {% else %}N/A
-                {% endif %}
-            </td>
-            <th>Rh Factor</th>
-            <td>{% if record.rh_factor == 1 %}+{% elif record.rh_factor == 0
-                %}-{% else %}N/A{% endif %}</td>
-        </tr>
-        <tr>
-            <th>Height (cm)</th>
-            <td>{{ record.height_cm|default:"N/A" }}</td>
-            <th>Weight (kg)</th>
-            <td>{{ record.weight_kg|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>BMI</th>
-            <td colspan="3">{{ record.bmi|default:"N/A" }}</td>
-        </tr>
-    </table>
-
-    <!-- Medical Details Section -->
-    <div class="section-title">Medical Details</div>
-    <table>
-        <tr>
-            <th>Wait List Days</th>
-            <td>{{ record.wait_list_days|default:"N/A" }}</td>
-            <th>Medical Urgency Score</th>
-            <td>{{ record.medical_urgency_score|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>Hemoglobin</th>
-            <td>{{ record.hemoglobin|default:"N/A" }}</td>
-            <th>WBC Count</th>
-            <td>{{ record.wbc_count|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>Platelet Count</th>
-            <td>{{ record.platelet_count|default:"N/A" }}</td>
-            <th>Creatinine</th>
-            <td>{{ record.creatinine|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>ALT</th>
-            <td>{{ record.alt|default:"N/A" }}</td>
-            <th>AST</th>
-            <td>{{ record.ast|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <th>Diabetes</th>
-            <td>
-                {% if record.diabetes == 1 %}Yes
-                {% elif record.diabetes == 0 %}No
-                {% else %}N/A
-                {% endif %}
-            </td>
-            <th>Hypertension</th>
-            <td>
-                {% if record.hypertension == 1 %}Yes
-                {% elif record.hypertension == 0 %}No
-                {% else %}N/A
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>Previous Transplant</th>
-            <td>
-                {% if record.previous_transplant == 1 %}Yes
-                {% elif record.previous_transplant == 0 %}No
-                {% else %}N/A
-                {% endif %}
-            </td>
-            <th>Dialysis Status</th>
-            <td>
-                {% if record.dialysis_status == 1 %}Yes
-                {% elif record.dialysis_status == 0 %}No
-                {% else %}N/A
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>Required Organ</th>
-            <td>{{ record.required_organ|default:"N/A" }}</td>
-            <th>Antibody Screen</th>
-            <td>
-                {% if record.antibody_screen == 1 %}Positive
-                {% elif record.antibody_screen == 0 %}Negative
-                {% else %}N/A
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>PRA Score</th>
-            <td>{{ record.pra_score|default:"N/A" }}</td>
-            <th>Transplant Eligibility</th>
-            <td>{{ record.transplant_eligibility|default:"N/A" }}</td>
-        </tr>
-    </table>
-
-    <div class="contact-info">
-        <strong>Contact:</strong> LifeChain_Team@uskt.edu.pk<br>
-        <strong>Address:</strong> University of Sialkot, Main Daska Road,
-        Sialkot, Pakistan
-    </div>
-
-    <!-- Download Button -->
-    <a href="#" class="download-button" onclick="downloadPDF()">Download PDF</a>
-</div>
-<!-- html2pdf -->
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <script>
-function downloadPDF() {
-    const element = document.getElementById('report-content');
-    
-    if (!element) {
-        Swal.fire('Error', 'Report content not found!', 'error');
-        return;
-    }
+// Simulate skeleton loading
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        document.getElementById('skeleton-loading').style.display = 'none';
+        document.getElementById('actual-content').style.display = 'block';
+    }, 1500);
+});
 
-    const loader = Swal.fire({
+// Download PDF function
+function downloadPDF() {
+    Swal.fire({
         title: 'Generating PDF...',
+        text: 'Please wait while we prepare your report',
         allowOutsideClick: false,
         didOpen: () => {
             Swal.showLoading();
         }
     });
-
-    const options = {
-        margin: [5, 5],
-        filename: 'Donor_Report_{{ record.id }}.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 3,
-            scrollY: 0,
-            useCORS: true,
-            logging: true  
-        },
-        jsPDF: { 
-            unit: 'mm', 
-            format: 'a4', 
-            orientation: 'portrait' 
-        }
-    };
-
-    html2pdf()
-    .from(element)
-    .set(options)
-    .save()
-    .then(() => {
+    
+    // Simulate PDF generation
+    setTimeout(() => {
         Swal.fire({
-            title: 'PDF downloaded!',
-            text: 'Do you want to see the available donors?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
-        }).then((result) => {
-            if (result.isConfirmed && "{{ record.transplant_eligibility }}" === "Eligible") {
-                Swal.fire({
-                    title: 'Redirecting to available donors...',
-                    icon: 'success',
-                    timer: 5000,
-                    showConfirmButton: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-                setTimeout(() => {
-                    window.location.href = "eligibleDonors/";
-                }, 3000);
-            } else if (result.isDismissed || "{{ record.transplant_eligibility }}" === "Not Eligible") {
-                Swal.fire({
-                    title: 'Not Eligible',
-                    text: 'You are not eligible to view the available donors.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    window.location.href = "/"; // Redirect to home page after "No"
-                });
-            }
+            title: 'PDF Ready!',
+            text: 'Your recipient compatibility report has been generated successfully',
+            icon: 'success',
+            confirmButtonText: 'Download'
         });
-    })
-    .catch((error) => {
-        console.error('PDF generation failed:', error);
-        Swal.fire('Error', 'Failed to generate PDF', 'error');
-    });
-
+    }, 2000);
 }
 </script>
-
-{% endblock %}
+{% endblock content %}

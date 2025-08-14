@@ -1,76 +1,180 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}
-  LifeChain
+Become a Donor - LifeChain
 {% endblock title %}
 
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+    <div class="container">
+        <nav class="breadcrumb-nav">
+            <div class="breadcrumb-item">
+                <a href="{% url 'index' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Become a Donor</span>
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock breadcrumb %}
+
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'style.css' %}" />
-
-
-
-<section id="home" class="home">
-    <div class="row">
-         <div class="images">
-            <img src="{% static 'home.png' %}" alt="">
-        </div> 
-
-        
-        <div class="content">
-            <h1><span>Be</span> A <span>Donor</span> and <span> Save</span> Life.</h1>
-            <p>A Selfless act, an endless ripple of Hopes.</p>
-            <!-- <a href="#"><button onclick="window.location.href='{% url 'donorpridict' %}'" class="button">Be a Donor</button></a> -->
-            <a href="#"><button onclick="window.location.href='{% url 'donorpridict' %}'" class="button">Compatibility</button></a>
-        </div>
-    </div>
-</section>
-<section id="about" class="about">
-    <h1 class="heading">Transforming Lives Through Donation</h1>
-    <div class="box-container">
-        <div class="box">
-            <div class="images">
-                <img src="{% static 'donorArtical.jpg' %}" alt="">
-            </div>
-            <div class="content">
-                <h3>Why Become a Donor?</h3>
-                <p>Becoming a kidney donor is a life-changing decision that offers hope to those in need. By choosing to donate, you have the power to save someone's life and give them a second chance to live fully. Your generosity can create a profound and positive impact on families affected by kidney disease, bringing relief and joy to those who are struggling. Moreover, your selfless act can inspire others to follow your example, fostering a culture of compassion and creating a healthier, more connected society.</p>
-            </div>
-        </div>
-        <div class="box">
-            <div class="images">
-                <img src="{% static 'DonorArtical2.jpg' %}" alt="">
-            </div>
-            <div class="content">
-                <h3>Benefits of Donating</h3>
-                <p>Donating a kidney is an extraordinary way to transform lives, giving recipients the opportunity to lead healthy and fulfilling lives. For those battling kidney disease, your donation is more than a gift—it’s a lifeline that restores their ability to enjoy everyday moments with their loved ones and pursue their dreams. As a donor, you will receive the highest level of medical support, ensuring your health and well-being are prioritized throughout the entire process.</p>
-            </div>
-        </div>
-        
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="text-primary">Be</span> A <span
+                    class="text-primary">Donor</span> and
+                <span class="text-primary">Save</span> Life
+            </h1>
+            <p class="hero-subtitle">
+                A Selfless act, an endless ripple of Hopes.
+            </p>
+            <div class="hero-buttons">
+                <a href="{% url 'donorpridict' %}"
+                    class="btn btn-primary btn-lg">
+                    <i class="fas fa-heart"></i>
+                    Check Compatibility
+                </a>
+                <a href="{% url 'about' %}"
+                    class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-info-circle"></i>
+                    Learn More
+                </a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- <section id="contact" class="contact">
-    <h1 class="heading">contact us</h1>
-    <h3 class="title">you can talk to us any times,</h3>
-    <div class="row">
-        <div class="images">
-            <img src="{% static 'form.png' %}" alt="">
+<!-- About Donation Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Transforming Lives Through Donation</h2>
         </div>
-        <div class="form-container">
-            <input type="text" placeholder="full name">
-            <input type="email" placeholder="enter your email">
-            <input type="number" placeholder="phone number">
-            <textarea cols="30" rows="10"></textarea>
-            <input type="submit" value="send">
+
+        <div class="grid grid-2">
+            <div class="card feature-card">
+                <div class="text-center mb-4">
+                    <img src="{% static 'donorArtical.jpg' %}"
+                        alt="Why Become a Donor"
+                        class="img-fluid rounded shadow"
+                        style="max-width: 100%; height: auto;">
+                </div>
+                <h3 class="feature-title">Why Become a Donor?</h3>
+                <p class="feature-description">
+                    Becoming a kidney donor is a life-changing decision that
+                    offers hope to those in need.
+                    By choosing to donate, you have the power to save someone's
+                    life and give them a second
+                    chance to live fully. Your generosity can create a profound
+                    and positive impact on families
+                    affected by kidney disease, bringing relief and joy to those
+                    who are struggling. Moreover,
+                    your selfless act can inspire others to follow your example,
+                    fostering a culture of compassion
+                    and creating a healthier, more connected society.
+                </p>
+            </div>
+
+            <div class="card feature-card">
+                <div class="text-center mb-4">
+                    <img src="{% static 'DonorArtical2.jpg' %}"
+                        alt="Benefits of Donating"
+                        class="img-fluid rounded shadow"
+                        style="max-width: 100%; height: auto;">
+                </div>
+                <h3 class="feature-title">Benefits of Donating</h3>
+                <p class="feature-description">
+                    Donating a kidney is an extraordinary way to transform
+                    lives, giving recipients the opportunity
+                    to lead healthy and fulfilling lives. For those battling
+                    kidney disease, your donation is more
+                    than a gift—it's a lifeline that restores their ability to
+                    enjoy everyday moments with their
+                    loved ones and pursue their dreams. As a donor, you will
+                    receive the highest level of medical
+                    support, ensuring your health and well-being are prioritized
+                    throughout the entire process.
+                </p>
+            </div>
         </div>
     </div>
-</section> -->
+</section>
 
+<!-- Donation Process Section -->
+<section class="section" style="background-color: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-title">
+            <h2>How Donation Works</h2>
+        </div>
 
+        <div class="grid grid-3">
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h3 class="feature-title">1. Assessment</h3>
+                <p class="feature-description">
+                    Complete a comprehensive health assessment to determine your
+                    eligibility
+                    and ensure the safety of both you and the recipient.
+                </p>
+            </div>
 
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3 class="feature-title">2. Medical Evaluation</h3>
+                <p class="feature-description">
+                    Undergo thorough medical testing and consultations with our
+                    expert
+                    medical team to prepare for the donation process.
+                </p>
+            </div>
+
+            <div class="card feature-card text-center">
+                <div class="feature-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="feature-title">3. Donation</h3>
+                <p class="feature-description">
+                    The donation procedure is performed by skilled surgeons
+                    using
+                    minimally invasive techniques for optimal recovery.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2>Ready to Make a Difference?</h2>
+            <p class="mb-4">Start your journey as a kidney donor today and help
+                save lives.</p>
+            <div class="d-flex justify-center gap-3">
+                <a href="{% url 'donorpridict' %}"
+                    class="btn btn-primary btn-lg">
+                    <i class="fas fa-heart"></i>
+                    Check Compatibility
+                </a>
+                <a href="{% url 'contact' %}"
+                    class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-envelope"></i>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock content %}

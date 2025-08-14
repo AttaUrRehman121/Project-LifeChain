@@ -83,6 +83,39 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Home Button */
+.home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 50px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.home-button:hover {
+  background: var(--bg-secondary);
+  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-medium);
+}
+
+.home-button svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-dark);
+  transition: color 0.3s ease;
+}
+
+.home-button:hover svg {
+  color: var(--primary-blue);
+}
+
 /* Theme Toggle */
 .theme-toggle {
   position: fixed;
