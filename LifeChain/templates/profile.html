@@ -30,20 +30,22 @@ Profile - LifeChain
     <div class="profile-avatar">
       <div class="avatar-circle">
         <i class="fas fa-user"></i>
-      </div>
+    </div>
       <div class="profile-title">
         <h1>{{ user.username }}</h1>
-        <span class="role-badge role-{{ user.role|lower }}">{{ user.role
-          }}</span>
-      </div>
-    </div>
+        <span class="role-badge role-{{ user.role|lower }}">
+          {{ user.role|default:"User" }}
+        </span>
   </div>
-</div>
+        </div>
+        </div>
+        </div>
 
 <!-- Profile Content -->
 <div class="profile-container">
   <div class="container">
     <div class="profile-layout">
+
       <!-- Left Sidebar -->
       <div class="profile-sidebar">
         <!-- Personal Info Card -->
@@ -51,44 +53,46 @@ Profile - LifeChain
           <div class="card-header">
             <i class="fas fa-user-circle"></i>
             <h3>Personal Info</h3>
-          </div>
+        </div>
           <div class="info-list">
             <div class="info-item">
               <i class="fas fa-envelope"></i>
-              <span>{{ user.email }}</span>
-            </div>
+              <span>{{ user.email|default:"Not provided" }}</span>
+        </div>
             <div class="info-item">
               <i class="fas fa-phone"></i>
               <span>{{ user.contact|default:"Not provided" }}</span>
-            </div>
+        </div>
             <div class="info-item">
               <i class="fas fa-flag"></i>
               <span>{{ user.nationality|default:"Not specified" }}</span>
-            </div>
+        </div>
             <div class="info-item">
               <i class="fas fa-map-marker-alt"></i>
               <span>{{ user.address|default:"Not provided" }}</span>
-            </div>
+        </div>
             <div class="info-item">
               <i class="fas fa-calendar"></i>
               <span>Joined {{ user.date_joined|date:"M Y" }}</span>
             </div>
+
             {% if user.userprofile and user.userprofile.wallet_address %}
             <div class="info-item wallet-item">
               <i class="fas fa-wallet"></i>
               <div class="wallet-info">
                 <span class="wallet-label">Wallet Address</span>
-                <code class="wallet-address">{{
-                  user.userprofile.wallet_address|truncatechars:20 }}</code>
-                <button class="copy-btn"
-                  onclick="navigator.clipboard.writeText('{{ user.userprofile.wallet_address }}')"
-                  title="Copy">
-                  <i class="fas fa-copy"></i>
-                </button>
-              </div>
+                <code class="wallet-address">
+                  {{ user.userprofile.wallet_address|truncatechars:20 }}
+                </code>
+              <button class="copy-btn"
+                onclick="navigator.clipboard.writeText('{{ user.userprofile.wallet_address }}')"
+                title="Copy">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
             </div>
             {% endif %}
-          </div>
+        </div>
         </div>
 
         <!-- Quick Actions -->
@@ -102,23 +106,24 @@ Profile - LifeChain
               <i class="fas fa-home"></i>
               <span>Home</span>
             </a>
-            {% if user.role == 'recipient' %}
+            {% if user.role|lower == 'recipient' %}
             <a href="{% url 'eligibleDdonors' %}" class="action-btn">
               <i class="fas fa-search"></i>
               <span>Find Donors</span>
             </a>
-            {% endif %}
+        {% endif %}
             <a href="{% url 'contact' %}" class="action-btn">
               <i class="fas fa-headset"></i>
               <span>Support</span>
             </a>
           </div>
-        </div>
       </div>
+    </div>
 
       <!-- Main Content -->
       <div class="profile-main">
-        {% if donor %}
+
+    {% if donor %}
         <!-- Donor Dashboard -->
         <div class="dashboard-section">
           <h2><i class="fas fa-heartbeat"></i> Donor Dashboard</h2>
@@ -132,51 +137,53 @@ Profile - LifeChain
               <div class="status-info">
                 <h3>Eligibility Status</h3>
                 <span
-                  class="status-value {{ donor.eligibility|lower|cut:' ' }}">{{
-                  donor.eligibility }}</span>
+                  class="status-value {{ donor.eligibility|default:'unknown'|lower|cut:' ' }}">
+                  {{ donor.eligibility|default:"Not Available" }}
+                </span>
               </div>
             </div>
             <div class="status-details">
               <div class="detail-grid">
                 <div class="detail-item">
                   <span class="detail-label">Organ Type</span>
-                  <span class="detail-value">{{ donor.organ_type }}</span>
+                  <span class="detail-value">{{ donor.organ_type|default:"N/A"
+                    }}</span>
                 </div>
                 <div class="detail-item">
                   <span class="detail-label">Blood Type</span>
-                  <span class="detail-value">{{ donor.blood_type }}{{
-                    donor.rh_factor }}</span>
+                  <span class="detail-value">
+                    {{ donor.blood_type|default:"?" }}{{
+                    donor.rh_factor|default:"" }}
+                  </span>
                 </div>
                 <div class="detail-item">
                   <span class="detail-label">Age</span>
-                  <span class="detail-value">{{ donor.age }} years</span>
+                  <span class="detail-value">{{ donor.age|default:"N/A" }}
+                    years</span>
                 </div>
                 <div class="detail-item">
                   <span class="detail-label">Gender</span>
-                  <span class="detail-value">{{ donor.gender }}</span>
+                  <span class="detail-value">{{ donor.gender|default:"N/A"
+                    }}</span>
                 </div>
               </div>
-            </div>
-          </div>
+      </div>
+    </div>
 
           <!-- Allocation Status -->
-          {% if donor_allocation %}
+      {% if donor_allocation %}
           <div class="status-card allocation-card">
             <div class="status-header">
-              <div class="status-icon">
-                <i class="fas fa-user-plus"></i>
-              </div>
+              <div class="status-icon"><i class="fas fa-user-plus"></i></div>
               <div class="status-info">
                 <h3>Allocation Status</h3>
                 <span class="status-value allocated">Allocated to
                   Recipient</span>
-              </div>
-            </div>
+        </div>
+        </div>
             <div class="allocation-details">
               <div class="recipient-info">
-                <div class="recipient-avatar">
-                  <i class="fas fa-user"></i>
-                </div>
+                <div class="recipient-avatar"><i class="fas fa-user"></i></div>
                 <div class="recipient-details">
                   <h4>{{ donor_allocation.recipient.user.username }}</h4>
                   <p>Recipient</p>
@@ -187,35 +194,33 @@ Profile - LifeChain
                 </div>
               </div>
               <div class="verification-status">
-                {% if donor_allocation.verification_status %}
+            {% if donor_allocation.verification_status %}
                 <span class="verification-badge verified">✅ Verified</span>
-                {% else %}
+            {% else %}
                 <span class="verification-badge pending">⏳ Pending
                   Verification</span>
-                {% endif %}
+            {% endif %}
               </div>
-            </div>
-            {% if donor_allocation.transaction_hash %}
+        </div>
+        {% if donor_allocation.transaction_hash %}
             <div class="transaction-info">
               <span class="tx-label">Transaction Hash:</span>
-              <div class="hash-container">
+            <div class="hash-container">
                 <code>{{ donor_allocation.transaction_hash|truncatechars:25
                   }}</code>
-                <button class="copy-btn"
-                  onclick="navigator.clipboard.writeText('{{ donor_allocation.transaction_hash }}')"
-                  title="Copy">
-                  <i class="fas fa-copy"></i>
-                </button>
-              </div>
+              <button class="copy-btn"
+                onclick="navigator.clipboard.writeText('{{ donor_allocation.transaction_hash }}')"
+                title="Copy">
+                <i class="fas fa-copy"></i>
+              </button>
             </div>
-            {% endif %}
-          </div>
-          {% else %}
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
           <div class="status-card no-allocation">
             <div class="status-header">
-              <div class="status-icon">
-                <i class="fas fa-clock"></i>
-              </div>
+              <div class="status-icon"><i class="fas fa-clock"></i></div>
               <div class="status-info">
                 <h3>Allocation Status</h3>
                 <span class="status-value not-allocated">Not Allocated
@@ -224,11 +229,11 @@ Profile - LifeChain
             </div>
             <p>You will be notified when a recipient is matched with you.</p>
           </div>
-          {% endif %}
-        </div>
-        {% endif %}
+      {% endif %}
+    </div>
+    {% endif %}
 
-        {% if recipient %}
+    {% if recipient %}
         <!-- Recipient Dashboard -->
         <div class="dashboard-section">
           <h2><i class="fas fa-heartbeat"></i> Recipient Dashboard</h2>
@@ -236,48 +241,48 @@ Profile - LifeChain
           <!-- Medical Profile Status -->
           <div class="status-card eligibility-card">
             <div class="status-header">
-              <div class="status-icon">
-                <i class="fas fa-stethoscope"></i>
-              </div>
+              <div class="status-icon"><i class="fas fa-stethoscope"></i></div>
               <div class="status-info">
                 <h3>Medical Profile Status</h3>
                 <span
-                  class="status-value {{ recipient.transplant_eligibility|lower|cut:' ' }}">{{
-                  recipient.transplant_eligibility }}</span>
+                  class="status-value {{ recipient.transplant_eligibility|default:'unknown'|lower|cut:' ' }}">
+                  {{ recipient.transplant_eligibility|default:"Not Available" }}
+                </span>
               </div>
             </div>
             <div class="status-details">
               <div class="detail-grid">
                 <div class="detail-item">
                   <span class="detail-label">Required Organ</span>
-                  <span class="detail-value">{{ recipient.required_organ
-                    }}</span>
+                  <span class="detail-value">{{
+                    recipient.required_organ|default:"N/A" }}</span>
                 </div>
                 <div class="detail-item">
                   <span class="detail-label">Blood Type</span>
-                  <span class="detail-value">{{ recipient.blood_type }}{% if
-                    recipient.rh_factor == 1 %}+{% else %}-{% endif %}</span>
+                  <span class="detail-value">
+                    {{ recipient.blood_type|default:"?" }}
+                    {% if recipient.rh_factor == 1 %}+{% elif recipient.rh_factor == 0 %}-{% endif %}
+                  </span>
                 </div>
                 <div class="detail-item">
                   <span class="detail-label">Age</span>
-                  <span class="detail-value">{{ recipient.age }} years</span>
+                  <span class="detail-value">{{ recipient.age|default:"N/A" }}
+                    years</span>
                 </div>
                 <div class="detail-item">
                   <span class="detail-label">Wait List</span>
-                  <span class="detail-value">{{ recipient.wait_list_days }}
-                    days</span>
+                  <span class="detail-value">{{
+                    recipient.wait_list_days|default:"0" }} days</span>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Donor Allocation Status -->
-          {% if recipient_allocations %}
+      {% if recipient_allocations %}
           <div class="status-card allocation-card">
             <div class="status-header">
-              <div class="status-icon">
-                <i class="fas fa-user-plus"></i>
-              </div>
+              <div class="status-icon"><i class="fas fa-user-plus"></i></div>
               <div class="status-info">
                 <h3>Donor Allocation Status</h3>
                 <span class="status-value allocated">Donors Allocated</span>
@@ -285,26 +290,25 @@ Profile - LifeChain
             </div>
             <div class="allocations-details">
               <div class="allocations-list">
-                {% for alloc in recipient_allocations %}
+            {% for alloc in recipient_allocations %}
                 <div class="allocation-item">
                   <div class="donor-info">
-                    <div class="donor-avatar">
-                      <i class="fas fa-user"></i>
-                    </div>
+                    <div class="donor-avatar"><i class="fas fa-user"></i></div>
                     <div class="donor-details">
                       <h4>{{ alloc.donor.username }}</h4>
                       <p>{{ alloc.donor.organ_type }} Donor</p>
-                      <span class="blood-type">{{ alloc.donor.blood_type }}{{
-                        alloc.donor.rh_factor }}</span>
+                      <span class="blood-type">
+                        {{ alloc.donor.blood_type }}{{ alloc.donor.rh_factor }}
+                      </span>
                     </div>
                   </div>
                   <div class="verification-status">
-                    {% if alloc.verification_status %}
+                {% if alloc.verification_status %}
                     <span class="verification-badge verified">✅ Verified</span>
-                    {% else %}
+                {% else %}
                     <span class="verification-badge pending">⏳ Pending
                       Verification</span>
-                    {% endif %}
+                {% endif %}
                   </div>
                 </div>
                 {% endfor %}
@@ -328,8 +332,7 @@ Profile - LifeChain
                   <div class="step-dot"></div>
                   <span>Verification</span>
                   {% if recipient_allocations.0.token_expiry and not
-                  recipient_allocations.0.verification_status %}
-                  <div class="countdown"
+                  {% if recipient_allocations.0.token_expiry and not recipient_allocations.0.verification_status %}
                     data-expiry="{{ recipient_allocations.0.token_expiry|date:'c' }}">
                     <small>Expires: {{
                       recipient_allocations.0.token_expiry|date:"M d, H:i"
@@ -341,29 +344,26 @@ Profile - LifeChain
             </div>
 
             <!-- Transaction Info -->
-            {% if recipient_allocations and
-            recipient_allocations.0.transaction_hash %}
+            {% if recipient_allocations.0.transaction_hash %}
             <div class="transaction-info">
               <span class="tx-label">Latest Transaction Hash:</span>
-              <div class="hash-container">
+                <div class="hash-container">
                 <code>{{
                   recipient_allocations.0.transaction_hash|truncatechars:25
-                  }}</code>
-                <button class="copy-btn"
+                    }}</code>
+                  <button class="copy-btn"
                   onclick="navigator.clipboard.writeText('{{ recipient_allocations.0.transaction_hash }}')"
-                  title="Copy to clipboard">
-                  <i class="fas fa-copy"></i>
-                </button>
-              </div>
+                    title="Copy">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
             </div>
-            {% endif %}
-          </div>
-          {% else %}
+                {% endif %}
+      </div>
+      {% else %}
           <div class="status-card no-allocation">
             <div class="status-header">
-              <div class="status-icon">
-                <i class="fas fa-clock"></i>
-              </div>
+              <div class="status-icon"><i class="fas fa-clock"></i></div>
               <div class="status-info">
                 <h3>Donor Allocation Status</h3>
                 <span class="status-value not-allocated">No Donors Allocated
@@ -379,18 +379,19 @@ Profile - LifeChain
               </a>
             </div>
           </div>
-          {% endif %}
-        </div>
-        {% endif %}
+      {% endif %}
+    </div>
+    {% endif %}
 
-      </div>
+  </div>
     </div>
   </div>
 </div>
 
 <style>
-/* Modern Profile Design */
+/* Modern Profile Design with Dark/Light Theme Support */
 :root {
+  /* Light Theme Colors */
   --profile-primary: #6366f1;
   --profile-secondary: #8b5cf6;
   --profile-success: #10b981;
@@ -400,8 +401,40 @@ Profile - LifeChain
   --profile-light: #f8fafc;
   --profile-dark: #1e293b;
   --profile-border: #e2e8f0;
+  --profile-bg: #ffffff;
+  --profile-bg-secondary: #f1f5f9;
+  --profile-text: #1e293b;
+  --profile-text-muted: #64748b;
+  --profile-card-bg: #ffffff;
+  --profile-hover: #f8fafc;
   --profile-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --profile-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Dark Theme Colors */
+[data-theme="dark"] {
+  --profile-primary: #818cf8;
+  --profile-secondary: #a78bfa;
+  --profile-success: #34d399;
+  --profile-warning: #fbbf24;
+  --profile-danger: #f87171;
+  --profile-info: #60a5fa;
+  --profile-light: #1e293b;
+  --profile-dark: #f8fafc;
+  --profile-border: #334155;
+  --profile-bg: #0f172a;
+  --profile-bg-secondary: #1e293b;
+  --profile-text: #f8fafc;
+  --profile-text-muted: #94a3b8;
+  --profile-card-bg: #1e293b;
+  --profile-hover: #334155;
+  --profile-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --profile-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+}
+
+/* Smooth Theme Transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Profile Header */
@@ -464,7 +497,7 @@ Profile - LifeChain
 
 /* Profile Layout */
 .profile-container {
-  background: var(--profile-light);
+  background: var(--profile-bg);
   min-height: calc(100vh - 200px);
   padding: 2rem 0;
 }
@@ -485,7 +518,7 @@ Profile - LifeChain
 }
 
 .sidebar-card {
-  background: white;
+  background: var(--profile-card-bg);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: var(--profile-shadow);
@@ -510,7 +543,7 @@ Profile - LifeChain
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--profile-dark);
+  color: var(--profile-text);
 }
 
 /* Info List */
@@ -525,14 +558,14 @@ Profile - LifeChain
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: var(--profile-light);
+  background: var(--profile-bg-secondary);
   border-radius: 0.75rem;
   border: 1px solid var(--profile-border);
   transition: all 0.2s ease;
 }
 
 .info-item:hover {
-  background: white;
+  background: var(--profile-hover);
   box-shadow: var(--profile-shadow);
   transform: translateY(-1px);
 }
@@ -544,7 +577,7 @@ Profile - LifeChain
 }
 
 .info-item span {
-  color: var(--profile-dark);
+  color: var(--profile-text);
   font-size: 0.875rem;
   font-weight: 500;
 }
@@ -564,13 +597,13 @@ Profile - LifeChain
 
 .wallet-label {
   font-size: 0.75rem;
-  color: var(--profile-dark);
+  color: var(--profile-text-muted);
   font-weight: 600;
 }
 
 .wallet-address {
-  background: var(--profile-dark);
-  color: white;
+  background: var(--profile-bg);
+  color: var(--profile-text);
   padding: 0.5rem;
   border-radius: 0.5rem;
   font-family: 'Courier New', monospace;
@@ -578,6 +611,7 @@ Profile - LifeChain
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border: 1px solid var(--profile-border);
 }
 
 .copy-btn {
@@ -606,10 +640,10 @@ Profile - LifeChain
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background: var(--profile-light);
+  background: var(--profile-bg-secondary);
   border: 1px solid var(--profile-border);
   border-radius: 0.75rem;
-  color: var(--profile-dark);
+  color: var(--profile-text);
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
@@ -617,7 +651,7 @@ Profile - LifeChain
 }
 
 .action-btn:hover {
-  background: white;
+  background: var(--profile-hover);
   box-shadow: var(--profile-shadow);
   transform: translateY(-1px);
   color: var(--profile-primary);
@@ -643,7 +677,7 @@ Profile - LifeChain
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--profile-dark);
+  color: var(--profile-text);
 }
 
 .dashboard-section h2 i {
@@ -654,12 +688,12 @@ Profile - LifeChain
   margin: 0 0 1rem 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--profile-dark);
+  color: var(--profile-text);
 }
 
 /* Status Cards */
 .status-card {
-  background: white;
+  background: var(--profile-card-bg);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: var(--profile-shadow);
@@ -710,7 +744,7 @@ Profile - LifeChain
   margin: 0 0 0.5rem 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--profile-dark);
+  color: var(--profile-text);
 }
 
 .status-value {
@@ -762,7 +796,7 @@ Profile - LifeChain
 
 .detail-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--profile-text-muted);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -770,7 +804,7 @@ Profile - LifeChain
 
 .detail-value {
   font-size: 0.875rem;
-  color: var(--profile-dark);
+  color: var(--profile-text);
   font-weight: 600;
 }
 
@@ -805,13 +839,13 @@ Profile - LifeChain
   margin: 0 0 0.25rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--profile-dark);
+  color: var(--profile-text);
 }
 
 .recipient-details p, .donor-info p {
   margin: 0 0 0.25rem 0;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--profile-text-muted);
 }
 
 .contact-info {
@@ -823,12 +857,12 @@ Profile - LifeChain
 .blood-type {
   display: inline-block;
   padding: 0.25rem 0.5rem;
-  background: var(--profile-light);
+  background: var(--profile-bg-secondary);
   border: 1px solid var(--profile-border);
   border-radius: 0.5rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--profile-dark);
+  color: var(--profile-text);
 }
 
 .verification-status {
@@ -865,7 +899,7 @@ Profile - LifeChain
 .tx-label {
   display: block;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--profile-text-muted);
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
@@ -874,7 +908,7 @@ Profile - LifeChain
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--profile-light);
+  background: var(--profile-bg-secondary);
   padding: 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid var(--profile-border);
@@ -883,7 +917,7 @@ Profile - LifeChain
 .hash-container code {
   font-family: 'Courier New', monospace;
   font-size: 0.75rem;
-  color: var(--profile-dark);
+  color: var(--profile-text);
   flex: 1;
 }
 
@@ -892,11 +926,11 @@ Profile - LifeChain
   margin: 1.5rem 0 1rem 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--profile-dark);
+  color: var(--profile-text);
 }
 
 .allocation-card {
-  background: white;
+  background: var(--profile-card-bg);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: var(--profile-shadow);
@@ -948,37 +982,37 @@ Profile - LifeChain
  }
 
  .allocation-item {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   padding: 1rem;
-   background: var(--profile-light);
-   border-radius: 0.75rem;
-   border: 1px solid var(--profile-border);
-   transition: all 0.2s ease;
- }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--profile-bg-secondary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--profile-border);
+  transition: all 0.2s ease;
+}
 
- .allocation-item:hover {
-   background: white;
-   box-shadow: var(--profile-shadow);
-   transform: translateY(-1px);
- }
+.allocation-item:hover {
+  background: var(--profile-hover);
+  box-shadow: var(--profile-shadow);
+  transform: translateY(-1px);
+}
 
  .progress-overview {
-   margin: 1.5rem 0;
-   padding: 1.5rem;
-   background: var(--profile-light);
-   border-radius: 0.75rem;
-   border: 1px solid var(--profile-border);
- }
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--profile-bg-secondary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--profile-border);
+}
 
- .progress-overview h4 {
-   margin: 0 0 1rem 0;
-   font-size: 1rem;
-   font-weight: 600;
-   color: var(--profile-dark);
+.progress-overview h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--profile-text);
   text-align: center;
- }
+}
 
  .action-section {
    margin-top: 1.5rem;
@@ -1006,15 +1040,15 @@ Profile - LifeChain
 
  /* Progress Steps */
  .progress-steps {
-   display: flex;
-   align-items: center;
-   gap: 1rem;
-   margin: 1rem 0;
-   padding: 1rem;
-   background: var(--profile-light);
-   border-radius: 0.75rem;
-   border: 1px solid var(--profile-border);
- }
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--profile-bg-secondary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--profile-border);
+}
 
 .step {
   display: flex;
@@ -1052,7 +1086,7 @@ Profile - LifeChain
 
 .step span {
   font-size: 0.75rem;
-  color: var(--profile-dark);
+  color: var(--profile-text);
   font-weight: 500;
 }
 
@@ -1079,14 +1113,14 @@ Profile - LifeChain
   font-size: 0.75rem;
   font-weight: 500;
   border: 1px solid var(--profile-border);
-  background: white;
-  color: var(--profile-dark);
+  background: var(--profile-card-bg);
+  color: var(--profile-text);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .allocation-actions .btn:hover {
-  background: var(--profile-light);
+  background: var(--profile-hover);
   transform: translateY(-1px);
 }
 
@@ -1106,7 +1140,7 @@ Profile - LifeChain
 }
 
 .no-allocations p {
-  color: #6b7280;
+  color: var(--profile-text-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -1209,6 +1243,123 @@ Profile - LifeChain
   .dashboard-section h2 {
     font-size: 1.25rem;
   }
+}
+
+/* Dark Theme Specific Adjustments */
+[data-theme="dark"] .profile-header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+[data-theme="dark"] .avatar-circle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .role-badge {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .info-item {
+  background: #334155;
+  border-color: #475569;
+}
+
+[data-theme="dark"] .wallet-address {
+  background: #0f172a;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .sidebar-card,
+[data-theme="dark"] .status-card,
+[data-theme="dark"] .allocation-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .info-item:hover,
+[data-theme="dark"] .allocation-item:hover,
+[data-theme="dark"] .action-btn:hover {
+  background: #334155;
+}
+
+[data-theme="dark"] .progress-overview,
+[data-theme="dark"] .progress-steps {
+  background: #334155;
+  border-color: #475569;
+}
+
+/* Light Theme Specific Adjustments */
+[data-theme="light"] .profile-header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+[data-theme="light"] .info-item {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .wallet-address {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Focus States for Accessibility */
+.action-btn:focus,
+.copy-btn:focus {
+  outline: 2px solid var(--profile-primary);
+  outline-offset: 2px;
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--profile-border);
+  border-top: 2px solid var(--profile-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Hover Effects */
+.sidebar-card:hover,
+.status-card:hover,
+.allocation-card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection Colors */
+::selection {
+  background: var(--profile-primary);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--profile-primary);
+  color: white;
 }
 </style>
 
@@ -1323,237 +1474,6 @@ Profile - LifeChain
   `;
   document.head.appendChild(style);
   </script>
-{% endblock content %}
-
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}
-Profile - LifeChain
-{% endblock title %}
-
-{% block breadcrumb %}
-<section class="breadcrumb-section">
-  <div class="container">
-    <nav class="breadcrumb-nav">
-      <div class="breadcrumb-item">
-        <a href="{% url 'index' %}" class="breadcrumb-link">
-          <i class="fas fa-home"></i>
-          Home
-        </a>
-      </div>
-      <div class="breadcrumb-item">
-        <span class="breadcrumb-current">User Profile</span>
-      </div>
-    </nav>
-  </div>
-</section>
-{% endblock breadcrumb %}
-
-{% block content %}
-<!-- Profile Hero Section -->
-<section class="profile-hero">
-  <div class="container">
-    <div class="hero-content">
-      <h1 class="hero-title">User Profile</h1>
-      <p class="hero-subtitle">Manage your account and view your information</p>
-    </div>
-  </div>
-</section>
-
-<!-- Profile Content Section -->
-<section class="profile-section">
-  <div class="container">
-    <!-- Personal Information Card -->
-    <div class="profile-card">
-      <h2>Personal Information</h2>
-      <div class="profile-info">
-        <div class="profile-info-item">
-          <span class="profile-label">Name:</span>
-          <span class="profile-value">{{ user.username }}</span>
-        </div>
-        <div class="profile-info-item">
-          <span class="profile-label">Email:</span>
-          <span class="profile-value">{{ user.email }}</span>
-        </div>
-        <div class="profile-info-item">
-          <span class="profile-label">Role:</span>
-          <span class="profile-value">{{ user.role }}</span>
-        </div>
-        <div class="profile-info-item">
-          <span class="profile-label">Phone No:</span>
-          <span class="profile-value">{{ user.contact }}</span>
-        </div>
-        <div class="profile-info-item">
-          <span class="profile-label">Nationality:</span>
-          <span class="profile-value">{{ user.nationality }}</span>
-        </div>
-        <div class="profile-info-item">
-          <span class="profile-label">Address:</span>
-          <span class="profile-value">{{ user.address }}</span>
-        </div>
-        <div class="profile-info-item">
-          <span class="profile-label">Date Joined:</span>
-          <span class="profile-value">{{ user.date_joined|date:"F j, Y"
-            }}</span>
-        </div>
-        <div class="profile-info-item">
-          <span class="profile-label">Last Login:</span>
-          <span class="profile-value">{{
-            user.last_login|date:"F j, Y, g:i a"|default:"Never" }}</span>
-        </div>
-        {% if user.userprofile %}
-        <div class="profile-info-item">
-          <span class="profile-label">Wallet Address:</span>
-          <span class="profile-value">
-            {% if user.userprofile.wallet_address %}
-            <div class="hash-container">
-              <code class="transaction-hash">{{
-                user.userprofile.wallet_address|truncatechars:30 }}</code>
-              <button class="copy-btn"
-                onclick="navigator.clipboard.writeText('{{ user.userprofile.wallet_address }}')"
-                title="Copy">
-                <i class="fas fa-copy"></i>
-              </button>
-            </div>
-            {% else %}
-            <span class="no-data">Not configured</span>
-            {% endif %}
-          </span>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-
-    {% if donor %}
-    <!-- Donor Compatibility Result Card -->
-    <div class="profile-card">
-      <h2>Your Compatibility Result</h2>
-      <div class="compatibility-result">
-        <span class="result-badge">{{ donor.eligibility }}</span>
-      </div>
-    </div>
-
-    <!-- Donor Allocation Card -->
-    <div class="profile-card">
-      <h2>Allocated To Recipient</h2>
-      {% if donor_allocation %}
-      <div class="allocation-info">
-        <div class="allocation-item">
-          <span class="allocation-label">Recipient:</span>
-          <span class="allocation-value">{{
-            donor_allocation.recipient.user.username }}</span>
-        </div>
-        <div class="allocation-item">
-          <span class="allocation-label">Date:</span>
-          <span class="allocation-value">{{ donor_allocation.allocation_date
-            }}</span>
-        </div>
-        <div class="allocation-item">
-          <span class="allocation-label">Status:</span>
-          <span class="allocation-value">
-            {% if donor_allocation.verification_status %}
-            <span class="status-badge status-verified">✅ Verified</span>
-            {% else %}
-            <span class="status-badge status-pending">⏳ Pending</span>
-            {% endif %}
-          </span>
-        </div>
-        {% if donor_allocation.transaction_hash %}
-        <div class="allocation-item">
-          <span class="allocation-label">Transaction Hash:</span>
-          <span class="allocation-value">
-            <div class="hash-container">
-              <code class="transaction-hash">{{
-                donor_allocation.transaction_hash }}</code>
-              <button class="copy-btn"
-                onclick="navigator.clipboard.writeText('{{ donor_allocation.transaction_hash }}')"
-                title="Copy">
-                <i class="fas fa-copy"></i>
-              </button>
-            </div>
-          </span>
-        </div>
-        {% endif %}
-        {% if donor_allocation.recipient.user.contact %}
-        <div class="allocation-item">
-          <span class="allocation-label">Recipient Contact:</span>
-          <span class="allocation-value">{{
-            donor_allocation.recipient.user.contact }}</span>
-        </div>
-        {% endif %}
-      </div>
-      {% else %}
-      <p class="no-data">You are not allocated to any recipient yet.</p>
-      {% endif %}
-    </div>
-    {% endif %}
-
-    {% if recipient %}
-    <!-- Recipient Allocated Donors Card -->
-    <div class="profile-card">
-      <h2>Allocated Donors</h2>
-      {% if recipient_allocations %}
-      <div class="table-responsive">
-        <table class="profile-table">
-          <thead>
-            <tr>
-              <th>Donor</th>
-              <th>Organ</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Transaction Hash</th>
-              <th>Contact</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for alloc in recipient_allocations %}
-            <tr>
-              <td data-label="Donor">{{ alloc.donor.username }}</td>
-              <td data-label="Organ">{{ alloc.donor.organ_type }}</td>
-              <td data-label="Status">
-                {% if alloc.verification_status %}
-                <span class="status-badge status-verified">✅ Verified</span>
-                {% else %}
-                <span class="status-badge status-pending">⏳ Pending</span>
-                {% endif %}
-              </td>
-              <td data-label="Date">{{ alloc.allocation_date|date:"M d, Y, H:i"
-                }}</td>
-              <td data-label="Transaction Hash">
-                {% if alloc.transaction_hash %}
-                <div class="hash-container">
-                  <code class="transaction-hash">{{ alloc.transaction_hash
-                    }}</code>
-                  <button class="copy-btn"
-                    onclick="navigator.clipboard.writeText('{{ alloc.transaction_hash }}')"
-                    title="Copy">
-                    <i class="fas fa-copy"></i>
-                  </button>
-                </div>
-                {% else %}
-                <span class="no-data">-</span>
-                {% endif %}
-              </td>
-              <td data-label="Contact">
-                {% if alloc.donor.user.contact %}
-                {{ alloc.donor.user.contact }}
-                {% else %}
-                <span class="no-data">-</span>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <p class="no-data">No donors have been allocated to you yet.</p>
-      {% endif %}
-    </div>
-    {% endif %}
-  </div>
-</section>
 
 <style>
 /* Profile Page Specific Styles */
