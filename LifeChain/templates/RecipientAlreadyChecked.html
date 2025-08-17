@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Already Completed - Recipient Compatibility{% endblock title %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a
+                href="{% url 'recipientpage' %}">Recipient</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Already
+            Completed</li>
+    </ol>
+</nav>
+{% endblock breadcrumb %}
+
+{% block content %}
+<section class="already-checked-section">
+    <div class="container">
+        <div class="already-checked-container">
+            <div class="already-checked-content">
+                <div class="already-checked-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h2>Compatibility Assessment Already Completed</h2>
+                <p>"You have already completed a compatibility assessment. One assessment per user is allowed to ensure accurate results."
+                </p>
+
+                <div class="assessment-summary">
+                    <h3>Your Assessment Summary</h3>
+                    <div class="summary-grid">
+                        <div class="result-item">
+                            <span class="result-label">Assessment Date:</span>
+                            <span class="result-value">
+                                {% if record.created_at %}
+                                {{ record.created_at|date:"F d, Y" }}
+                                {% else %}
+                                Recently completed
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Required Organ:</span>
+                            <span class="summary-value">
+                                {{ record.required_organ|default:"N/A" }}
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">Eligibility
+                                Status:</span>
+                            <span class="summary-value">
+                                <span class="status-badge 
+                                    ">
+                                    {% if record.transplant_eligibility %}
+                                    {{ record.transplant_eligibility }}
+                                    {% else %}
+                                    Not Available
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">Medical Urgency:</span>
+                            <span class="summary-value">
+                                {% if record.medical_urgency_score > 7 %}
+                                High Priority
+                                {% else %}
+                                Standard Priority
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="already-checked-actions">
+                    <a href="{% url 'RecipientResultpage' %}"
+                        class="btn btn-primary">
+                        <i class="fas fa-eye"></i>
+                        View Complete Results
+                    </a>
+                    <a href="{% url 'index' %}"
+                        class="btn btn-outline-secondary">
+                        <i class="fas fa-home"></i>
+                        Go to Home Page
+                    </a>
+                </div>
+
+                <div class="info-note">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Your compatibility assessment results are stored securely
+                        and can be accessed anytime. If you need to update your
+                        information, please contact our support team.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

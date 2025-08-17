@@ -10,7 +10,7 @@
                         </a>
 
                         <!-- Navigation -->
-                        <nav class="navbar">
+                        <nav class="navbar" id="navbar">
                                 <ul class="nav-list">
                                         <li class="nav-item">
                                                 <a href="{% url 'index' %}"
@@ -34,20 +34,76 @@
                                                         class="nav-link">About</a>
                                         </li>
                                 </ul>
+
+                                <!-- Mobile Navigation Items -->
+                                <div class="mobile-nav-items">
+                                        <!-- Theme Toggle for Mobile -->
+                                        <div class="mobile-theme-toggle">
+                                                <button class="theme-toggle"
+                                                        id="mobileThemeToggle"
+                                                        title="Toggle Theme">
+                                                        <i
+                                                                class="fas fa-sun light-icon"></i>
+                                                        <i
+                                                                class="fas fa-moon dark-icon"></i>
+                                                </button>
+                                                <span>Toggle Theme</span>
+                                        </div>
+
+                                        <!-- Auth Buttons for Mobile -->
+                                        {% if user.is_authenticated %}
+                                        <div class="mobile-user-section">
+                                                <button
+                                                        class="user-btn mobile-user-btn"
+                                                        onclick="window.location.href='{% url 'profile_view' %}'">
+                                                        <i
+                                                                class="fas fa-user"></i>
+                                                        <span>{{ user.username
+                                                                }}</span>
+                                                </button>
+                                                <button
+                                                        class="logout-btn mobile-logout-btn"
+                                                        onclick="window.location.href='{% url 'logout' %}'">
+                                                        <i
+                                                                class="fas fa-sign-out-alt"></i>
+                                                        Logout
+                                                </button>
+                                        </div>
+                                        {% else %}
+                                        <div class="mobile-auth-buttons">
+                                                <button
+                                                        class="btn btn-outline-primary mobile-btn"
+                                                        onclick="window.location.href='{% url 'login' %}'">
+                                                        <i
+                                                                class="fas fa-sign-in-alt"></i>
+                                                        Login
+                                                </button>
+                                                <button
+                                                        class="btn btn-primary mobile-btn"
+                                                        onclick="window.location.href='{% url 'signup' %}'">
+                                                        <i
+                                                                class="fas fa-user-plus"></i>
+                                                        Signup
+                                                </button>
+                                        </div>
+                                        {% endif %}
+                                </div>
                         </nav>
 
                         <!-- Right Section -->
                         <div class="header-right">
-                                <!-- Theme Toggle -->
-                                <button class="theme-toggle" id="themeToggle"
+                                <!-- Desktop Theme Toggle -->
+                                <button
+                                        class="theme-toggle desktop-theme-toggle"
+                                        id="themeToggle"
                                         title="Toggle Theme">
                                         <i class="fas fa-sun light-icon"></i>
                                         <i class="fas fa-moon dark-icon"></i>
                                 </button>
 
-                                <!-- Auth Buttons -->
+                                <!-- Desktop Auth Buttons -->
                                 {% if user.is_authenticated %}
-                                <div class="user-section">
+                                <div class="user-section desktop-user-section">
                                         <button class="user-btn"
                                                 onclick="window.location.href='{% url 'profile_view' %}'">
                                                 <i class="fas fa-user"></i>
@@ -61,7 +117,7 @@
                                         </button>
                                 </div>
                                 {% else %}
-                                <div class="auth-buttons">
+                                <div class="auth-buttons desktop-auth-buttons">
                                         <button class="btn btn-outline-primary"
                                                 onclick="window.location.href='{% url 'login' %}'">
                                                 <i
@@ -78,7 +134,8 @@
 
                                 <!-- Mobile Menu Toggle -->
                                 <button class="mobile-menu-toggle"
-                                        id="mobileMenuToggle">
+                                        id="mobileMenuToggle"
+                                        aria-label="Toggle mobile menu">
                                         <span></span>
                                         <span></span>
                                         <span></span>
@@ -91,8 +148,18 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const navbar = document.querySelector('.navbar');
+    const navbar = document.getElementById('navbar');
     const header = document.querySelector('.header');
+    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+    const desktopThemeToggle = document.getElementById('themeToggle');
+
+    // Sync theme toggle between mobile and desktop
+    if (mobileThemeToggle && desktopThemeToggle) {
+        mobileThemeToggle.addEventListener('click', function() {
+            // Trigger the desktop theme toggle
+            desktopThemeToggle.click();
+        });
+    }
 
     mobileMenuToggle.addEventListener('click', function() {
         navbar.classList.toggle('active');
@@ -114,6 +181,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close menu when clicking on nav links
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                navbar.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                header.classList.remove('menu-open');
+            }
+        });
+    });
+
+    // Close menu when clicking on mobile auth buttons
+    document.querySelectorAll('.mobile-nav-items button').forEach(button => {
+        button.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
                 navbar.classList.remove('active');
                 mobileMenuToggle.classList.remove('active');

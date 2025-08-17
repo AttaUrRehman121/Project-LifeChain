@@ -57,6 +57,9 @@ def donorpridict(request):
         record = PredictionRecord.objects.get(user=request.user)
         messages.info(request, "You have already made a compatibility check. Here is your previous result. One prediction per user is allowed.")
         
+        # Check if user is already registered as a donor
+        is_already_donor = donor_Registered.objects.filter(user=request.user).exists()
+        
         # Create result context for existing prediction
         result = {
             'eligibility': 'Eligible' if record.donation_status == 1 else 'Not Eligible',
@@ -70,7 +73,8 @@ def donorpridict(request):
         
         return render(request, 'DonorResult.html', {
             'record': record,
-            'result': result
+            'result': result,
+            'is_already_donor': is_already_donor
         })
     
     if request.method == 'POST':
@@ -152,6 +156,7 @@ def donorpridict(request):
             return render(request, 'DonorResult.html', {
                 'record': record, 
                 'result': result,
+                'user': request.user,  # Add the user object to the context
                 'message': 'Success!'
             })
         
@@ -181,6 +186,13 @@ def donor_Applicants(request):
             if not user_id:
                 logger.error("user_id not found in request data")
                 return JsonResponse({'error': 'user_id is required'}, status=400)
+            
+            # Validate required fields
+            required_fields = ['username', 'email', 'age', 'eligibility']
+            for field in required_fields:
+                if not data.get(field):
+                    logger.error(f"Required field '{field}' is missing")
+                    return JsonResponse({'error': f'Required field {field} is missing'}, status=400)
 
             # Fetch the UserProfile instance by the user_id
             try:
@@ -190,70 +202,101 @@ def donor_Applicants(request):
                 logger.error(f"User with ID {user_id} not found")
                 return JsonResponse({'error': 'User not found'}, status=404)
 
-            # Convert gender from 1/0 to 'Male'/'Female'
-            gender = 'Male' if data.get('gender') == '1' else 'Female'
+            # Check if user is already registered as a donor
+            if donor_Registered.objects.filter(user=user_instance).exists():
+                logger.warning(f"User {user_instance.username} is already registered as a donor")
+                return JsonResponse({'error': 'You are already registered as a donor. Multiple registrations are not allowed.'}, status=400)
 
-            # Convert blood_type from 0-3 to 'A', 'B', 'AB', 'O'
+            # Convert gender from various formats to 'Male'/'Female' (must match model choices)
+            gender_raw = str(data.get('gender', '')).strip()
+            if gender_raw.lower() in ['male', 'm', '1', 'true']:
+                gender = 'Male'
+            elif gender_raw.lower() in ['female', 'f', '0', 'false']:
+                gender = 'Female'
+            else:
+                gender = 'Male'  # Default to Male if unknown
+
+            # Convert blood_type from various formats to 'A', 'B', 'AB', 'O' (must match model choices)
+            blood_type_raw = str(data.get('blood_type', '')).strip()
             blood_type_mapping = {
-                '0': 'A',
-                '1': 'B',
-                '2': 'AB',
-                '3': 'O'
+                '0': 'A', 'a': 'A', 'A': 'A',
+                '1': 'B', 'b': 'B', 'B': 'B',
+                '2': 'AB', 'ab': 'AB', 'AB': 'AB', 'Ab': 'AB', 'aB': 'AB',
+                '3': 'O', 'o': 'O', 'O': 'O'
             }
-            blood_type = blood_type_mapping.get(data.get('blood_type'), 'Unknown')  # Default to 'Unknown' if not found
+            blood_type = blood_type_mapping.get(blood_type_raw, 'A')  # Default to A if unknown
             
+            # Convert rh_factor from various formats to '+'/'-' (must match model choices)
+            rh_raw = str(data.get('rh_factor', '')).strip()
+            if rh_raw in ['+', 'positive', 'pos', '1', 'true']:
+                rh_factor = '+'
+            elif rh_raw in ['-', 'negative', 'neg', '0', 'false']:
+                rh_factor = '-'
+            else:
+                rh_factor = '+'  # Default to + if unknown
             
-            # Convert rh_factor from 1/0 to '+'/'-'
-            rh_factor = '+' if data.get('rh_factor') == '1' else '-'
-            
-            # Convert organ_type from '1' to 'Kidney' (you can add more mappings if needed)
+            # Convert organ_type from various formats to readable names (must match model choices)
+            organ_raw = str(data.get('organ_type', '')).strip()
             organ_type_mapping = {
-                '1': 'Kidney',
-                '2': 'Liver',
-                '3': 'Heart',
-                '4': 'Lungs',
-                '5': 'Pancreas'
+                '1': 'Kidney', 'kidney': 'Kidney', 'KIDNEY': 'Kidney',
+                '2': 'Liver', 'liver': 'Liver', 'LIVER': 'Liver',
+                '3': 'Heart', 'heart': 'Heart', 'HEART': 'Heart',
+                '4': 'Lungs', 'lungs': 'Lungs', 'LUNGS': 'Lungs',
+                '5': 'Pancreas', 'pancreas': 'Pancreas', 'PANCREAS': 'Pancreas'
             }
-            organ_type = organ_type_mapping.get(data.get('organ_type'), 'Unknown')
+            organ_type = organ_type_mapping.get(organ_raw, 'Kidney')  # Default to Kidney if unknown
 
             # Create the donor_Registered object
-            donor = donor_Registered.objects.create(
-                user=user_instance,  # Assign the UserProfile instance here
-                username=data.get('username'),
-                contact=data.get('contact', ''),  # Default empty string if contact not provided
-                email=data.get('email'),
-                age=float(data.get('age')),  # Ensure age is a float
-                gender=gender,  # Set the gender to 'Male' or 'Female'
-                blood_type=blood_type,  # Convert and set the blood type
-                rh_factor=rh_factor,  # Convert and set the rh_factor
-                address=data.get('address', ''),  # Default empty string if address not provided
-                eligibility=data.get('eligibility'),
-                 organ_type=organ_type
-            )
+            try:
+                donor = donor_Registered.objects.create(
+                    user=user_instance,  # Assign the UserProfile instance here
+                    username=data.get('username'),
+                    contact=data.get('contact', ''),  # Default empty string if contact not provided
+                    email=data.get('email'),
+                    age=float(data.get('age', 0) or 0),  # Ensure age is a float, default to 0 if invalid
+                    gender=gender,  # Set the gender to 'Male' or 'Female'
+                    blood_type=blood_type,  # Convert and set the blood type
+                    rh_factor=rh_factor,  # Convert and set the rh_factor
+                    address=data.get('address', ''),  # Default empty string if address not provided
+                    eligibility=data.get('eligibility'),
+                    organ_type=organ_type
+                )
+                logger.info(f"Donor object created successfully: {donor}")
+            except Exception as create_error:
+                logger.error(f"Failed to create donor object: {str(create_error)}")
+                return JsonResponse({'error': f'Failed to create donor record: {str(create_error)}'}, status=500)
 
             logger.info(f"Donor saved successfully: {donor}")
-            send_mail(
-                subject='Donor Registration Confirmation',
-                message=(
-                    f"Dear {user_instance.username},\n\n"
-                    f"Thank you for registering as an organ donor. Below are your registration details:\n\n"
-                    f"Username: {data.get('username')}\n"
-                    f"Contact: {data.get('contact', 'Not provided')}\n"
-                    f"Email: {data.get('email')}\n"
-                    f"Age: {data.get('age')}\n"
-                    f"Gender: {gender}\n"
-                    f"Blood Type: {blood_type} {rh_factor}\n"
-                    f"Address: {data.get('address', 'Not provided')}\n\n"
-                    f"We deeply appreciate your selfless decision to contribute to saving lives. "
-                    f"Your generosity and compassion make a significant impact.\n\n"
-                    f"Should you have any questions or need further assistance, please do not hesitate to contact us.\n\n"
-                    f"Best regards,\n"
-                    f"LifeChain Team"
-                ),
-                from_email=EMAIL_HOST_USER,
-                recipient_list=[user_instance.email],
-                fail_silently=False
-            )
+            
+            # Try to send confirmation email, but don't fail if email fails
+            try:
+                send_mail(
+                    subject='Donor Registration Confirmation',
+                    message=(
+                        f"Dear {user_instance.username},\n\n"
+                        f"Thank you for registering as an organ donor. Below are your registration details:\n\n"
+                        f"Username: {data.get('username')}\n"
+                        f"Contact: {data.get('contact', 'Not provided')}\n"
+                        f"Email: {data.get('email')}\n"
+                        f"Age: {data.get('age')}\n"
+                        f"Gender: {gender}\n"
+                        f"Blood Type: {blood_type} {rh_factor}\n"
+                        f"Address: {data.get('address', 'Not provided')}\n\n"
+                        f"We deeply appreciate your selfless decision to contribute to saving lives. "
+                        f"Your generosity and compassion make a significant impact.\n\n"
+                        f"Should you have any questions or need further assistance, please do not hesitate to contact us.\n\n"
+                        f"Best regards,\n"
+                        f"LifeChain Team"
+                    ),
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=[user_instance.email],
+                    fail_silently=True  # Don't fail if email fails
+                )
+                logger.info("Confirmation email sent successfully")
+            except Exception as email_error:
+                logger.warning(f"Failed to send confirmation email: {str(email_error)}")
+                # Continue with registration even if email fails
+            
             return JsonResponse({'message': 'Donor saved successfully'})
 
         except Exception as e:
@@ -300,6 +343,9 @@ def DonorResultpage(request):
     if PredictionRecord.objects.filter(user=request.user).exists():
         record = PredictionRecord.objects.get(user=request.user)
         
+        # Check if user is already registered as a donor
+        is_already_donor = donor_Registered.objects.filter(user=request.user).exists()
+        
         # Create result context for existing prediction
         result = {
             'eligibility': 'Eligible' if record.donation_status == 1 else 'Not Eligible',
@@ -313,7 +359,9 @@ def DonorResultpage(request):
         
         return render(request, 'DonorResult.html', {
             'record': record,
-            'result': result
+            'result': result,
+            'user': request.user,  # Add the user object to the context
+            'is_already_donor': is_already_donor
         })
     else:
         # No prediction record found

@@ -1,58 +1,65 @@
-// Theme Toggle Functionality
+// Theme Toggle Functionality - Optimized for performance
 document.addEventListener('DOMContentLoaded', function () {
     const themeToggle = document.getElementById('themeToggle');
     const html = document.documentElement;
 
-    // Get saved theme from localStorage or default to 'light'
+    // Batch DOM reads to avoid forced reflows
     const savedTheme = localStorage.getItem('theme') || 'light';
-    html.setAttribute('data-theme', savedTheme);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const systemTheme = prefersDark ? 'dark' : 'light';
+    const initialTheme = !localStorage.getItem('theme') ? systemTheme : savedTheme;
 
-    // Theme toggle click handler
+    // Single DOM write operation
+    html.setAttribute('data-theme', initialTheme);
+    if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', systemTheme);
+    }
+
+    // Theme toggle click handler - optimized to reduce reflows
     themeToggle.addEventListener('click', function () {
         const currentTheme = html.getAttribute('data-theme');
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-        // Update theme
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-
-        // Add smooth transition effect
-        html.style.transition = 'background-color 0.3s ease, color 0.3s ease';
-
-        // Optional: Add animation to the toggle button
-        themeToggle.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            themeToggle.style.transform = 'scale(1)';
-        }, 150);
-    });
-
-    // Check for system preference on first load
-    if (!localStorage.getItem('theme')) {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const systemTheme = prefersDark ? 'dark' : 'light';
-        html.setAttribute('data-theme', systemTheme);
-        localStorage.setItem('theme', systemTheme);
-    }
-
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-        if (!localStorage.getItem('theme')) {
-            const newTheme = e.matches ? 'dark' : 'light';
+        // Batch DOM operations using requestAnimationFrame
+        requestAnimationFrame(() => {
+            // Update theme and localStorage in one frame
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+
+            // Add button animation
+            themeToggle.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                themeToggle.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+
+    // Listen for system theme changes - optimized
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', function (e) {
+        if (!localStorage.getItem('theme')) {
+            const newTheme = e.matches ? 'dark' : 'light';
+            requestAnimationFrame(() => {
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
         }
     });
 });
 
-// Smooth theme transition for all elements
+// Optimized theme transitions - add CSS once instead of inline styles
 function addThemeTransition() {
-    const style = document.createElement('style');
-    style.textContent = `
-        * {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-    `;
-    document.head.appendChild(style);
+    // Check if style already exists to avoid duplicates
+    if (!document.getElementById('theme-transitions')) {
+        const style = document.createElement('style');
+        style.id = 'theme-transitions';
+        style.textContent = `
+            * {
+                transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 // Initialize theme transitions

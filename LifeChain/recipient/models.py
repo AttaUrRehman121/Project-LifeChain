@@ -64,6 +64,7 @@ class Recipient(models.Model):
     pra_score = models.FloatField()
     transplant_eligibility = models.CharField(max_length=50, default='not eligible')
     wallet_address = models.CharField(max_length=42, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"{self.required_organ} - {self.transplant_eligibility}"
 

@@ -64,26 +64,25 @@ blood_type_mapping = {'A': 0, 'B': 1, 'AB': 2, 'O': 3}
 def recipientprictiction(request):
     user = request.user
    
-    if Recipient.objects.filter(user=user).exists():
-        recipient = Recipient.objects.get(user=user)
-        messages.info(request, "You have already made a prediction. Here is your previous report. One prediction per user is allowed.")
-        
-        # Create result context for existing recipient
-        result = {
-            'eligibility': recipient.transplant_eligibility,
-            'compatibility_score': 90 if recipient.transplant_eligibility == 'Eligible' else 25,
-            'assessment_date': 'Previously completed',
-            'organ_type': recipient.required_organ,
-            'priority_level': 'High' if recipient.medical_urgency_score > 7 else 'Standard',
-            'matching_notes': 'Our system will search for compatible donors based on your medical profile.',
-            'wait_time_notes': 'Estimated wait time based on current donor availability and your priority level.',
-            'safety_notes': 'Comprehensive safety protocols ensure the highest standards for transplantation.'
-        }
-        
-        return render(request, 'RecipientResultPage.html', {
-            'record': recipient,
-            'result': result
-        })
+    try:
+        if Recipient.objects.filter(user=UserProfile.objects.get(username=user)).exists():
+            recipient = Recipient.objects.get(user=UserProfile.objects.get(username=user))
+            
+            # If it's a POST request, redirect to result page with message
+            if request.method == 'POST':
+                messages.info(request, "You have already made a compatibility assessment. Redirecting to your results.")
+                return redirect('RecipientResultpage')
+            
+            # If it's a GET request, show the "already checked" page with options
+            return render(request, 'RecipientAlreadyChecked.html', {
+                'record': recipient, 
+                'user': user,
+                'message': 'You have already completed a compatibility assessment. One assessment per user is allowed.'
+            })
+    except Exception as e:
+        logging.error(f"Database error in recipientprictiction (existing user check): {str(e)}")
+        messages.error(request, "There was a database connection issue. Please try again in a moment.")
+        return redirect('recipientpage')
 
     if request.method == 'POST':
         try:
@@ -94,7 +93,7 @@ def recipientprictiction(request):
             # Extract input values safely
             age = float(request.POST.get('age', 0))
             gender = 1 if request.POST.get('gender') == 'male' else 0
-            blood_type = blood_type_mapping.get(request.POST.get('blood_type'), -1)  # Use `.get()` to avoid KeyError
+            blood_type = request.POST.get('blood_type', 'Unknown')  # Keep as string since model expects CharField
             rh_factor = 1 if request.POST.get('rh_factor') == 'positive' else 0
             height_cm = float(request.POST.get('height_cm', 0))
             weight_kg = float(request.POST.get('weight_kg', 0))
@@ -112,15 +111,18 @@ def recipientprictiction(request):
             previous_transplant = 1 if request.POST.get('previous_transplant') == 'yes' else 0
             dialysis_status = 1 if request.POST.get('dialysis_status') == 'yes' else 0
             required_organ = request.POST.get('required_organ', 'Unknown')
-            antibody_screen = float(request.POST.get('antibody_screen', 0))
+            antibody_screen = 1 if request.POST.get('antibody_screen') == 'Positive' else 0
             pra_score = float(request.POST.get('pra_score', 0))
 
             logging.info("Extracted input data successfully.")
 
             # Check if model is loaded
             if model:
+                # Convert blood_type back to numeric for model input
+                blood_type_numeric = blood_type_mapping.get(blood_type, 0)
+                
                 input_features = [[
-                    age, gender, blood_type, rh_factor, height_cm, weight_kg, bmi, wait_list_days, medical_urgency_score, hemoglobin, wbc_count, platelet_count, creatinine, alt, ast, diabetes, hypertension, previous_transplant, dialysis_status, required_organ, antibody_screen, pra_score
+                    age, gender, blood_type_numeric, rh_factor, height_cm, weight_kg, bmi, wait_list_days, medical_urgency_score, hemoglobin, wbc_count, platelet_count, creatinine, alt, ast, diabetes, hypertension, previous_transplant, dialysis_status, 0, antibody_screen, pra_score  # Use 0 for required_organ in model input
                 ]]
 
                 # Make prediction
@@ -134,7 +136,7 @@ def recipientprictiction(request):
             #
             # Save the data to the database
             record = Recipient(
-                user=request.user,
+                user=UserProfile.objects.get(username=request.user),
                 age=age,
                 gender=gender,
                 blood_type=blood_type,
@@ -162,6 +164,7 @@ def recipientprictiction(request):
             
             record.save()
             logging.info("Prediction record saved successfully to the database.")
+            logging.info("Record ID: %s, User: %s, Eligibility: %s", record.id, record.user, record.transplant_eligibility)
 
             # Render the result with a success message
             # Create result context with proper formatting
@@ -179,13 +182,17 @@ def recipientprictiction(request):
             context = {
                 'record': record, 
                 'result': result,
-                'message': 'Prediction record saved successfully!'
+                'message': 'Prediction record saved successfully!',
+                'user': request.user
             }
-            return render(request, 'RecipientResultPage.html', context)
+            return redirect('RecipientResultpage')
         
         except Exception as e:
             error_message = f'An error occurred: {str(e)}'
             logging.error("Error processing recipient prediction: %s", error_message)
+            logging.error("Full error details: %s", str(e))
+            import traceback
+            logging.error("Traceback: %s", traceback.format_exc())
             context = {'error_message': error_message}
             return render(request, 'RecipientPrediction.html', context)
 
@@ -193,15 +200,72 @@ def recipientprictiction(request):
     return render(request, 'RecipientPrediction.html')
 
   
+def cleanup_expired_allocations():
+    """
+    Clean up expired allocations and return donors to eligible list
+    """
+    try:
+        # Find expired allocations
+        expired_allocations = AllocatedDonorToRecipient.objects.filter(
+            token_expiry__lt=now(),
+            verification_status=False  # Only unverified expired allocations
+        )
+        
+        cleaned_count = 0
+        for allocation in expired_allocations:
+            donor = allocation.donor
+            recipient = allocation.recipient
+            
+            # Delete the expired allocation
+            allocation.delete()
+            
+            # Mark donor as eligible again
+            donor.is_allocated = False
+            donor.save()
+            
+            # Send notification email to recipient
+            try:
+                send_mail(
+                    subject='Donor Allocation Expired',
+                    message=f'''Dear {recipient.user.username},
+
+Unfortunately, the donor "{donor.username}" did not verify their donation within the time limit. The allocation has been cancelled.
+
+You can now search for other eligible donors.
+
+Regards,
+LifeChain Team
+''',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[recipient.user.email],
+                    fail_silently=True,
+                )
+            except Exception as e:
+                logging.error(f"Failed to send expiration email: {str(e)}")
+            
+            cleaned_count += 1
+        
+        if cleaned_count > 0:
+            logging.info(f"Cleaned up {cleaned_count} expired allocations")
+        
+        return cleaned_count
+        
+    except Exception as e:
+        logging.error(f"Error cleaning up expired allocations: {str(e)}")
+        return 0
+
 @login_required
 def eligible_donors(request):
     try:
+        # Clean up expired allocations first
+        cleanup_expired_allocations()
+        
         # Check if user is a recipient
-        if not Recipient.objects.filter(user=request.user).exists():
+        if not Recipient.objects.filter(user=UserProfile.objects.get(username=request.user)).exists():
             messages.error(request, "You are not registered as a recipient.")
             return redirect('profile_view')
 
-        recipient = Recipient.objects.get(user=request.user)
+        recipient = Recipient.objects.get(user=UserProfile.objects.get(username=request.user))
 
         # Check for existing valid allocation (not expired)
         allocation = AllocatedDonorToRecipient.objects.filter(
@@ -242,6 +306,7 @@ def eligible_donors(request):
                 'organ_type': donor.organ_type,
                 'address': donor.address,
                 'eligibility': donor.eligibility,
+                'last_updated': 'Recently',  # Mock last updated for now
             }
             for donor in eligible_donors
         ]
@@ -249,8 +314,42 @@ def eligible_donors(request):
         return render(request, 'eligibleDonors.html', {'donors': donors_data})
 
     except Exception as e:
-        logger.error(f"Error fetching eligible donors: {str(e)}")
+        logging.error(f"Error fetching eligible donors: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+@csrf_exempt
+def refresh_eligible_donors(request):
+    """
+    Refresh eligible donors list by cleaning up expired allocations
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
+    
+    try:
+        # Clean up expired allocations
+        cleaned_count = cleanup_expired_allocations()
+        
+        # Get updated count of eligible donors
+        allocated_donor_ids = AllocatedDonorToRecipient.objects.filter(
+            verification_status__in=[False, True],
+            token_expiry__gt=now()
+        ).values_list('donor_id', flat=True)
+
+        eligible_count = donor_Registered.objects.filter(
+            eligibility='Eligible',
+            is_allocated=False
+        ).exclude(id__in=allocated_donor_ids).count()
+        
+        return JsonResponse({
+            'message': 'Eligible donors list refreshed successfully',
+            'cleaned_count': cleaned_count,
+            'eligible_count': eligible_count
+        })
+        
+    except Exception as e:
+        logging.error(f"Error refreshing eligible donors: {str(e)}")
+        return JsonResponse({'error': f'Refresh failed: {str(e)}'}, status=500)
     
     
 
@@ -358,14 +457,13 @@ def eligible_donors(request):
 #         return redirect('profile_view')
 # Setup Web3
 from web3 import Web3
-BACKEND_ADDRESS = Web3.to_checksum_address(settings.BACKEND_WALLET_ADDRESS)
-PRIVATE_KEY = settings.BACKEND_PRIVATE_KEY
 
-# Connect to Ganache
-web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
 @login_required
 @csrf_exempt
 def allocate_donor(request, donor_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
+    
     try:
         print("Allocate donor triggered", donor_id)
         donor = get_object_or_404(donor_Registered, id=donor_id)
@@ -373,6 +471,14 @@ def allocate_donor(request, donor_id):
 
         if not donor.user.wallet_address or not recipient.user.wallet_address:
             return JsonResponse({'error': 'Missing wallet address.'}, status=400)
+
+        # Check if donor is already allocated
+        if AllocatedDonorToRecipient.objects.filter(donor=donor).exists():
+            return JsonResponse({'error': 'This donor has already been allocated to another recipient.'}, status=400)
+
+        # Check if blockchain is available
+        if not w3 or not contract or not backend_wallet_address or not backend_private_key:
+            return JsonResponse({'error': 'Blockchain service not available. Please try again later.'}, status=503)
 
         nonce = w3.eth.get_transaction_count(backend_wallet_address)
         txn = contract.functions.allocateDonorToRecipient(
@@ -385,7 +491,7 @@ def allocate_donor(request, donor_id):
             'gasPrice': w3.to_wei('1', 'gwei'),
         })
 
-        signed_tx = w3.eth.account.sign_transaction(txn, private_key=PRIVATE_KEY)
+        signed_tx = w3.eth.account.sign_transaction(txn, private_key=backend_private_key)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
         receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
@@ -393,7 +499,7 @@ def allocate_donor(request, donor_id):
         event_logs = contract.events.DonorAllocated().process_receipt(receipt)
         
         if not event_logs:
-            logger.error("DonorAllocated event not found in logs.")
+            logging.error("DonorAllocated event not found in logs.")
             return JsonResponse({'error': 'Event not found in logs.'}, status=500)
 
         event = event_logs[0]
@@ -438,8 +544,16 @@ LifeChain Team
         return JsonResponse({'message': 'Donor allocated successfully', 'token': token})
 
     except Exception as e:
-        logger.exception("Allocation error:")
-        return JsonResponse({'error': str(e)}, status=500)
+        logging.exception("Allocation error:")
+        error_message = str(e)
+        if "insufficient funds" in error_message.lower():
+            return JsonResponse({'error': 'Insufficient funds for transaction. Please contact support.'}, status=500)
+        elif "nonce" in error_message.lower():
+            return JsonResponse({'error': 'Transaction nonce error. Please try again.'}, status=500)
+        elif "gas" in error_message.lower():
+            return JsonResponse({'error': 'Gas estimation failed. Please try again.'}, status=500)
+        else:
+            return JsonResponse({'error': f'Allocation failed: {error_message}'}, status=500)
 
 
 
@@ -483,34 +597,50 @@ def verify_donor_email(request, token):
         return redirect('profile_view')
 
     except Exception as e:
-        logger.exception("Blockchain verification error:")
+        logging.exception("Blockchain verification error:")
         messages.error(request, "Invalid or expired verification link.")
         return redirect('profile_view')
 
 @login_required
 def RecipientResultpage(request):
-    # Check if user has a recipient record
-    if Recipient.objects.filter(user=request.user).exists():
-        record = Recipient.objects.get(user=request.user)
-        
-        # Create result context for existing recipient
-        result = {
-            'eligibility': record.transplant_eligibility,
-            'compatibility_score': 90 if record.transplant_eligibility == 'Eligible' else 25,
-            'assessment_date': 'Previously completed',
-            'organ_type': record.required_organ,
-            'priority_level': 'High' if record.medical_urgency_score > 7 else 'Standard',
-            'matching_notes': 'Our system will search for compatible donors based on your medical profile.',
-            'wait_time_notes': 'Estimated wait time based on current donor availability and your priority level.',
-            'safety_notes': 'Comprehensive safety protocols ensure the highest standards for transplantation.'
-        }
-        
-        return render(request, 'RecipientResultPage.html', {
-            'record': record,
-            'result': result
-        })
-    else:
-        # No recipient record found
-        messages.warning(request, "No recipient record found. Please complete a compatibility assessment first.")
-        return redirect('recipientprictiction')
+    try:
+        # Check if user has a recipient record
+        if Recipient.objects.filter(user=UserProfile.objects.get(username=request.user)).exists():
+            record = Recipient.objects.get(user=UserProfile.objects.get(username=request.user))
+            
+            # Create result context for existing recipient
+            result = {
+                'eligibility': record.transplant_eligibility,
+                'compatibility_score': 90 if record.transplant_eligibility == 'Eligible' else 25,
+                'assessment_date': 'Previously completed',
+                'organ_type': record.required_organ,
+                'priority_level': 'High' if record.medical_urgency_score > 7 else 'Standard',
+                'matching_notes': 'Our system will search for compatible donors based on your medical profile.',
+                'wait_time_notes': 'Estimated wait time based on current donor availability and your priority level.',
+                'safety_notes': 'Comprehensive safety protocols ensure the highest standards for transplantation.'
+            }
+            
+            # Check if user is already registered as a donor
+            is_already_donor = False
+            try:
+                from donor.models import donor_Registered
+                is_already_donor = donor_Registered.objects.filter(user=UserProfile.objects.get(username=request.user)).exists()
+            except Exception as e:
+                logging.warning(f"Could not check donor status: {str(e)}")
+            
+            return render(request, 'RecipientResultPage.html', {
+                'record': record,
+                'result': result,
+                'user': request.user,
+                'is_already_donor': is_already_donor
+            })
+        else:
+            # No recipient record found
+            messages.warning(request, "No recipient record found. Please complete a compatibility assessment first.")
+            return redirect('recipientprictiction')
+            
+    except Exception as e:
+        logging.error(f"Database error in RecipientResultpage: {str(e)}")
+        messages.error(request, "There was a database connection issue. Please try again in a moment.")
+        return redirect('recipientpage')
 

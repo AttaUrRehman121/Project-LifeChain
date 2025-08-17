@@ -24,6 +24,1333 @@ Profile - LifeChain
 {% endblock breadcrumb %}
 
 {% block content %}
+<!-- Profile Header -->
+<div class="profile-header">
+  <div class="container">
+    <div class="profile-avatar">
+      <div class="avatar-circle">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="profile-title">
+        <h1>{{ user.username }}</h1>
+        <span class="role-badge role-{{ user.role|lower }}">{{ user.role
+          }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Content -->
+<div class="profile-container">
+  <div class="container">
+    <div class="profile-layout">
+      <!-- Left Sidebar -->
+      <div class="profile-sidebar">
+        <!-- Personal Info Card -->
+        <div class="sidebar-card">
+          <div class="card-header">
+            <i class="fas fa-user-circle"></i>
+            <h3>Personal Info</h3>
+          </div>
+          <div class="info-list">
+            <div class="info-item">
+              <i class="fas fa-envelope"></i>
+              <span>{{ user.email }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-phone"></i>
+              <span>{{ user.contact|default:"Not provided" }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-flag"></i>
+              <span>{{ user.nationality|default:"Not specified" }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ user.address|default:"Not provided" }}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-calendar"></i>
+              <span>Joined {{ user.date_joined|date:"M Y" }}</span>
+            </div>
+            {% if user.userprofile and user.userprofile.wallet_address %}
+            <div class="info-item wallet-item">
+              <i class="fas fa-wallet"></i>
+              <div class="wallet-info">
+                <span class="wallet-label">Wallet Address</span>
+                <code class="wallet-address">{{
+                  user.userprofile.wallet_address|truncatechars:20 }}</code>
+                <button class="copy-btn"
+                  onclick="navigator.clipboard.writeText('{{ user.userprofile.wallet_address }}')"
+                  title="Copy">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="sidebar-card">
+          <div class="card-header">
+            <i class="fas fa-bolt"></i>
+            <h3>Quick Actions</h3>
+          </div>
+          <div class="action-buttons">
+            <a href="{% url 'index' %}" class="action-btn">
+              <i class="fas fa-home"></i>
+              <span>Home</span>
+            </a>
+            {% if user.role == 'recipient' %}
+            <a href="{% url 'eligibleDdonors' %}" class="action-btn">
+              <i class="fas fa-search"></i>
+              <span>Find Donors</span>
+            </a>
+            {% endif %}
+            <a href="{% url 'contact' %}" class="action-btn">
+              <i class="fas fa-headset"></i>
+              <span>Support</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="profile-main">
+        {% if donor %}
+        <!-- Donor Dashboard -->
+        <div class="dashboard-section">
+          <h2><i class="fas fa-heartbeat"></i> Donor Dashboard</h2>
+
+          <!-- Eligibility Status -->
+          <div class="status-card eligibility-card">
+            <div class="status-header">
+              <div class="status-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="status-info">
+                <h3>Eligibility Status</h3>
+                <span
+                  class="status-value {{ donor.eligibility|lower|cut:' ' }}">{{
+                  donor.eligibility }}</span>
+              </div>
+            </div>
+            <div class="status-details">
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Organ Type</span>
+                  <span class="detail-value">{{ donor.organ_type }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Blood Type</span>
+                  <span class="detail-value">{{ donor.blood_type }}{{
+                    donor.rh_factor }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Age</span>
+                  <span class="detail-value">{{ donor.age }} years</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Gender</span>
+                  <span class="detail-value">{{ donor.gender }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Allocation Status -->
+          {% if donor_allocation %}
+          <div class="status-card allocation-card">
+            <div class="status-header">
+              <div class="status-icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="status-info">
+                <h3>Allocation Status</h3>
+                <span class="status-value allocated">Allocated to
+                  Recipient</span>
+              </div>
+            </div>
+            <div class="allocation-details">
+              <div class="recipient-info">
+                <div class="recipient-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="recipient-details">
+                  <h4>{{ donor_allocation.recipient.user.username }}</h4>
+                  <p>Recipient</p>
+                  {% if donor_allocation.recipient.user.contact %}
+                  <span class="contact-info">{{
+                    donor_allocation.recipient.user.contact }}</span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="verification-status">
+                {% if donor_allocation.verification_status %}
+                <span class="verification-badge verified">✅ Verified</span>
+                {% else %}
+                <span class="verification-badge pending">⏳ Pending
+                  Verification</span>
+                {% endif %}
+              </div>
+            </div>
+            {% if donor_allocation.transaction_hash %}
+            <div class="transaction-info">
+              <span class="tx-label">Transaction Hash:</span>
+              <div class="hash-container">
+                <code>{{ donor_allocation.transaction_hash|truncatechars:25
+                  }}</code>
+                <button class="copy-btn"
+                  onclick="navigator.clipboard.writeText('{{ donor_allocation.transaction_hash }}')"
+                  title="Copy">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% else %}
+          <div class="status-card no-allocation">
+            <div class="status-header">
+              <div class="status-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="status-info">
+                <h3>Allocation Status</h3>
+                <span class="status-value not-allocated">Not Allocated
+                  Yet</span>
+              </div>
+            </div>
+            <p>You will be notified when a recipient is matched with you.</p>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if recipient %}
+        <!-- Recipient Dashboard -->
+        <div class="dashboard-section">
+          <h2><i class="fas fa-heartbeat"></i> Recipient Dashboard</h2>
+
+          <!-- Medical Profile Status -->
+          <div class="status-card eligibility-card">
+            <div class="status-header">
+              <div class="status-icon">
+                <i class="fas fa-stethoscope"></i>
+              </div>
+              <div class="status-info">
+                <h3>Medical Profile Status</h3>
+                <span
+                  class="status-value {{ recipient.transplant_eligibility|lower|cut:' ' }}">{{
+                  recipient.transplant_eligibility }}</span>
+              </div>
+            </div>
+            <div class="status-details">
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Required Organ</span>
+                  <span class="detail-value">{{ recipient.required_organ
+                    }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Blood Type</span>
+                  <span class="detail-value">{{ recipient.blood_type }}{% if
+                    recipient.rh_factor == 1 %}+{% else %}-{% endif %}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Age</span>
+                  <span class="detail-value">{{ recipient.age }} years</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Wait List</span>
+                  <span class="detail-value">{{ recipient.wait_list_days }}
+                    days</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Donor Allocation Status -->
+          {% if recipient_allocations %}
+          <div class="status-card allocation-card">
+            <div class="status-header">
+              <div class="status-icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="status-info">
+                <h3>Donor Allocation Status</h3>
+                <span class="status-value allocated">Donors Allocated</span>
+              </div>
+            </div>
+            <div class="allocations-details">
+              <div class="allocations-list">
+                {% for alloc in recipient_allocations %}
+                <div class="allocation-item">
+                  <div class="donor-info">
+                    <div class="donor-avatar">
+                      <i class="fas fa-user"></i>
+                    </div>
+                    <div class="donor-details">
+                      <h4>{{ alloc.donor.username }}</h4>
+                      <p>{{ alloc.donor.organ_type }} Donor</p>
+                      <span class="blood-type">{{ alloc.donor.blood_type }}{{
+                        alloc.donor.rh_factor }}</span>
+                    </div>
+                  </div>
+                  <div class="verification-status">
+                    {% if alloc.verification_status %}
+                    <span class="verification-badge verified">✅ Verified</span>
+                    {% else %}
+                    <span class="verification-badge pending">⏳ Pending
+                      Verification</span>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="progress-overview">
+              <h4>Overall Progress</h4>
+              <div class="progress-steps">
+                <div class="step completed">
+                  <div class="step-dot"></div>
+                  <span>Donors Found</span>
+                </div>
+                <div class="step completed">
+                  <div class="step-dot"></div>
+                  <span>Allocated</span>
+                </div>
+                <div
+                  class="step {% if recipient_allocations.0.verification_status %}completed{% else %}current{% endif %}">
+                  <div class="step-dot"></div>
+                  <span>Verification</span>
+                  {% if recipient_allocations.0.token_expiry and not
+                  recipient_allocations.0.verification_status %}
+                  <div class="countdown"
+                    data-expiry="{{ recipient_allocations.0.token_expiry|date:'c' }}">
+                    <small>Expires: {{
+                      recipient_allocations.0.token_expiry|date:"M d, H:i"
+                      }}</small>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Transaction Info -->
+            {% if recipient_allocations and
+            recipient_allocations.0.transaction_hash %}
+            <div class="transaction-info">
+              <span class="tx-label">Latest Transaction Hash:</span>
+              <div class="hash-container">
+                <code>{{
+                  recipient_allocations.0.transaction_hash|truncatechars:25
+                  }}</code>
+                <button class="copy-btn"
+                  onclick="navigator.clipboard.writeText('{{ recipient_allocations.0.transaction_hash }}')"
+                  title="Copy to clipboard">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% else %}
+          <div class="status-card no-allocation">
+            <div class="status-header">
+              <div class="status-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="status-info">
+                <h3>Donor Allocation Status</h3>
+                <span class="status-value not-allocated">No Donors Allocated
+                  Yet</span>
+              </div>
+            </div>
+            <p>Start your search for compatible donors to begin the allocation
+              process.</p>
+            <div class="action-section">
+              <a href="{% url 'eligibleDdonors' %}" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+                Find Eligible Donors
+              </a>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Modern Profile Design */
+:root {
+  --profile-primary: #6366f1;
+  --profile-secondary: #8b5cf6;
+  --profile-success: #10b981;
+  --profile-warning: #f59e0b;
+  --profile-danger: #ef4444;
+  --profile-info: #3b82f6;
+  --profile-light: #f8fafc;
+  --profile-dark: #1e293b;
+  --profile-border: #e2e8f0;
+  --profile-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --profile-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Profile Header */
+.profile-header {
+  background: linear-gradient(135deg, var(--profile-primary) 0%, var(--profile-secondary) 100%);
+  color: white;
+  padding: 2rem 0;
+  margin-top: 80px;
+  box-shadow: var(--profile-shadow-lg);
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.profile-title h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(10px);
+}
+
+.role-donor {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.role-recipient {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Profile Layout */
+.profile-container {
+  background: var(--profile-light);
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Sidebar */
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebar-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--profile-shadow);
+  border: 1px solid var(--profile-border);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--profile-border);
+}
+
+.card-header i {
+  color: var(--profile-primary);
+  font-size: 1.25rem;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--profile-dark);
+}
+
+/* Info List */
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--profile-light);
+  border-radius: 0.75rem;
+  border: 1px solid var(--profile-border);
+  transition: all 0.2s ease;
+}
+
+.info-item:hover {
+  background: white;
+  box-shadow: var(--profile-shadow);
+  transform: translateY(-1px);
+}
+
+.info-item i {
+  color: var(--profile-primary);
+  width: 20px;
+  text-align: center;
+}
+
+.info-item span {
+  color: var(--profile-dark);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.wallet-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.wallet-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.wallet-label {
+  font-size: 0.75rem;
+  color: var(--profile-dark);
+  font-weight: 600;
+}
+
+.wallet-address {
+  background: var(--profile-dark);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--profile-light);
+  border: 1px solid var(--profile-border);
+  border-radius: 0.75rem;
+  color: var(--profile-dark);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: white;
+  box-shadow: var(--profile-shadow);
+  transform: translateY(-1px);
+  color: var(--profile-primary);
+}
+
+.action-btn i {
+  color: var(--profile-primary);
+  width: 20px;
+  text-align: center;
+}
+
+/* Main Content */
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dashboard-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--profile-dark);
+}
+
+.dashboard-section h2 i {
+  color: var(--profile-primary);
+}
+
+.dashboard-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--profile-dark);
+}
+
+/* Status Cards */
+.status-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--profile-shadow);
+  border: 1px solid var(--profile-border);
+  transition: all 0.2s ease;
+}
+
+.status-card:hover {
+  box-shadow: var(--profile-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.eligibility-card .status-icon {
+  background: linear-gradient(135deg, var(--profile-success) 0%, #059669 100%);
+}
+
+.allocation-card .status-icon {
+  background: linear-gradient(135deg, var(--profile-info) 0%, #2563eb 100%);
+}
+
+.medical-card .status-icon {
+  background: linear-gradient(135deg, var(--profile-warning) 0%, #d97706 100%);
+}
+
+.no-allocation .status-icon {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+}
+
+.status-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--profile-dark);
+}
+
+.status-value {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-value.eligible {
+  background: var(--profile-success);
+  color: white;
+}
+
+.status-value.not-eligible {
+  background: var(--profile-danger);
+  color: white;
+}
+
+.status-value.allocated {
+  background: var(--profile-info);
+  color: white;
+}
+
+.status-value.not-allocated {
+  background: #6b7280;
+  color: white;
+}
+
+/* Detail Grid */
+.status-details {
+  margin-top: 1rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: var(--profile-dark);
+  font-weight: 600;
+}
+
+/* Allocation Details */
+.allocation-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.recipient-info, .donor-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.recipient-avatar, .donor-avatar {
+  width: 50px;
+  height: 50px;
+  background: var(--profile-light);
+  border: 2px solid var(--profile-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--profile-primary);
+  font-size: 1.25rem;
+}
+
+.recipient-details h4, .donor-info h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--profile-dark);
+}
+
+.recipient-details p, .donor-info p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.contact-info {
+  font-size: 0.75rem;
+  color: var(--profile-primary);
+  font-weight: 500;
+}
+
+.blood-type {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: var(--profile-light);
+  border: 1px solid var(--profile-border);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--profile-dark);
+}
+
+.verification-status {
+  text-align: right;
+}
+
+.verification-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.verification-badge.verified {
+  background: var(--profile-success);
+  color: white;
+}
+
+.verification-badge.pending {
+  background: var(--profile-warning);
+  color: white;
+}
+
+/* Transaction Info */
+.transaction-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--profile-border);
+}
+
+.tx-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.hash-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--profile-light);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--profile-border);
+}
+
+.hash-container code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: var(--profile-dark);
+  flex: 1;
+}
+
+/* Allocations Section */
+.allocations-section h3 {
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--profile-dark);
+}
+
+.allocation-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--profile-shadow);
+  border: 1px solid var(--profile-border);
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.allocation-card:hover {
+  box-shadow: var(--profile-shadow-lg);
+  transform: translateY(-1px);
+}
+
+.allocation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.allocation-status .status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge.completed {
+  background: var(--profile-success);
+  color: white;
+}
+
+ .status-badge.in-progress {
+   background: var(--profile-warning);
+   color: white;
+ }
+
+ /* Recipient Specific Styles */
+ .allocations-details {
+   margin: 1rem 0;
+ }
+
+ .allocations-list {
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+ }
+
+ .allocation-item {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 1rem;
+   background: var(--profile-light);
+   border-radius: 0.75rem;
+   border: 1px solid var(--profile-border);
+   transition: all 0.2s ease;
+ }
+
+ .allocation-item:hover {
+   background: white;
+   box-shadow: var(--profile-shadow);
+   transform: translateY(-1px);
+ }
+
+ .progress-overview {
+   margin: 1.5rem 0;
+   padding: 1.5rem;
+   background: var(--profile-light);
+   border-radius: 0.75rem;
+   border: 1px solid var(--profile-border);
+ }
+
+ .progress-overview h4 {
+   margin: 0 0 1rem 0;
+   font-size: 1rem;
+   font-weight: 600;
+   color: var(--profile-dark);
+  text-align: center;
+ }
+
+ .action-section {
+   margin-top: 1.5rem;
+   text-align: center;
+ }
+
+ .action-section .btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+   padding: 0.75rem 1.5rem;
+   background: var(--profile-primary);
+   color: white;
+   text-decoration: none;
+   border-radius: 0.75rem;
+   font-weight: 500;
+   transition: all 0.2s ease;
+ }
+
+ .action-section .btn:hover {
+   background: var(--profile-secondary);
+   transform: translateY(-1px);
+   box-shadow: var(--profile-shadow-lg);
+ }
+
+ /* Progress Steps */
+ .progress-steps {
+   display: flex;
+   align-items: center;
+   gap: 1rem;
+   margin: 1rem 0;
+   padding: 1rem;
+   background: var(--profile-light);
+   border-radius: 0.75rem;
+   border: 1px solid var(--profile-border);
+ }
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  text-align: center;
+}
+
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #d1d5db;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px #d1d5db;
+}
+
+.step.completed .step-dot {
+  background: var(--profile-success);
+  box-shadow: 0 0 0 2px var(--profile-success);
+}
+
+.step.current .step-dot {
+  background: var(--profile-primary);
+  box-shadow: 0 0 0 2px var(--profile-primary);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.step span {
+  font-size: 0.75rem;
+  color: var(--profile-dark);
+  font-weight: 500;
+}
+
+.countdown {
+  margin-top: 0.25rem;
+}
+
+.countdown small {
+  font-size: 0.625rem;
+  color: var(--profile-warning);
+  font-weight: 600;
+}
+
+/* Allocation Actions */
+.allocation-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.allocation-actions .btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--profile-border);
+  background: white;
+  color: var(--profile-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.allocation-actions .btn:hover {
+  background: var(--profile-light);
+  transform: translateY(-1px);
+}
+
+.allocation-actions .btn i {
+  margin-right: 0.5rem;
+}
+
+/* No Allocations */
+.no-allocations {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.no-allocations .status-header {
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.no-allocations p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.no-allocations .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--profile-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.no-allocations .btn:hover {
+  background: var(--profile-secondary);
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .profile-sidebar {
+    order: 2;
+  }
+  
+  .profile-main {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    padding: 1.5rem 0;
+  }
+  
+  .profile-avatar {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .profile-title h1 {
+    font-size: 2rem;
+  }
+  
+  .profile-container {
+    padding: 1rem 0;
+  }
+  
+  .status-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .allocation-details {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .progress-steps {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-title h1 {
+    font-size: 1.75rem;
+  }
+  
+  .avatar-circle {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+  
+  .sidebar-card,
+  .status-card,
+  .allocation-card {
+    padding: 1rem;
+  }
+  
+  .card-header h3 {
+    font-size: 1rem;
+  }
+  
+  .dashboard-section h2 {
+    font-size: 1.25rem;
+  }
+}
+</style>
+
+<script>
+  // Countdown Timer Functionality for new design
+  function updateCountdownTimers() {
+    const countdownElements = document.querySelectorAll('.countdown');
+    
+    countdownElements.forEach(element => {
+      const expiryDate = new Date(element.dataset.expiry);
+      const now = new Date();
+      const timeRemaining = expiryDate - now;
+      
+      if (timeRemaining > 0) {
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        
+        const countdownText = element.querySelector('small');
+        if (countdownText) {
+          if (days > 0) {
+            countdownText.textContent = `Expires in ${days}d ${hours}h`;
+          } else if (hours > 0) {
+            countdownText.textContent = `Expires in ${hours}h ${minutes}m`;
+          } else if (minutes > 0) {
+            countdownText.textContent = `Expires in ${minutes}m`;
+          } else {
+            countdownText.textContent = 'Expires soon!';
+          }
+          
+          // Add warning class when less than 24 hours remaining
+          if (timeRemaining < 24 * 60 * 60 * 1000) {
+            element.classList.add('urgent');
+          }
+        }
+      } else {
+        // Expired
+        const countdownText = element.querySelector('small');
+        if (countdownText) {
+          countdownText.textContent = 'EXPIRED';
+          element.classList.add('expired');
+        }
+      }
+    });
+  }
+
+  // Update countdown every minute
+  setInterval(updateCountdownTimers, 60000);
+  
+  // Initial update
+  document.addEventListener('DOMContentLoaded', function() {
+    updateCountdownTimers();
+    
+    // Add hover effects to status cards
+    const statusCards = document.querySelectorAll('.status-card');
+    statusCards.forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-4px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+  });
+
+  // Function to view allocation details
+  function viewAllocationDetails(allocationId) {
+    Swal.fire({
+      title: 'Allocation Details',
+      html: `
+        <div class="text-left">
+          <p><strong>Allocation ID:</strong> ${allocationId}</p>
+          <p><strong>Status:</strong> Active</p>
+          <p><strong>Created:</strong> ${new Date().toLocaleDateString()}</p>
+          <p><strong>Note:</strong> This shows detailed information about the allocation.</p>
+        </div>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Close',
+      customClass: {
+        popup: 'swal2-custom-popup'
+      }
+    });
+  }
+
+  // Add custom styles for SweetAlert
+  const style = document.createElement('style');
+  style.textContent = `
+    .countdown.urgent small {
+      color: #ef4444 !important;
+      font-weight: 700;
+    }
+    
+    .countdown.expired small {
+      color: #6b7280 !important;
+      font-weight: 400;
+    }
+    
+    .swal2-custom-popup {
+      border-radius: 1rem;
+      font-family: inherit;
+    }
+    
+    .swal2-custom-popup .swal2-title {
+      color: #1e293b;
+    }
+    
+    .swal2-custom-popup .swal2-html-container {
+      color: #475569;
+    }
+  `;
+  document.head.appendChild(style);
+  </script>
+{% endblock content %}
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Profile - LifeChain
+{% endblock title %}
+
+{% block breadcrumb %}
+<section class="breadcrumb-section">
+  <div class="container">
+    <nav class="breadcrumb-nav">
+      <div class="breadcrumb-item">
+        <a href="{% url 'index' %}" class="breadcrumb-link">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+      </div>
+      <div class="breadcrumb-item">
+        <span class="breadcrumb-current">User Profile</span>
+      </div>
+    </nav>
+  </div>
+</section>
+{% endblock breadcrumb %}
+
+{% block content %}
 <!-- Profile Hero Section -->
 <section class="profile-hero">
   <div class="container">

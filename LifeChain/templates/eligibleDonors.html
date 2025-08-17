@@ -34,21 +34,21 @@ Eligible Donors - LifeChain
 <div id="skeleton-loading">
   <section class="section">
     <div class="container">
-      <div class="text-center mb-5">
+      <div class="text-center mb-4">
         <div class="skeleton skeleton-title"></div>
         <div class="skeleton skeleton-subtitle"></div>
       </div>
 
       <div class="skeleton-card">
         <div class="skeleton skeleton-title"
-          style="width: 60%; margin-bottom: var(--spacing-lg);"></div>
+          style="width: 60%; margin-bottom: var(--spacing-md);"></div>
         <div class="skeleton skeleton-text long"></div>
         <div class="skeleton skeleton-text medium"></div>
       </div>
 
       <div class="skeleton-card">
         <div class="skeleton skeleton-title"
-          style="width: 50%; margin-bottom: var(--spacing-lg);"></div>
+          style="width: 50%; margin-bottom: var(--spacing-md);"></div>
         <div class="skeleton skeleton-table">
           <div class="skeleton skeleton-text long"></div>
           <div class="skeleton skeleton-text medium"></div>
@@ -56,7 +56,7 @@ Eligible Donors - LifeChain
         </div>
       </div>
 
-      <div class="text-center mt-5">
+      <div class="text-center mt-4">
         <div class="skeleton skeleton-button" style="margin: 0 auto;"></div>
       </div>
     </div>
@@ -67,7 +67,7 @@ Eligible Donors - LifeChain
 <div id="actual-content" style="display: none;">
   <section class="section">
     <div class="container">
-      <div class="text-center mb-5">
+      <div class="text-center mb-4">
         <h1 class="hero-title">Eligible Donors</h1>
         <p class="hero-subtitle">Find compatible donors for your transplant
           needs</p>
@@ -141,13 +141,28 @@ Eligible Donors - LifeChain
               <div class="donor-avatar">
                 <i class="fas fa-user"></i>
               </div>
+
               <div class="donor-info">
                 <h4>{{ donor.username|default:"Anonymous Donor" }}</h4>
-                <p class="donor-location">
+                <p class="donor-location"
+                  {% if donor.address %}
+                  title="{{ donor.address }}"
+                  {% endif %}>
                   <i class="fas fa-map-marker-alt"></i>
-                  {{ donor.location|default:"Location not specified" }}
+                  {% if donor.address %}
+                  {% if donor.address|length > 30 %}
+                  {{ donor.address|slice:":30" }}...
+                  <i class="fas fa-info-circle"
+                    style="color: var(--primary-color); font-size: 0.8rem;"></i>
+                  {% else %}
+                  {{ donor.address }}
+                  {% endif %}
+                  {% else %}
+                  Pakistan
+                  {% endif %}
                 </p>
               </div>
+
               <div class="donor-status">
                 <span class="status-badge status-available">Available</span>
               </div>
@@ -167,15 +182,14 @@ Eligible Donors - LifeChain
               </div>
 
               <div class="detail-row">
-                <span class="detail-label">Compatibility Score:</span>
-                <span class="detail-value score-high">{{
-                  donor.compatibility_score|default:"N/A" }}%</span>
-              </div>
-
-              <div class="detail-row">
                 <span class="detail-label">Last Updated:</span>
-                <span class="detail-value">{{ donor.last_updated|default:"N/A"
-                  }}</span>
+                <span class="detail-value">
+                  {% if donor.last_updated %}
+                  {{ donor.last_updated }}
+                  {% else %}
+                  N/A
+                  {% endif %}
+                </span>
               </div>
             </div>
 
@@ -200,77 +214,77 @@ Eligible Donors - LifeChain
             <i class="fas fa-search"></i>
           </div>
           <h4>No Donors Found</h4>
-          <p>Currently there are no eligible donors matching your criteria.
-            Please try adjusting your search filters or check back later.</p>
+          <p>
+            Currently there are no eligible donors matching your criteria.
+            Please try adjusting your search filters or check back later.
+          </p>
           <button class="btn btn-outline-primary" onclick="resetFilters()">
             <i class="fas fa-undo"></i>
             Reset Filters
           </button>
         </div>
         {% endif %}
+
+        <!-- Pagination -->
+        {% if donors.has_other_pages %}
+        <div class="pagination-wrapper">
+          <ul class="pagination">
+            {% if donors.has_previous %}
+            <li class="page-item">
+              <a class="page-link"
+                href="?page={{ donors.previous_page_number }}">
+                <i class="fas fa-chevron-left"></i> Previous
+              </a>
+            </li>
+            {% endif %}
+
+            {% for num in donors.paginator.page_range %}
+            {% if donors.number == num %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > donors.number|add:'-3' and num < donors.number|add:'3'
+            %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if donors.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ donors.next_page_number }}">
+                Next <i class="fas fa-chevron-right"></i>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <a href="{% url 'recipientpage' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i>
+            Back to Recipient Portal
+          </a>
+          <a href="{% url 'contact' %}" class="btn btn-primary">
+            <i class="fas fa-envelope"></i>
+            Contact Support
+          </a>
+          <a href="{% url 'index' %}" class="btn btn-secondary">
+            <i class="fas fa-home"></i>
+            Go Home
+          </a>
+        </div>
       </div>
+    </section>
+  </div>
 
-      <!-- Pagination -->
-      {% if donors.has_other_pages %}
-      <div class="pagination-wrapper">
-        <ul class="pagination">
-          {% if donors.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ donors.previous_page_number }}">
-              <i class="fas fa-chevron-left"></i>
-              Previous
-            </a>
-          </li>
-          {% endif %}
-
-          {% for num in donors.paginator.page_range %}
-          {% if donors.number == num %}
-          <li class="page-item active">
-            <span class="page-link">{{ num }}</span>
-          </li>
-          {% elif num > donors.number|add:'-3' and num < donors.number|add:'3'
-          %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-          </li>
-          {% endif %}
-          {% endfor %}
-
-          {% if donors.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ donors.next_page_number }}">
-              Next
-              <i class="fas fa-chevron-right"></i>
-            </a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-      {% endif %}
-
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <a href="{% url 'recipientpage' %}" class="btn btn-outline-primary">
-          <i class="fas fa-arrow-left"></i>
-          Back to Recipient Portal
-        </a>
-        <a href="{% url 'contact' %}" class="btn btn-primary">
-          <i class="fas fa-envelope"></i>
-          Contact Support
-        </a>
-        <a href="{% url 'index' %}" class="btn btn-secondary">
-          <i class="fas fa-home"></i>
-          Go Home
-        </a>
-      </div>
-    </div>
-  </section>
-</div>
-
-<style>
+  <style>
 /* Enhanced Eligible Donors Page Styles */
 .hero-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     -webkit-background-clip: text;
@@ -281,18 +295,18 @@ Eligible Donors - LifeChain
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
     font-weight: 500;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
 }
 
 .search-card {
     background: var(--bg-card);
     border: 2px solid var(--border-primary);
     border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
     box-shadow: 0 8px 32px var(--shadow-lg);
     position: relative;
     overflow: hidden;
@@ -316,10 +330,10 @@ Eligible Donors - LifeChain
 }
 
 .search-card h3 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
     text-align: center;
     position: relative;
 }
@@ -344,14 +358,14 @@ Eligible Donors - LifeChain
 .search-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .search-field {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 .search-field label {
@@ -361,12 +375,12 @@ Eligible Donors - LifeChain
 }
 
 .search-field .form-control {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border: 2px solid var(--border-primary);
     border-radius: var(--radius-md);
     background: var(--input-bg);
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: all var(--transition-fast);
 }
 
@@ -379,7 +393,7 @@ Eligible Donors - LifeChain
 .search-actions {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
 }
 
@@ -401,8 +415,8 @@ Eligible Donors - LifeChain
     background: var(--bg-card);
     border: 2px solid var(--border-primary);
     border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
     box-shadow: 0 8px 32px var(--shadow-lg);
 }
 
@@ -410,13 +424,13 @@ Eligible Donors - LifeChain
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
     flex-wrap: wrap;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
 }
 
 .donors-header h3 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
@@ -424,7 +438,7 @@ Eligible Donors - LifeChain
 
 .count-badge {
     background: linear-gradient(135deg, var(--success) 0%, var(--primary-color) 100%);
-    color: var(--text-inverse);
+    color: white !important;
     padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--radius-lg);
     font-weight: 700;
@@ -434,15 +448,15 @@ Eligible Donors - LifeChain
 
 .donors-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: var(--spacing-lg);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
 }
 
 .donor-item {
     background: var(--bg-secondary);
     border: 2px solid var(--border-primary);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
@@ -462,8 +476,8 @@ Eligible Donors - LifeChain
 .donor-item:hover {
     background: var(--bg-primary);
     border-color: var(--border-focus);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px var(--shadow-lg);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow-lg);
 }
 
 .donor-item:hover::before {
@@ -474,12 +488,12 @@ Eligible Donors - LifeChain
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
 }
 
 .donor-avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     border-radius: 50%;
     display: flex;
@@ -499,7 +513,7 @@ Eligible Donors - LifeChain
 }
 
 .donor-info h4 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary);
     margin: 0 0 var(--spacing-xs) 0;
@@ -507,11 +521,13 @@ Eligible Donors - LifeChain
 
 .donor-location {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin: 0;
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
+    position: relative;
+    cursor: help;
 }
 
 .donor-location i {
@@ -535,14 +551,14 @@ Eligible Donors - LifeChain
 }
 
 .donor-details {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
 }
 
 .detail-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-sm) 0;
+    padding: var(--spacing-xs) 0;
     border-bottom: 1px solid var(--border-primary);
 }
 
@@ -553,13 +569,13 @@ Eligible Donors - LifeChain
 .detail-label {
     font-weight: 600;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .detail-value {
     font-weight: 700;
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .score-high {
@@ -574,9 +590,9 @@ Eligible Donors - LifeChain
 
 .donor-actions .btn {
     flex: 1;
-    min-width: 120px;
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.9rem;
+    min-width: 100px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.85rem;
     font-weight: 600;
     border-radius: var(--radius-md);
     transition: all var(--transition-fast);
@@ -628,7 +644,7 @@ Eligible Donors - LifeChain
 .pagination-wrapper {
     display: flex;
     justify-content: center;
-    margin: var(--spacing-xl) 0;
+    margin: var(--spacing-lg) 0;
 }
 
 .pagination {
@@ -674,18 +690,18 @@ Eligible Donors - LifeChain
 .action-buttons {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
     flex-wrap: wrap;
-    margin-top: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
 }
 
 .action-buttons .btn {
-    padding: var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-sm) var(--spacing-lg);
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.95rem;
     border-radius: var(--radius-lg);
     transition: all var(--transition-normal);
-    min-width: 180px;
+    min-width: 160px;
     text-align: center;
 }
 
@@ -751,7 +767,7 @@ Eligible Donors - LifeChain
   }
 </style>
 
-<script>
+  <script>
 // Simulate skeleton loading
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
@@ -820,4 +836,4 @@ function contactDonor(donorId) {
     });
 }
 </script>
-{% endblock content %}
+  {% endblock content %}
